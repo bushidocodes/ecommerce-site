@@ -1,10 +1,10 @@
-import { connect } from 'react-redux';
-import Cart from '../components/Cart';
+import { connect } from 'react-redux'
+import Cart from '../components/Cart'
 
 function mapStateToProps(state) {
   return {
-    cart: state.cart
+    cart: state.cart,
   }
-};
+}
 
-export default connect(mapStateToProps)(Cart);
+export default connect(mapStateToProps)(Cart)

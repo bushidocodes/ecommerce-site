@@ -13,8 +13,8 @@ const selfOnly = action => (req, res, next) => {
 }
 
 const forbidden = message => (req, res, next) => {
-  console.log("running forbidden");
-  return res.status(403).send(message);
+  console.log('running forbidden')
+  return res.status(403).send(message)
 }
 
 // const selfOnlyOrAdmin = action => (req, res, next) => {
@@ -24,5 +24,4 @@ const forbidden = message => (req, res, next) => {
 //   next()
 // }
 
-
-module.exports = {mustBeLoggedIn, selfOnly, forbidden}
+module.exports = { mustBeLoggedIn, selfOnly, forbidden }

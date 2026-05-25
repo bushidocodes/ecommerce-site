@@ -10,7 +10,8 @@ const reducer = (state = null, action) => {
 
 const AUTHENTICATED = 'AUTHENTICATED'
 export const authenticated = user => ({
-  type: AUTHENTICATED, user
+  type: AUTHENTICATED,
+  user,
 })
 
 // wipeLocalState is an action creator that dispatches an action that the rrot reducer uses as a hook
@@ -20,44 +21,42 @@ export const authenticated = user => ({
 
 const WIPELOCALSTATE = 'WIPELOCALSTATE'
 export const wipeLocalState = () => ({
-  type: WIPELOCALSTATE
+  type: WIPELOCALSTATE,
 })
 
-export const login = (username, password) =>
-  dispatch =>
-    axios.post('/api/auth/local/login',
-      { username, password })
-      .then(() => dispatch(whoami()))
-      .catch(() => dispatch(whoami()))
+export const login = (username, password) => dispatch =>
+  axios
+    .post('/api/auth/local/login', { username, password })
+    .then(() => dispatch(whoami()))
+    .catch(() => dispatch(whoami()))
 
-export const signup = (username, password) =>
-  dispatch =>
-    axios.post('/api/auth/local/signup',
-      { username, password })
-      .then(() => dispatch(whoami()))
-      .catch(() => dispatch(whoami()))
+export const signup = (username, password) => dispatch =>
+  axios
+    .post('/api/auth/local/signup', { username, password })
+    .then(() => dispatch(whoami()))
+    .catch(() => dispatch(whoami()))
 
-export const logout = () =>
-  dispatch => {
-    console.log('dispatch: ', dispatch)
-    axios.post('/api/auth/logout')
-      .then(() => {
-        dispatch(whoami());
-        dispatch(wipeLocalState());
-      })
-      .catch(() => {
-        dispatch(whoami());
-        dispatch(wipeLocalState());
-      })
-  }
+export const logout = () => dispatch => {
+  console.log('dispatch: ', dispatch)
+  axios
+    .post('/api/auth/logout')
+    .then(() => {
+      dispatch(whoami())
+      dispatch(wipeLocalState())
+    })
+    .catch(() => {
+      dispatch(whoami())
+      dispatch(wipeLocalState())
+    })
+}
 
-export const whoami = () =>
-  dispatch =>
-    axios.get('/api/auth/whoami')
-      .then(response => {
-        const user = response.data
-        dispatch(authenticated(user))
-      })
-      .catch(failed => dispatch(authenticated(null)))
+export const whoami = () => dispatch =>
+  axios
+    .get('/api/auth/whoami')
+    .then(response => {
+      const user = response.data
+      dispatch(authenticated(user))
+    })
+    .catch(failed => dispatch(authenticated(null)))
 
 export default reducer

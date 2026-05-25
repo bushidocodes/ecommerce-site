@@ -1,13 +1,13 @@
-'use strict';
+'use strict'
 
-import React, { Component } from 'react';
-import { Link } from 'react-router';
+import React, { Component } from 'react'
+import { Link } from 'react-router'
 
-export default (props) => {
+export default props => {
   return (
     <div className="container">
       <div>
-        <img className="cookieMonsterImg" src='/images/cookie-monster.jpg' />
+        <img className="cookieMonsterImg" src="/images/cookie-monster.jpg" />
         <h1>Cookie Monsters</h1>
         <h3 className="subtitle">Home of the world's greatest cookies</h3>
       </div>
@@ -24,7 +24,9 @@ export default (props) => {
           <tfoot>
             <tr>
               <td></td>
-              <td className="pull-right orderTableFooterTitles">Flat Shipping Rate</td>
+              <td className="pull-right orderTableFooterTitles">
+                Flat Shipping Rate
+              </td>
               <td>${props.order.shippingRate}</td>
             </tr>
             <tr>
@@ -44,15 +46,16 @@ export default (props) => {
                 <td>{product.orderLineItems.quantity}</td>
                 <td>{product.name}</td>
                 <td>$ {product.orderLineItems.subtotal}</td>
-              </tr>)
-            )}
+              </tr>
+            ))}
           </tbody>
         </table>
         {/* This should appear after order is submitted */}
         <div className="lead">
-          Cookies shipped by <span id="shippingCarrier">{props.order.shippingCarrier}</span>.
-      </div>
+          Cookies shipped by{' '}
+          <span id="shippingCarrier">{props.order.shippingCarrier}</span>.
+        </div>
       </div>
     </div>
   )
-};
+}

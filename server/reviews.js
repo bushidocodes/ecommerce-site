@@ -1,14 +1,16 @@
-const db = require('../db');
-const Review = require('../db/models/review');
+const db = require('../db')
+const Review = require('../db/models/review')
 
-module.exports = require('express').Router()
+module.exports = require('express')
+  .Router()
 
   // Action: View all reviews
   // Roles: Guest, User, Admin
   .get('/', (req, res, next) =>
     Review.findAll()
       .then(reviews => res.json(reviews))
-      .catch(next))
+      .catch(next)
+  )
 
   // Action: Create a new review
   // Roles: User, Admin
@@ -17,8 +19,8 @@ module.exports = require('express').Router()
   .post('/', (req, res, next) =>
     Review.create(req.body)
       .then(review => res.status(201).json(review))
-      .catch(next))
-
+      .catch(next)
+  )
 
   // TODO: Implement router param for review ID
 
@@ -27,16 +29,17 @@ module.exports = require('express').Router()
   .get('/:id', (req, res, next) =>
     Review.findById(req.params.id)
       .then(review => res.json(review))
-      .catch(next))
+      .catch(next)
+  )
 
-  // Action: Modify a single existing review by ID
-  // Roles: User, Admin
-  // Notes: Users can only modify reviews that they wrote
-  // TODO: Implement put route for modifying a single review
-  // .put('/:id', (req, res, next)
+// Action: Modify a single existing review by ID
+// Roles: User, Admin
+// Notes: Users can only modify reviews that they wrote
+// TODO: Implement put route for modifying a single review
+// .put('/:id', (req, res, next)
 
-  // Action: Delete a single existing review by ID
-  // Roles: User, Admin
-  // Notes: Users can only modify delete that they wrote
-  // TODO: Implement delete route for deleting a single review
-  // .put('/:id', (req, res, next)
+// Action: Delete a single existing review by ID
+// Roles: User, Admin
+// Notes: Users can only modify delete that they wrote
+// TODO: Implement delete route for deleting a single review
+// .put('/:id', (req, res, next)

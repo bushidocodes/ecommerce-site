@@ -1,10 +1,10 @@
-import User from '../components/User.jsx';
-import { connect } from 'react-redux';
+import User from '../components/User.jsx'
+import { connect } from 'react-redux'
 
 function mapStateToProps(state) {
   return {
     user: state.users.selectedUser,
-    auth: state.auth
+    auth: state.auth,
   }
 }
 
@@ -17,7 +17,5 @@ function mapStateToProps(state) {
 //     }
 //   }
 // }
-
-
 
 export default connect(mapStateToProps)(User)

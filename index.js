@@ -1,6 +1,6 @@
 'use strict'
 
-const {resolve} = require('path')
+const { resolve } = require('path')
 const chalk = require('chalk')
 const pkg = require('./package.json')
 const debug = require('debug')(`${pkg.name}:boot`)
@@ -11,8 +11,8 @@ const debug = require('debug')(`${pkg.name}:boot`)
 //   or ~/.your_app_name.env.json
 //
 // and add it to the environment.
-const env = Object.create(process.env)
-  , secretsFile = resolve(env.HOME, `.${pkg.name}.env`)
+const env = Object.create(process.env),
+  secretsFile = resolve(env.HOME, `.${pkg.name}.env`)
 try {
   Object.assign(env, require(secretsFile))
 } catch (error) {
@@ -21,8 +21,12 @@ try {
 }
 
 module.exports = {
-  get name() { return pkg.name },
-  get isTesting() { return !!global.it },
+  get name() {
+    return pkg.name
+  },
+  get isTesting() {
+    return !!global.it
+  },
   get isProduction() {
     return process.env.NODE_ENV === 'production'
   },

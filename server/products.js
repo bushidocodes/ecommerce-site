@@ -30,7 +30,7 @@ module.exports = require('express')
 
   // Use Param to DRY subsequent routes
   .param('id', function (req, res, next) {
-    Product.findById(req.params.id)
+    Product.findByPk(req.params.id)
       .then(product => {
         if (product) {
           req.product = product

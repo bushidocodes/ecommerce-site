@@ -1,7 +1,7 @@
 const db = require('../db')
 
 const seedUsers = () =>
-  db.Promise.map(
+  Promise.all(
     [
       {
         name: 'Evan',
@@ -27,12 +27,11 @@ const seedUsers = () =>
         password: '1234',
         isAdmin: false,
       },
-    ],
-    user => db.model('users').create(user)
+    ].map(user => db.model('users').create(user))
   )
 
 const seedProducts = () =>
-  db.Promise.map(
+  Promise.all(
     [
       {
         name: 'Chocolate Chip',
@@ -130,12 +129,11 @@ const seedProducts = () =>
         photo: 'images/cookies/lemon-raspberry.jpg',
         categories: ['classic', 'regal', 'award-winning'],
       },
-    ],
-    product => db.model('products').create(product)
+    ].map(product => db.model('products').create(product))
   )
 
 const seedReviews = () =>
-  db.Promise.map(
+  Promise.all(
     [
       {
         title: 'Gross!',
@@ -158,8 +156,7 @@ const seedReviews = () =>
         user_id: 3,
         product_id: 9,
       },
-    ],
-    review => db.model('reviews').create(review)
+    ].map(review => db.model('reviews').create(review))
   )
 
 db.didSync

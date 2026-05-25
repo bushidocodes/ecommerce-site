@@ -2,7 +2,7 @@
 
 import React, { Component } from 'react'
 import Cart from './Cart'
-import { Link } from 'react-router'
+import { Link } from 'react-router-dom'
 
 export default props => {
   let numOfItems = 0

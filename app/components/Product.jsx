@@ -1,7 +1,7 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { Link } from 'react-router'
+import { Link } from 'react-router-dom'
 
 export default ({ cookie, plusItemzToCart }) => (
   <div className="col-xs-18 col-sm-6 col-md-3">

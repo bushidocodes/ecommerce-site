@@ -1,7 +1,7 @@
 'use strict'
 
 import React, { Component } from 'react'
-import { Link, browserHistory } from 'react-router'
+import { Link } from 'react-router-dom'
 
 export default props => {
   let users = props.users.users

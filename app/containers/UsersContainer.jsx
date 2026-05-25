@@ -1,7 +1,8 @@
+import React, { useEffect } from 'react'
 import Users from '../components/Users.jsx'
-import { connect } from 'react-redux'
-import { selectUser } from '../reducers/users'
-import { browserHistory } from 'react-router'
+import { connect, useDispatch } from 'react-redux'
+import { selectUser, receiveUsers } from '../reducers/users'
+import withNavigate from '../utils/withNavigate'
 
 function mapStateToProps(state) {
   return {
@@ -10,13 +11,21 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, ownProps) {
   return {
     selectUser: user => {
       dispatch(selectUser(user))
-      browserHistory.push('/user')
+      ownProps.navigate('/user')
     },
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Users)
+function UsersPage(props) {
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(receiveUsers())
+  }, [dispatch])
+  return <Users {...props} />
+}
+
+export default withNavigate(connect(mapStateToProps, mapDispatchToProps)(UsersPage))

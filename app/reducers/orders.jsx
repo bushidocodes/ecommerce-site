@@ -1,6 +1,5 @@
 import axios from 'axios'
 import { emptyCart } from './cart'
-import { browserHistory } from 'react-router'
 
 // Constants
 const GET_ORDERS = 'GET_ORDERS'
@@ -50,7 +49,7 @@ export function receiveOrders() {
   }
 }
 
-export function submitOrder(cart) {
+export function submitOrder(cart, navigate) {
   ;[
     {
       product: {},
@@ -75,7 +74,7 @@ export function submitOrder(cart) {
       .then(order => {
         alert('Cookies are on the way!')
         dispatch(emptyCart())
-        browserHistory.push('/myOrders')
+        navigate && navigate('/myorders')
       })
       .catch(err => alert(err))
   }

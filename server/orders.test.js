@@ -1,8 +1,9 @@
-const request = require('supertest-as-promised')
+const request = require('supertest')
 const { expect } = require('chai')
 const db = require('../db')
 const User = require('../db/models/user')
 const Order = require('../db/models/order')
+const Product = require('../db/models/product')
 const app = require('./start')
 
 const bobTheAdmin = {
@@ -95,16 +96,26 @@ describe('/api/orders/', () => {
   xdescribe('POST / (as Guest)', () => {})
   describe('POST / (as Non-Admin)', () => {
     const agent = request.agent(app)
-    let user, id
-    before('Create Non-Admin user and Login', () =>
+    let user, product, id
+    before('Create Non-Admin user, product, and Login', () =>
       db.didSync
         .then(() =>
-          User.create({
+          Product.create({
+            name: 'Chocolate Chip',
+            description: 'Classic cookie',
+            price: 1.50,
+            quantity: 100,
+            categories: [],
+          })
+        )
+        .then(_product => {
+          product = _product
+          return User.create({
             name: dallas.name,
             email: dallas.username,
             password: dallas.password,
           })
-        )
+        })
         .then(_user => {
           user = _user
           return agent.post('/api/auth/local/login').send(dallas)
@@ -119,23 +130,23 @@ describe('/api/orders/', () => {
           shippingCarrier: 'UPS',
           trackingNumber: null,
           orderLineItems: {
-            1: { quantity: 10 },
+            [product.id]: { quantity: 10 },
           },
         })
         .expect(200)
         .then(res => {
-          console.log('==================RES: ', res.body)
           id = res.body.id
           expect(res.body.shippingCarrier).to.equal('UPS')
           expect(res.body).to.have.property('id')
           expect(res.body.userId).to.equal(user.id)
         }))
-    after('logoff, destroy posts, and destroy non-admin user', () => {
+    after('logoff, destroy order, product, and non-admin user', () => {
       agent.post('/logout')
-      user.destroy()
-      if (id) {
-        Order.findByPk(id).then(order => order.destroy())
-      }
+      return Promise.all([
+        user.destroy(),
+        product.destroy(),
+        id ? Order.findByPk(id).then(order => order && order.destroy()) : Promise.resolve(),
+      ])
     })
   })
   describe('POST / (as Admin)', () => {

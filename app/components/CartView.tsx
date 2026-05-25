@@ -2,14 +2,17 @@ import React from 'react'
 import Hero from './Hero'
 import CartEmpty from './CartEmpty'
 import CartLineItem from './CartLineItem'
-import type { CartItem } from '../types'
+import type { CartItem, User } from '../types'
 
 interface CartViewProps {
   cart: CartItem[]
+  auth: User | null
   submitOrder: (cart: CartItem[]) => void
+  removeFromCart: (productId: number) => void
+  navigateToLogin: () => void
 }
 
-export default function CartView({ cart, submitOrder }: CartViewProps) {
+export default function CartView({ cart, auth, submitOrder, removeFromCart, navigateToLogin }: CartViewProps) {
   return (
     <div id="cart-view" className="container">
       <Hero />
@@ -27,6 +30,7 @@ export default function CartView({ cart, submitOrder }: CartViewProps) {
                 photo={item.product.photo}
                 description={item.product.description}
                 price={item.product.price}
+                onRemove={() => removeFromCart(item.product.id)}
               />
             ))
           )}
@@ -37,11 +41,15 @@ export default function CartView({ cart, submitOrder }: CartViewProps) {
           <button
             onClick={evt => {
               evt.preventDefault()
-              submitOrder(cart)
+              if (!auth) {
+                navigateToLogin()
+              } else {
+                submitOrder(cart)
+              }
             }}
             className="btn btn-success btn-lg"
           >
-            Checkout
+            {auth ? 'Checkout' : 'Log in to checkout'}
           </button>
         </div>
       ) : (

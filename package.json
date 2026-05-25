@@ -37,7 +37,7 @@
   "homepage": "https://github.com/spmcbride1201/cookie-monsters#readme",
   "dependencies": {
     "@reduxjs/toolkit": "^2.8.2",
-    "axios": "^0.15.2",
+    "axios": "^1.16.1",
     "bcrypt": "^5.1.1",
     "bluebird": "^3.4.7",
     "body-parser": "^1.15.2",

@@ -1,51 +1,27 @@
+import { createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
+import { wipeLocalState } from './auth'
 
-// Constants
-const GET_USERS = 'GET_USERS'
-const SELECT_USER = 'SELECT_USER'
+const initialState = { users: [], selectedUser: {} }
 
-// Reducers
-export const initialUsersState = {
-  users: [],
-  selectedUser: {},
-}
-
-const reducer = (state = initialUsersState, action) => {
-  const newState = Object.assign({}, state)
-
-  switch (action.type) {
-    case GET_USERS:
-      newState.users = action.users
-      break
-    case SELECT_USER:
-      newState.selectedUser = action.selectedUser
-      break
-    default:
-      return state
-  }
-  return newState
-}
-
-// Actions
-export const getUsers = users => ({
-  type: GET_USERS,
-  users,
+const usersSlice = createSlice({
+  name: 'users',
+  initialState,
+  reducers: {
+    setUsers: (state, action) => { state.users = action.payload },
+    selectUser: (state, action) => { state.selectedUser = action.payload },
+  },
+  extraReducers: builder => {
+    builder.addCase(wipeLocalState, () => initialState)
+  },
 })
 
-export const selectUser = selectedUser => ({
-  type: SELECT_USER,
-  selectedUser,
-})
+export const { selectUser } = usersSlice.actions
 
-export function receiveUsers() {
-  console.log('Receiving Users')
-  // Return a thunk
-  return function (dispatch) {
-    axios
-      .get('/api/users/')
-      .then(res => dispatch(getUsers(res.data)))
-      .catch(err => alert(err))
-  }
-}
+export const receiveUsers = () => dispatch =>
+  axios
+    .get('/api/users/')
+    .then(res => dispatch(usersSlice.actions.setUsers(res.data)))
+    .catch(err => console.error(err))
 
-export default reducer
+export default usersSlice.reducer

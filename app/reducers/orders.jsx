@@ -1,83 +1,39 @@
+import { createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 import { emptyCart } from './cart'
 
-// Constants
-const GET_ORDERS = 'GET_ORDERS'
-const SELECT_ORDER = 'SELECT_ORDERS'
-
-// Reducers
-export const initialOrdersState = {
-  orders: [],
-  selectedOrder: {},
-}
-
-const reducer = (state = initialOrdersState, action) => {
-  const newState = Object.assign({}, state)
-
-  switch (action.type) {
-    case GET_ORDERS:
-      newState.orders = action.orders
-      break
-    case SELECT_ORDER:
-      newState.selectedOrder = action.selectedOrder
-      break
-    default:
-      return state
-  }
-  return newState
-}
-
-// Actions
-export const getOrders = orders => ({
-  type: GET_ORDERS,
-  orders,
+const ordersSlice = createSlice({
+  name: 'orders',
+  initialState: { orders: [], selectedOrder: {} },
+  reducers: {
+    setOrders: (state, action) => { state.orders = action.payload },
+    selectOrder: (state, action) => { state.selectedOrder = action.payload },
+  },
 })
 
-export const selectOrder = selectedOrder => ({
-  type: SELECT_ORDER,
-  selectedOrder,
-})
+export const { selectOrder } = ordersSlice.actions
 
-export function receiveOrders() {
-  console.log('Receiving Orders')
-  // Return a thunk
-  return function (dispatch) {
-    axios
-      .get('/api/orders/')
-      .then(res => dispatch(getOrders(res.data)))
-      .catch(err => alert(err))
-  }
-}
+export const receiveOrders = () => dispatch =>
+  axios
+    .get('/api/orders/')
+    .then(res => dispatch(ordersSlice.actions.setOrders(res.data)))
+    .catch(err => console.error(err))
 
 export function submitOrder(cart, navigate) {
-  ;[
-    {
-      product: {},
-      quantity: 1,
-    },
-  ]
-
-  let orderLineItems = {}
+  const orderLineItems = {}
   cart.forEach(item => {
-    let itemObj = { quantity: item.quantity }
-    orderLineItems[item.product.id] = itemObj
+    orderLineItems[item.product.id] = { quantity: item.quantity }
   })
-  let order = {
-    shippingCarrier: 'UPS',
-    orderLineItems: orderLineItems,
-  }
-  let data = JSON.stringify(order)
-  console.log(data)
-  return function (dispatch) {
+  const order = { shippingCarrier: 'UPS', orderLineItems }
+  return dispatch =>
     axios
       .post('/api/orders/', order)
-      .then(order => {
+      .then(() => {
         alert('Cookies are on the way!')
         dispatch(emptyCart())
         navigate && navigate('/myorders')
       })
       .catch(err => alert(err))
-  }
 }
 
-export default reducer
+export default ordersSlice.reducer

@@ -1,22 +1,12 @@
-import axios from 'axios'
+import { createSlice } from '@reduxjs/toolkit'
 
-const reducer = (state = [], action) => {
-  let newState = Object.assign({}, state)
-
-  switch (action.type) {
-    case RECEIVE_PRODUCTS:
-      newState = action.products
-      break
-    default:
-      return state
-  }
-  return newState
-}
-
-const RECEIVE_PRODUCTS = 'RECEIVE_PRODUCTS'
-export const receiveProducts = products => ({
-  type: RECEIVE_PRODUCTS,
-  products,
+const productsSlice = createSlice({
+  name: 'products',
+  initialState: [],
+  reducers: {
+    receiveProducts: (state, action) => action.payload,
+  },
 })
 
-export default reducer
+export const { receiveProducts } = productsSlice.actions
+export default productsSlice.reducer

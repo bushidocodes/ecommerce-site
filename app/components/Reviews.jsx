@@ -14,7 +14,7 @@ export default () => (
     </div>
 
     <div id="reviews" className="row">
-      <div className="col-xs-12 col-sm-6 col-md-4">
+      <div className="col-12 col-sm-6 col-md-4">
         <div className="cookieContainer">
           <img
             className="cookieImage"
@@ -22,7 +22,7 @@ export default () => (
           />
         </div>
       </div>
-      <div className="col-xs-12 col-sm-6 col-md-8">
+      <div className="col-12 col-sm-6 col-md-8">
         {/* REVIEW PRODUCT NAME */}
         <h3 id="reviewTitle">Chocolate Chip Cookie</h3>
         {/* Loop on this for product reviews */}

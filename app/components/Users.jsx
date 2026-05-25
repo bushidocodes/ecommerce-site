@@ -9,7 +9,7 @@ export default props => {
   let selectUser = props.selectUser
   return (
     <div className="container">
-      <div className="col-xs-12 col-sm-4">
+      <div className="col-12 col-sm-4">
         <h2>All the Cookie Monsters</h2>
         <div id="users" className="list-group">
           {users.map((user, index) => (

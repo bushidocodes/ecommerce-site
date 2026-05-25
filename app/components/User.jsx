@@ -10,9 +10,9 @@ export default props => {
   }
   return (
     <div className="container">
-      <div className="col-xs-12 col-sm-4">
+      <div className="col-12 col-sm-4">
         <h2>{user.name}</h2>
-        <div className="form-group">
+        <div className="mb-3">
           <label htmlFor="name">Name</label>
           <input
             type="text"
@@ -22,7 +22,7 @@ export default props => {
             value={user.name}
           />
         </div>
-        <div className="form-group">
+        <div className="mb-3">
           <label htmlFor="email">Email address</label>
           <input
             type="email"
@@ -36,7 +36,7 @@ export default props => {
           </small>
         </div>
         <h4>Billing Address</h4>
-        <div className="form-group">
+        <div className="mb-3">
           <label htmlFor="billingAddress">Address</label>
           <input
             type="text"
@@ -46,7 +46,7 @@ export default props => {
             value={user.billingAddress}
           />
         </div>
-        <div className="form-group">
+        <div className="mb-3">
           <label htmlFor="billingCity">City</label>
           <input
             type="text"
@@ -56,7 +56,7 @@ export default props => {
             value={user.billingCity}
           />
         </div>
-        <div className="form-group">
+        <div className="mb-3">
           <label htmlFor="billingState">State</label>
           <input
             type="text"
@@ -66,7 +66,7 @@ export default props => {
             value={user.billingState}
           />
         </div>
-        <div className="form-group">
+        <div className="mb-3">
           <label htmlFor="billingZip">Zip Code</label>
           <input
             type="text"
@@ -77,7 +77,7 @@ export default props => {
           />
         </div>
         <h4>Shipping Address</h4>
-        <div className="form-group">
+        <div className="mb-3">
           <label htmlFor="shippingAddress">Address</label>
           <input
             type="text"
@@ -87,7 +87,7 @@ export default props => {
             value={user.shippingAddress}
           />
         </div>
-        <div className="form-group">
+        <div className="mb-3">
           <label htmlFor="shippingCity">City</label>
           <input
             type="text"
@@ -97,7 +97,7 @@ export default props => {
             value={user.shippingCity}
           />
         </div>
-        <div className="form-group">
+        <div className="mb-3">
           <label htmlFor="shippingState">State</label>
           <input
             type="text"
@@ -107,7 +107,7 @@ export default props => {
             value={user.shippingState}
           />
         </div>
-        <div className="form-group">
+        <div className="mb-3">
           <label htmlFor="shippingZip">Zip Code</label>
           <input
             type="text"
@@ -118,7 +118,7 @@ export default props => {
           />
         </div>
         {props.auth && props.auth.isAdmin ? (
-          <fieldset className="form-group">
+          <fieldset className="mb-3">
             <legend>
               {user.name}{' '}
               {user.isAdmin
@@ -158,7 +158,7 @@ export default props => {
         <button type="submit" className="btn btn-primary">
           Submit
         </button>
-        <Link to="/users" className="btn btn-default cancel-btn">
+        <Link to="/users" className="btn btn-secondary cancel-btn">
           Cancel
         </Link>
       </div>

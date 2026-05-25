@@ -12,7 +12,7 @@ export default props => {
     total += cartLineItem.product.price * cartLineItem.quantity
   })
   return (
-    <div className="pull-right">
+    <div className="float-end">
       <p id="cartPreviewText">
         <i id="cartPreviewIcon" className="fa fa-shopping-cart"></i>
         <span> {numOfItems}</span> items totaling{' '}

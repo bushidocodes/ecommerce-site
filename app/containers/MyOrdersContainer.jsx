@@ -1,7 +1,7 @@
-import React, { Component } from 'react'
-import { connect } from 'react-redux'
+import React, { useEffect } from 'react'
+import { connect, useDispatch } from 'react-redux'
 import MyOrders from '../components/MyOrders'
-import { selectOrder } from '../reducers/orders'
+import { selectOrder, receiveOrders } from '../reducers/orders'
 
 function mapStateToProps(state) {
   return {
@@ -13,9 +13,16 @@ function mapDispatchToProps(dispatch) {
   return {
     selectOrder: order => {
       dispatch(selectOrder(order))
-      // browserHistory.push('/user');
     },
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(MyOrders)
+function MyOrdersPage(props) {
+  const dispatch = useDispatch()
+  useEffect(() => {
+    dispatch(receiveOrders())
+  }, [dispatch])
+  return <MyOrders {...props} />
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(MyOrdersPage)

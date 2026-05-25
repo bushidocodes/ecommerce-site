@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import Nav from '../components/Nav'
 import { selectUser } from '../reducers/users'
 import { logout } from '../reducers/auth'
-import { browserHistory } from 'react-router'
+import withNavigate from '../utils/withNavigate'
 
 function mapStateToProps(state) {
   return {
@@ -11,17 +11,17 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, ownProps) {
   return {
     logout: () => {
       dispatch(logout())
-      browserHistory.push('/')
+      ownProps.navigate('/')
     },
     selectUser: user => {
       dispatch(selectUser(user))
-      browserHistory.push('/user')
+      ownProps.navigate('/user')
     },
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Nav)
+export default withNavigate(connect(mapStateToProps, mapDispatchToProps)(Nav))

@@ -1,7 +1,8 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 import CartView from '../components/CartView'
 import { submitOrder } from '../reducers/orders.jsx'
+import withNavigate from '../utils/withNavigate'
 
 function mapStateToProps(state) {
   return {
@@ -9,12 +10,12 @@ function mapStateToProps(state) {
   }
 }
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, ownProps) {
   return {
     submitOrder: cart => {
-      dispatch(submitOrder(cart))
+      dispatch(submitOrder(cart, ownProps.navigate))
     },
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(CartView)
+export default withNavigate(connect(mapStateToProps, mapDispatchToProps)(CartView))

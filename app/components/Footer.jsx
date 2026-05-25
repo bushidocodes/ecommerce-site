@@ -1,32 +1,27 @@
 'use strict'
 
-import React, { Component } from 'react'
-import { Link } from 'react-router'
+import React from 'react'
 
 export default () => (
   <div className="footer">
     <div className="container">
       <p className="text-muted">
         Created by{' '}
-        <Link to="http://spmcb.com/" target="_blank" rel="noopener noreferrer">
+        <a href="http://spmcb.com/" target="_blank" rel="noopener noreferrer">
           Sean
-        </Link>
+        </a>
         ,{' '}
-        <Link
-          to="https://myspace.com/evandigiambattista"
+        <a
+          href="https://myspace.com/evandigiambattista"
           target="_blank"
           rel="noopener noreferrer"
         >
           Evan
-        </Link>
+        </a>
         , and{' '}
-        <Link
-          to="http://rachelbird.com/"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
+        <a href="http://rachelbird.com/" target="_blank" rel="noopener noreferrer">
           Rachel
-        </Link>
+        </a>
         : the Cookie Monsters of Fullstack Academy{' '}
         <i className="fa fa-graduation-cap"></i>
       </p>

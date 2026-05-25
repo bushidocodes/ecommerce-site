@@ -1,14 +1,14 @@
 import Login from '../components/Login.jsx'
 import { login } from '../reducers/auth'
 import { connect } from 'react-redux'
-import { browserHistory } from 'react-router'
+import withNavigate from '../utils/withNavigate'
 
-function mapDispatchToProps(dispatch) {
+function mapDispatchToProps(dispatch, ownProps) {
   return {
     login: (username, password) => {
-      dispatch(login(username, password))
-      browserHistory.push('/')
+      dispatch(login(username, password)).then(() => ownProps.navigate('/products'))
     },
   }
 }
-export default connect(null, mapDispatchToProps)(Login)
+
+export default withNavigate(connect(null, mapDispatchToProps)(Login))

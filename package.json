@@ -15,7 +15,11 @@
     "start[prod]": "check-node-version --node '>= 10.15.3' && node server/start.js",
     "start": "check-node-version --node '>= 10.15.3' && npm run start[prod]",
     "seed": "node db/seed.js",
-    "postinstall": "npm run build && node db/seed.js"
+    "postinstall": "npm run build && node db/seed.js",
+    "lint": "eslint app/ server/ db/ index.js",
+    "lint:fix": "eslint --fix app/ server/ db/ index.js",
+    "format": "prettier --write app/ server/ db/ index.js",
+    "format:check": "prettier --check app/ server/ db/ index.js"
   },
   "repository": {
     "type": "git",
@@ -73,7 +77,11 @@
     "babel-register": "^6.18.0",
     "chai": "^3.5.0",
     "debug": "^2.6.0",
+    "eslint": "^8.57.1",
+    "eslint-config-prettier": "^8.10.2",
+    "eslint-plugin-react": "^7.37.5",
     "mocha": "^3.1.2",
+    "prettier": "^2.8.8",
     "react-addons-test-utils": "^15.4.2",
     "supertest": "^2.0.1",
     "supertest-as-promised": "^4.0.1",

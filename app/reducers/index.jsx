@@ -10,14 +10,14 @@ const appReducer = combineReducers({
   products: require('./products').default,
   cart: require('./cart').default,
   users: require('./users').default,
-  orders: require('./orders').default
+  orders: require('./orders').default,
 })
 
 const rootReducer = (state, action) => {
   if (action.type === 'WIPELOCALSTATE') {
-    localStorage.clear();
-    state.cart = [];
-    state.users = initialUsersState;
+    localStorage.clear()
+    state.cart = []
+    state.users = initialUsersState
   }
   return appReducer(state, action)
 }

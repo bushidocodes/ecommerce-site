@@ -1,9 +1,9 @@
 'use strict'
 
-const Order = require('./order.js');
-const Product = require('./product.js');
-const Sequelize = require('sequelize');
-const db = require('../../db');
+const Order = require('./order.js')
+const Product = require('./product.js')
+const Sequelize = require('sequelize')
+const db = require('../../db')
 
 // An OrderLineItem is effectively a join table with extra attributes
 
@@ -15,28 +15,31 @@ const db = require('../../db');
 //   price: selectedProduct.price
 // })
 
-const OrderLineItem = db.define('orderLineItems', {
-  quantity: {
-    type: Sequelize.INTEGER,
-    allowNull: false,
-    validate: {
-      notEmpty: true
-    }
+const OrderLineItem = db.define(
+  'orderLineItems',
+  {
+    quantity: {
+      type: Sequelize.INTEGER,
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
+    price: {
+      type: Sequelize.DECIMAL(16, 2),
+      allowNull: false,
+      validate: {
+        notEmpty: true,
+      },
+    },
   },
-  price: {
-    type: Sequelize.DECIMAL(16, 2),
-    allowNull: false,
-    validate: {
-      notEmpty: true
-    }
-  }
-}, {
+  {
     getterMethods: {
       subtotal: function () {
-        return this.quantity * this.price;
-      }
-    }
+        return this.quantity * this.price
+      },
+    },
   }
-);
+)
 
 module.exports = OrderLineItem

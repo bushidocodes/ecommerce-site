@@ -21,6 +21,11 @@ const cartSlice = createSlice({
         return { payload: { product, quantity } }
       },
     },
+    removeFromCart(state, action: PayloadAction<number>) {
+      const next = state.filter(item => item.product.id !== action.payload)
+      localStorage.setItem('cart', JSON.stringify(next))
+      return next
+    },
     emptyCart(): CartItem[] {
       localStorage.removeItem('cart')
       return []
@@ -34,5 +39,5 @@ const cartSlice = createSlice({
   },
 })
 
-export const { addToCart, emptyCart } = cartSlice.actions
+export const { addToCart, removeFromCart, emptyCart } = cartSlice.actions
 export default cartSlice.reducer

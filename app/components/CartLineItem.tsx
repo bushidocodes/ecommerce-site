@@ -7,9 +7,10 @@ interface CartLineItemProps {
   photo: string
   description: string
   price: number
+  onRemove: () => void
 }
 
-export default function CartLineItem({ name, quantity, photo, description, price }: CartLineItemProps) {
+export default function CartLineItem({ name, quantity, photo, description, price, onRemove }: CartLineItemProps) {
   return (
     <div id="cart-line-item" className="container">
       <div className="card border-success">
@@ -19,7 +20,11 @@ export default function CartLineItem({ name, quantity, photo, description, price
               <h3 className="card-title text-start">{name}</h3>
             </div>
             <div className="col-sm-2 col-3 text-end">
-              <button id="remove-from-cart" className="btn btn-sm btn-danger">
+              <button
+                id="remove-from-cart"
+                className="btn btn-sm btn-danger"
+                onClick={evt => { evt.preventDefault(); onRemove() }}
+              >
                 Remove
               </button>
             </div>

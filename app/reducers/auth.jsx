@@ -1,28 +1,23 @@
+import { createSlice, createAction } from '@reduxjs/toolkit'
 import axios from 'axios'
 
-const reducer = (state = null, action) => {
-  switch (action.type) {
-    case AUTHENTICATED:
-      return action.user
-  }
-  return state
-}
+export const wipeLocalState = createAction('auth/wipeLocalState')
 
-const AUTHENTICATED = 'AUTHENTICATED'
-export const authenticated = user => ({
-  type: AUTHENTICATED,
-  user,
+const authSlice = createSlice({
+  name: 'auth',
+  initialState: null,
+  reducers: {
+    authenticated: (state, action) => action.payload,
+  },
 })
 
-// wipeLocalState is an action creator that dispatches an action that the rrot reducer uses as a hook
-// to know when to clear the cart. The idea is that a cart should persist in localStorage until a
-// user logs out of the site. This theoretically could be used with server site persistance of carts for
-// logged in users in the future.
+export const { authenticated } = authSlice.actions
 
-const WIPELOCALSTATE = 'WIPELOCALSTATE'
-export const wipeLocalState = () => ({
-  type: WIPELOCALSTATE,
-})
+export const whoami = () => dispatch =>
+  axios
+    .get('/api/auth/whoami')
+    .then(response => dispatch(authenticated(response.data)))
+    .catch(() => dispatch(authenticated(null)))
 
 export const login = (username, password) => dispatch =>
   axios
@@ -36,27 +31,10 @@ export const signup = (username, password) => dispatch =>
     .then(() => dispatch(whoami()))
     .catch(() => dispatch(whoami()))
 
-export const logout = () => dispatch => {
-  console.log('dispatch: ', dispatch)
+export const logout = () => dispatch =>
   axios
     .post('/api/auth/logout')
-    .then(() => {
-      dispatch(whoami())
-      dispatch(wipeLocalState())
-    })
-    .catch(() => {
-      dispatch(whoami())
-      dispatch(wipeLocalState())
-    })
-}
+    .then(() => { dispatch(whoami()); dispatch(wipeLocalState()) })
+    .catch(() => { dispatch(whoami()); dispatch(wipeLocalState()) })
 
-export const whoami = () => dispatch =>
-  axios
-    .get('/api/auth/whoami')
-    .then(response => {
-      const user = response.data
-      dispatch(authenticated(user))
-    })
-    .catch(failed => dispatch(authenticated(null)))
-
-export default reducer
+export default authSlice.reducer

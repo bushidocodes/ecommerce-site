@@ -126,12 +126,16 @@ module.exports = require('express')
           })
           .then(products => {
             if (products) {
-              products.forEach(product =>
-                order.addProduct(product, {
-                  through: {
-                    quantity: orderLineItems[product.id].quantity,
-                    price: product.price,
-                  },
+              return Promise.all(
+                products.map(product => {
+                  const qty = orderLineItems[product.id].quantity
+                  return order
+                    .addProduct(product, {
+                      through: { quantity: qty, price: product.price },
+                    })
+                    .then(() =>
+                      product.decrement('quantity', { by: qty })
+                    )
                 })
               )
             }
@@ -168,14 +172,16 @@ module.exports = require('express')
         .then(products => {
           if (products) {
             return Promise.all(
-              products.map(product =>
-                order.addProduct(product, {
-                  through: {
-                    quantity: orderLineItems[product.id].quantity,
-                    price: product.price,
-                  },
-                })
-              )
+              products.map(product => {
+                const qty = orderLineItems[product.id].quantity
+                return order
+                  .addProduct(product, {
+                    through: { quantity: qty, price: product.price },
+                  })
+                  .then(() =>
+                    product.decrement('quantity', { by: qty })
+                  )
+              })
             )
           }
         })

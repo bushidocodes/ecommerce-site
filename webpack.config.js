@@ -1,28 +1,25 @@
-'use strict';
+'use strict'
 
-var webpack = require('webpack');
+const path = require('path')
 
 module.exports = {
+  mode: 'development',
   entry: './app/main.jsx',
   output: {
-    path: __dirname,
-    filename: './public/bundle.js'
+    path: path.join(__dirname, 'public'),
+    filename: 'bundle.js',
   },
-  context: __dirname,
   devtool: 'source-map',
   resolve: {
-    extensions: ['', '.js', '.jsx']
+    extensions: ['.js', '.jsx'],
   },
   module: {
-    loaders: [
+    rules: [
       {
-        test: /jsx?$/,
-        exclude: /(node_modules|bower_components)/,
-        loader: 'babel',
-        query: {
-          presets: ['react', 'es2015', 'stage-2']
-        }
-      }
-    ]
-  }
-};
+        test: /\.jsx?$/,
+        exclude: /node_modules/,
+        use: 'babel-loader',
+      },
+    ],
+  },
+}

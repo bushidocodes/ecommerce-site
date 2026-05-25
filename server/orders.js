@@ -91,20 +91,22 @@ module.exports = require('express')
       // ...and the admin specifies a userID for whom to create an order
       if (req.param && req.param.userId) {
         console.log('User ', req.param.userId, ' specified as param')
-        User.findById(req.param.userId)
+        User.findByPk(req.param.userId)
           .then(user => user.createOrder(req.body)) // filter out only the Order attributes???
           .then(_order => {
             order = _order
             return Promise.all(
-              productIds.map(productId => Product.findById(productId))
+              productIds.map(productId => Product.findByPk(productId))
             )
           })
           .then(products => {
             if (products) {
               products.forEach(product =>
                 order.addProduct(product, {
-                  quantity: orderLineItems[product.id].quantity,
-                  price: product.price,
+                  through: {
+                    quantity: orderLineItems[product.id].quantity,
+                    price: product.price,
+                  },
                 })
               )
             }
@@ -119,21 +121,23 @@ module.exports = require('express')
           .then(_order => {
             order = _order
             return Promise.all(
-              productIds.map(productId => Product.findById(productId))
+              productIds.map(productId => Product.findByPk(productId))
             )
           })
           .then(products => {
             if (products) {
               products.forEach(product =>
                 order.addProduct(product, {
-                  quantity: orderLineItems[product.id].quantity,
-                  price: product.price,
+                  through: {
+                    quantity: orderLineItems[product.id].quantity,
+                    price: product.price,
+                  },
                 })
               )
             }
           })
           .then(() =>
-            Order.findById(order.id, {
+            Order.findByPk(order.id, {
               include: [
                 {
                   model: Product,
@@ -158,7 +162,7 @@ module.exports = require('express')
         .then(_order => {
           order = _order
           return Promise.all(
-            productIds.map(productId => Product.findById(productId))
+            productIds.map(productId => Product.findByPk(productId))
           )
         })
         .then(products => {
@@ -166,15 +170,17 @@ module.exports = require('express')
             return Promise.all(
               products.map(product =>
                 order.addProduct(product, {
-                  quantity: orderLineItems[product.id].quantity,
-                  price: product.price,
+                  through: {
+                    quantity: orderLineItems[product.id].quantity,
+                    price: product.price,
+                  },
                 })
               )
             )
           }
         })
         .then(() =>
-          Order.findById(order.id, {
+          Order.findByPk(order.id, {
             include: [
               {
                 model: Product,
@@ -198,7 +204,7 @@ module.exports = require('express')
         .then(_order => {
           order = _order
           return Promise.all(
-            productIds.map(productId => Product.findById(productId))
+            productIds.map(productId => Product.findByPk(productId))
           )
         })
         .then(products => {
@@ -249,7 +255,7 @@ module.exports = require('express')
   // Notes: Perhaps a user should be able to view this for their orders...
   .get('/:id', mustBeLoggedIn, (req, res, next) => {
     if (req.user.isAdmin) {
-      return Order.findById(req.params.id, {
+      return Order.findByPk(req.params.id, {
         include: [
           {
             model: Product,
@@ -271,7 +277,7 @@ module.exports = require('express')
   // Roles: Admin.
   .put('/:id', mustBeLoggedIn, (req, res, next) => {
     if (req.user.isAdmin) {
-      return Order.findById(req.params.id)
+      return Order.findByPk(req.params.id)
         .then(order => order.update(req.body))
         .then(order => res.status(200).json(order))
         .catch(next)
@@ -284,7 +290,7 @@ module.exports = require('express')
   // Roles: Admin.
   .delete('/:id/', mustBeLoggedIn, (req, res, next) => {
     if (req.user.isAdmin) {
-      return Order.findById(req.params.id)
+      return Order.findByPk(req.params.id)
         .then(order => order.destroy())
         .then(res.sendStatus(200))
         .catch(next)
@@ -305,18 +311,20 @@ module.exports = require('express')
       let orderLineItems = req.body.orderLineItems
       let productIds = Object.keys(orderLineItems)
       let order
-      Order.findById(req.params.id)
+      Order.findByPk(req.params.id)
         .then(_order => {
           order = _order
           return Promise.all(
-            productIds.map(productId => Product.findById(productId))
+            productIds.map(productId => Product.findByPk(productId))
           )
         })
         .then(products => {
           products.forEach(product =>
             order.addProduct(product, {
-              quantity: orderLineItems[product.id].quantity,
-              price: product.price,
+              through: {
+                quantity: orderLineItems[product.id].quantity,
+                price: product.price,
+              },
             })
           )
         })
@@ -331,7 +339,7 @@ module.exports = require('express')
   // Roles: Admin.
   .delete('/:orderId/products/:productId', mustBeLoggedIn, (req, res, next) => {
     if (req.user.isAdmin) {
-      return Order.findById(req.params.orderId)
+      return Order.findByPk(req.params.orderId)
         .then(order => order.removeProduct(req.params.productId))
         .then(res.sendStatus(200))
         .catch(next)

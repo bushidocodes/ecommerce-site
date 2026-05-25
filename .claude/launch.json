@@ -3,7 +3,7 @@
   "configurations": [
     {
       "name": "Express Server",
-      "runtimeExecutable": "C:\\Users\\sean\\AppData\\Local\\nvm\\v12.22.12\\node.exe",
+      "runtimeExecutable": "node",
       "runtimeArgs": ["start-preview.js"],
       "port": 1337,
       "autoPort": true

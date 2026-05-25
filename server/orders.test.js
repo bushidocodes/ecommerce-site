@@ -134,7 +134,7 @@ describe('/api/orders/', () => {
       agent.post('/logout')
       user.destroy()
       if (id) {
-        Order.findById(id).then(order => order.destroy())
+        Order.findByPk(id).then(order => order.destroy())
       }
     })
   })
@@ -171,7 +171,7 @@ describe('/api/orders/', () => {
     after('logoff, destroy posts, and destroy admin user', () => {
       agent.post('/logout')
       user.destroy()
-      Order.findById(id).then(order => order.destroy())
+      Order.findByPk(id).then(order => order.destroy())
     })
   })
 })

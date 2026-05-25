@@ -82,7 +82,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser((id, done) => {
   debug('will deserialize user.id=%d', id)
-  User.findById(id)
+  User.findByPk(id)
     .then(user => {
       debug('deserialize did ok user.id=%d', user.id)
       done(null, user)

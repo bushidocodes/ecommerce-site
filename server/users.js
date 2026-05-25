@@ -38,7 +38,7 @@ module.exports = require('express')
   // Notes: A User should only be able to see their own stuff
   .param('id', mustBeLoggedIn, function (req, res, next) {
     //selfOnlyOrAdmin,
-    User.findById(req.params.id)
+    User.findByPk(req.params.id)
       .then(user => {
         if (user) {
           req.foundUser = user //DO NOT KLOBBER PASSPORT BY USING REQ.USER!!!!

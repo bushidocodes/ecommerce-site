@@ -27,7 +27,7 @@ module.exports = require('express')
   // Action: View a single review by ID
   // Roles: Guest, User, Admin
   .get('/:id', (req, res, next) =>
-    Review.findById(req.params.id)
+    Review.findByPk(req.params.id)
       .then(review => res.json(review))
       .catch(next)
   )

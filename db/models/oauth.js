@@ -3,6 +3,7 @@
 const debug = require('debug')('oauth')
 const Sequelize = require('sequelize')
 const db = require('../../db')
+const Promise = require('bluebird')
 
 const OAuth = db.define(
   'oauths',
@@ -41,7 +42,7 @@ OAuth.V2 = (accessToken, refreshToken, profile, done) =>
         token.uid
       )
       oauth.profileJson = profile
-      return db.Promise.props({
+      return Promise.props({
         oauth,
         user: token.getUser(),
         _saveProfile: oauth.save(),
@@ -53,7 +54,7 @@ OAuth.V2 = (accessToken, refreshToken, profile, done) =>
         User.create({
           name: profile.displayName,
         }).then(user =>
-          db.Promise.props({
+          Promise.props({
             user,
             _setOauthUser: oauth.setUser(user),
           })

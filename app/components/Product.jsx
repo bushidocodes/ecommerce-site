@@ -6,12 +6,12 @@ import { Link } from 'react-router-dom'
 export default ({ cookie, plusItemzToCart }) => {
   const quantityRef = useRef(null)
   return (
-    <div className="col-xs-18 col-sm-6 col-md-3">
-      <div className="thumbnail">
+    <div className="col-12 col-sm-6 col-md-3">
+      <div className="card">
         <div className="cookieContainer">
           <img className="cookieImage" src={cookie.photo} />
         </div>
-        <div className="caption">
+        <div className="card-body">
           {/* Handles case of Seinfeld's race relations cookie discussion */}
           <h4>
             {cookie.name === 'Black & White Cookie' ? (

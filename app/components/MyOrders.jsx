@@ -9,7 +9,7 @@ export default props => {
       {/* Handle if no orders */}
       {props.orders.length === 0 ? (
         <div className="container">
-          <div id="no-orders" className="jumbotron center">
+          <div id="no-orders" className="p-5 mb-4 bg-light rounded-3 text-center">
             <div>
               <p>
                 You haven't placed any orders yet. <br />

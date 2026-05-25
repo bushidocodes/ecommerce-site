@@ -13,7 +13,7 @@ export default props => {
       </div>
       <div id="orderDetail">
         <p className="lead">Cookie Order {props.order.id}</p>
-        <table className="table table-responsive table-borderless">
+        <div className="table-responsive"><table className="table table-borderless">
           <thead>
             <tr>
               <th>Quantity</th>
@@ -24,14 +24,14 @@ export default props => {
           <tfoot>
             <tr>
               <td></td>
-              <td className="pull-right orderTableFooterTitles">
+              <td className="float-end orderTableFooterTitles">
                 Flat Shipping Rate
               </td>
               <td>${props.order.shippingRate}</td>
             </tr>
             <tr>
               <td></td>
-              <td className="pull-right orderTableFooterTitles">Total</td>
+              <td className="float-end orderTableFooterTitles">Total</td>
               <td>${props.order.total}</td>
             </tr>
             <tr>
@@ -49,7 +49,7 @@ export default props => {
               </tr>
             ))}
           </tbody>
-        </table>
+        </table></div>
         {/* This should appear after order is submitted */}
         <div className="lead">
           Cookies shipped by{' '}

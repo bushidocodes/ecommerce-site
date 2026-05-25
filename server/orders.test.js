@@ -128,7 +128,7 @@ describe('/api/orders/', () => {
           id = res.body.id
           expect(res.body.shippingCarrier).to.equal('UPS')
           expect(res.body).to.have.property('id')
-          expect(res.body.user_id).to.equal(user.id)
+          expect(res.body.userId).to.equal(user.id)
         }))
     after('logoff, destroy posts, and destroy non-admin user', () => {
       agent.post('/logout')
@@ -165,8 +165,8 @@ describe('/api/orders/', () => {
           id = res.body.id
           expect(res.body.shippingCarrier).to.equal('USPS')
           expect(res.body).to.have.property('id')
-          expect(res.body).to.have.property('user_id')
-          expect(res.body.user_id).to.be.null
+          expect(res.body).to.have.property('userId')
+          expect(res.body.userId).to.be.null
         }))
     after('logoff, destroy posts, and destroy admin user', () => {
       agent.post('/logout')

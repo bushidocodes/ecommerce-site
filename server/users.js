@@ -23,12 +23,15 @@ module.exports = require('express')
   })
 
   // Action: Create a new user
-  // Roles: Guest, Admin
-  // Notes: A signed in user should not be able to create a new user
-  // TODO: Harden this route.
+  // Roles: Guest only (a signed-in user should not register again)
+  // Hardened: only whitelisted fields are passed to create; isAdmin cannot be
+  // set via the public registration endpoint.
   .post('/', (req, res, next) => {
-    //selfOnlyOrAdmin,
-    return User.create(req.body)
+    if (req.user) {
+      return res.status(403).send('Already logged in')
+    }
+    const { name, email, password } = req.body
+    return User.create({ name, email, password })
       .then(user => res.status(201).json(user))
       .catch(next)
   })

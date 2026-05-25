@@ -1,6 +1,8 @@
 'use strict'
 
 import React from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faGraduationCap } from '@fortawesome/free-solid-svg-icons'
 
 export default () => (
   <div className="footer">
@@ -23,7 +25,7 @@ export default () => (
           Rachel
         </a>
         : the Cookie Monsters of Fullstack Academy{' '}
-        <i className="fa fa-graduation-cap"></i>
+        <FontAwesomeIcon icon={faGraduationCap} />
       </p>
     </div>
   </div>

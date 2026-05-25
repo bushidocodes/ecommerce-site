@@ -1,6 +1,8 @@
 'use strict'
 
-import React, { Component } from 'react'
+import React from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faStar } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom'
 
 export default () => (
@@ -29,7 +31,7 @@ export default () => (
         {/* STARS - REVIEW TITLE: */}
         {/* Loop over stars to display by rating */}
         <h4>
-          <i className="fa fa-star fa-lg reviewStar" aria-hidden="true"></i>{' '}
+          <FontAwesomeIcon icon={faStar} size="lg" className="reviewStar" />{' '}
           Delicious
         </h4>
         {/* REVIEW BODY by REVIEW.USER */}

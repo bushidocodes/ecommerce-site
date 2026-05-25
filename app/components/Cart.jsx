@@ -1,7 +1,8 @@
 'use strict'
 
-import React, { Component } from 'react'
-import Cart from './Cart'
+import React from 'react'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom'
 
 export default props => {
@@ -14,7 +15,7 @@ export default props => {
   return (
     <div className="float-end">
       <p id="cartPreviewText">
-        <i id="cartPreviewIcon" className="fa fa-shopping-cart"></i>
+        <FontAwesomeIcon id="cartPreviewIcon" icon={faShoppingCart} />
         <span> {numOfItems}</span> items totaling{' '}
         <span>${total.toFixed(2)} </span>
         {window.location.pathname === '/viewcart' ? (

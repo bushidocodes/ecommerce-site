@@ -19,7 +19,8 @@
     "lint": "eslint app/ server/ db/ index.js",
     "lint:fix": "eslint --fix app/ server/ db/ index.js",
     "format": "prettier --write app/ server/ db/ index.js",
-    "format:check": "prettier --check app/ server/ db/ index.js"
+    "format:check": "prettier --check app/ server/ db/ index.js",
+    "typecheck": "tsc --noEmit"
   },
   "repository": {
     "type": "git",
@@ -66,8 +67,14 @@
     "@babel/core": "^7.29.7",
     "@babel/preset-env": "^7.29.7",
     "@babel/preset-react": "^7.29.7",
+    "@babel/preset-typescript": "^7.29.7",
     "@babel/register": "^7.29.7",
     "@cfaester/enzyme-adapter-react-18": "^0.8.0",
+    "@types/node": "^25.9.1",
+    "@types/react": "^19.2.15",
+    "@types/react-dom": "^19.2.3",
+    "@types/react-redux": "^7.1.34",
+    "@types/redux-logger": "^3.0.13",
     "ajv": "^8.20.0",
     "babel-loader": "^9.2.1",
     "chai": "^4.5.0",
@@ -82,6 +89,7 @@
     "sinon": "^19.0.5",
     "sinon-chai": "^3.7.0",
     "supertest": "^7.2.2",
+    "typescript": "^6.0.3",
     "volleyball": "^1.4.1",
     "webpack": "^5.107.2",
     "webpack-cli": "^5.1.4"

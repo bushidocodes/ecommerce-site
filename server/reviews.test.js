@@ -1,4 +1,4 @@
-const request = require('supertest-as-promised')
+const request = require('supertest')
 const { expect } = require('chai')
 const db = require('../db')
 const Review = require('../db/models/review')

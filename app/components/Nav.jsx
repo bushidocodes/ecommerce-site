@@ -1,19 +1,20 @@
 'use strict'
 
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 
-export default props => (
+export default props => {
+  const [navOpen, setNavOpen] = useState(false)
+  return (
   <nav className="navbar navbar-default">
     <div className="container-fluid">
       {/* Brand and toggle get grouped for better mobile display */}
       <div className="navbar-header">
         <button
           type="button"
-          className="navbar-toggle collapsed"
-          data-toggle="collapse"
-          data-target="#bs-example-navbar-collapse-1"
-          aria-expanded="false"
+          className={`navbar-toggle${navOpen ? '' : ' collapsed'}`}
+          onClick={() => setNavOpen(open => !open)}
+          aria-expanded={navOpen}
         >
           <span className="sr-only">Toggle navigation</span>
           <span className="icon-bar" />
@@ -27,7 +28,7 @@ export default props => (
       </div>
       {/* Collect the nav links, forms, and other content for toggling */}
       <div
-        className="collapse navbar-collapse"
+        className={`collapse navbar-collapse${navOpen ? ' in' : ''}`}
         id="bs-example-navbar-collapse-1"
       >
         {/* handles if user is logged in or not */}
@@ -87,4 +88,5 @@ export default props => (
     </div>
     {/* /.container-fluid */}
   </nav>
-)
+  )
+}

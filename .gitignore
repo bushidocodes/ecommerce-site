@@ -10,3 +10,6 @@ npm-debug.log
 
 # Browser automation artifacts
 .playwright-mcp/
+
+# macOS metadata
+.DS_Store

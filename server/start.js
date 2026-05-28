@@ -19,7 +19,13 @@ module.exports = app
   .use(
     require('cookie-session')({
       name: 'session',
-      keys: [process.env.SESSION_SECRET || 'an insecure secret key'],
+      keys: [
+      (() => {
+        if (!process.env.SESSION_SECRET)
+          throw new Error('SESSION_SECRET environment variable is required')
+        return process.env.SESSION_SECRET
+      })(),
+    ],
     })
   )
 

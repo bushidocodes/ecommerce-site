@@ -31,7 +31,7 @@ module.exports = {
     return process.env.NODE_ENV === 'production'
   },
   get baseUrl() {
-    return env.BASE_URL || `http://localhost:${PORT}`
+    return env.BASE_URL || `http://localhost:${this.port}`
   },
   get port() {
     return env.PORT || 1337

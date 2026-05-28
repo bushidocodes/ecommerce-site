@@ -15,7 +15,7 @@
     "start[prod]": "check-node-version --node '>= 10.15.3' && node server/start.js",
     "start": "check-node-version --node '>= 10.15.3' && npm run start[prod]",
     "seed": "node db/seed.js",
-    "postinstall": "npm run build && node db/seed.js",
+    "postinstall": "npm run build",
     "lint": "eslint app/ server/ db/ index.js",
     "lint:fix": "eslint --fix app/ server/ db/ index.js",
     "format": "prettier --write app/ server/ db/ index.js",

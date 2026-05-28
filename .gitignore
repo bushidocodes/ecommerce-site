@@ -13,3 +13,6 @@ npm-debug.log
 
 # macOS metadata
 .DS_Store
+
+# Local environment variables (use .env.example as template)
+.env

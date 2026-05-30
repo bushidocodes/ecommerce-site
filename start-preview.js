@@ -1,6 +1,5 @@
-// Windows: HOME is undefined but index.js uses path.resolve(env.HOME, ...) at module load time.
-if (!process.env.HOME) {
-  process.env.HOME = process.env.USERPROFILE || (process.env.HOMEDRIVE + process.env.HOMEPATH);
+if (!process.env.SESSION_SECRET) {
+  process.env.SESSION_SECRET = 'dev-preview-secret';
 }
 
 // server/start.js exports the Express app but only calls app.listen() when it is

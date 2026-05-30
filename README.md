@@ -10,11 +10,11 @@ Cookie Monsters is the ultimate e-Commerce platform for lovers of cookies. Origi
 
 ## Project Setup
 
-**Prerequisites:** Node.js ≥ 18, PostgreSQL running locally.
+**Prerequisites:** Node.js ≥ 18, pnpm ≥ 9, PostgreSQL running locally.
 
 ```sh
 # 1. Install dependencies
-npm ci
+pnpm install
 
 # 2. Create a local .env file from the example
 cp .env.example .env
@@ -26,7 +26,7 @@ cp .env.example .env
 createdb cookie-monsters
 
 # 5. Start the dev server (runs on http://localhost:1337 by default)
-npm start
+pnpm start
 ```
 
 **Environment variables** (see [.env.example](.env.example) for the full list):

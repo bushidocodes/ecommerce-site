@@ -1,6 +1,7 @@
 'use strict'
 
 const { resolve } = require('path')
+const { homedir } = require('os')
 const chalk = require('chalk')
 const pkg = require('./package.json')
 const debug = require('debug')(`${pkg.name}:boot`)
@@ -12,7 +13,7 @@ const debug = require('debug')(`${pkg.name}:boot`)
 //
 // and add it to the environment.
 const env = Object.create(process.env),
-  secretsFile = resolve(env.HOME, `.${pkg.name}.env`)
+  secretsFile = resolve(homedir(), `.${pkg.name}.env`)
 try {
   Object.assign(env, require(secretsFile))
 } catch (error) {

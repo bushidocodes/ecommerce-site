@@ -1,4 +1,5 @@
 {
+  "root": true,
   "parserOptions": {
     "ecmaVersion": 2018,
     "sourceType": "module",
@@ -28,6 +29,19 @@
       "files": ["**/*.test.js", "**/*.test.jsx"],
       "env": {
         "mocha": true
+      }
+    },
+    {
+      "files": ["app/**/*.jsx"],
+      "excludedFiles": ["app/**/*.test.jsx"],
+      "rules": {
+        "no-restricted-syntax": [
+          "error",
+          {
+            "selector": "Program",
+            "message": "Non-test .jsx files are banned; use .tsx for React components or .ts for plain modules."
+          }
+        ]
       }
     }
   ]

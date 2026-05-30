@@ -25,6 +25,7 @@ createRoot(rootEl).render(
         <Route path="/" element={<AppContainer />}>
           <Route index element={<Navigate to="/products" replace />} />
           <Route path="products" element={<ProductsContainer />} />
+          <Route path="cart" element={<Navigate to="/viewcart" replace />} />
           <Route path="viewcart" element={<CartViewContainer />} />
           <Route path="order" element={<Order />} />
           <Route path="reviews" element={<Reviews />} />

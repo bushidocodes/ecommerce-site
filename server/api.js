@@ -13,8 +13,8 @@ api
 
 // Send along any errors AND LOG OUT TO SERVER
 api.use((err, req, res, next) => {
-  console.log(err)
-  res.status(500).send(err)
+  console.error(err)
+  res.status(500).json({ error: 'Internal server error' })
 })
 
 // No routes matched? 404.

@@ -10,6 +10,8 @@ function mapStateToProps(state: RootState) {
   return {
     cart: state.cart,
     auth: state.auth,
+    successMessage: state.orders.successMessage,
+    errorMessage: state.orders.errorMessage,
   }
 }
 

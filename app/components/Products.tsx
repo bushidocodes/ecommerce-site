@@ -15,9 +15,9 @@ export default function Products({ products, plusItemzToCart }: ProductsProps) {
         <Hero />
         <div className="container">
           <div className="row">
-            {products.map((cookie, index) => (
+            {products.map((cookie) => (
               <Product
-                key={index}
+                key={cookie.id}
                 cookie={cookie}
                 plusItemzToCart={plusItemzToCart}
               />

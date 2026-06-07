@@ -1,7 +1,7 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import type { CartItem } from '../types'
 
 interface CartProps {
@@ -9,6 +9,7 @@ interface CartProps {
 }
 
 export default function Cart({ cart }: CartProps) {
+  const { pathname } = useLocation()
   let numOfItems = 0
   let total = 0
   cart.forEach(cartLineItem => {
@@ -21,7 +22,7 @@ export default function Cart({ cart }: CartProps) {
         <FontAwesomeIcon id="cartPreviewIcon" icon={faShoppingCart} />
         <span> {numOfItems}</span> items totaling{' '}
         <span>${total.toFixed(2)} </span>
-        {window.location.pathname === '/viewcart' ? (
+        {pathname === '/viewcart' ? (
           <Link className="btn btn-warning btn-sm" to="/products">
             Buy more
           </Link>

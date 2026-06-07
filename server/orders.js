@@ -96,7 +96,7 @@ module.exports = require('express')
               )
             }
           })
-          .then(res.sendStatus(200))
+          .then(() => res.sendStatus(200))
           .catch(next)
       }
       // ... and the user does not specify a userID
@@ -208,7 +208,7 @@ module.exports = require('express')
             )
           }
         })
-        .then(res.sendStatus(200))
+        .then(() => res.sendStatus(200))
         .catch(next)
     }
   })
@@ -283,7 +283,7 @@ module.exports = require('express')
     if (req.user.isAdmin) {
       return Order.findByPk(req.params.id)
         .then(order => order.destroy())
-        .then(res.sendStatus(200))
+        .then(() => res.sendStatus(200))
         .catch(next)
     } else {
       forbidden('You are not authorized to do this.')
@@ -319,7 +319,7 @@ module.exports = require('express')
             })
           )
         })
-        .then(res.sendStatus(200))
+        .then(() => res.sendStatus(200))
         .catch(next)
     } else {
       forbidden('You are not authorized to do this.')
@@ -332,7 +332,7 @@ module.exports = require('express')
     if (req.user.isAdmin) {
       return Order.findByPk(req.params.orderId)
         .then(order => order.removeProduct(req.params.productId))
-        .then(res.sendStatus(200))
+        .then(() => res.sendStatus(200))
         .catch(next)
     } else {
       forbidden('You are not authorized to do this.')

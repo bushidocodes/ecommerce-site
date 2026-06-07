@@ -18,7 +18,7 @@ module.exports = require('express')
         .then(users => res.json(users))
         .catch(next)
     } else {
-      forbidden('only admins can list all users')
+      return forbidden(res, 'only admins can list all users')
     }
   })
 

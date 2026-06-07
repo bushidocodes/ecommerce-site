@@ -12,8 +12,7 @@ const selfOnly = action => (req, res, next) => {
   next()
 }
 
-const forbidden = message => (req, res, next) => {
-  console.log('running forbidden')
+const forbidden = (res, message) => {
   return res.status(403).send(message)
 }
 

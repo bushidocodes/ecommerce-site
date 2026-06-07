@@ -260,7 +260,7 @@ module.exports = require('express')
         .then(order => res.json(order))
         .catch(next)
     } else {
-      forbidden('You are not authorized to do this.')
+      return forbidden(res, 'You are not authorized to do this.')
     }
   })
 
@@ -273,7 +273,7 @@ module.exports = require('express')
         .then(order => res.status(200).json(order))
         .catch(next)
     } else {
-      forbidden('You are not authorized to do this.')
+      return forbidden(res, 'You are not authorized to do this.')
     }
   })
 
@@ -286,7 +286,7 @@ module.exports = require('express')
         .then(() => res.sendStatus(200))
         .catch(next)
     } else {
-      forbidden('You are not authorized to do this.')
+      return forbidden(res, 'You are not authorized to do this.')
     }
   })
 
@@ -322,7 +322,7 @@ module.exports = require('express')
         .then(() => res.sendStatus(200))
         .catch(next)
     } else {
-      forbidden('You are not authorized to do this.')
+      return forbidden(res, 'You are not authorized to do this.')
     }
   })
 
@@ -335,7 +335,7 @@ module.exports = require('express')
         .then(() => res.sendStatus(200))
         .catch(next)
     } else {
-      forbidden('You are not authorized to do this.')
+      return forbidden(res, 'You are not authorized to do this.')
     }
   })
 

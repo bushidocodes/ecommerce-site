@@ -8,18 +8,22 @@ import type { NavigateFunction } from 'react-router-dom'
 interface OrdersState {
   orders: Order[]
   selectedOrder: Partial<Order>
+  successMessage: string | null
+  errorMessage: string | null
 }
 
 const ordersSlice = createSlice({
   name: 'orders',
-  initialState: { orders: [], selectedOrder: {} } as OrdersState,
+  initialState: { orders: [], selectedOrder: {}, successMessage: null, errorMessage: null } as OrdersState,
   reducers: {
     setOrders: (state, action: PayloadAction<Order[]>) => { state.orders = action.payload },
     selectOrder: (state, action: PayloadAction<Partial<Order>>) => { state.selectedOrder = action.payload },
+    setOrderSuccess: (state, action: PayloadAction<string | null>) => { state.successMessage = action.payload; state.errorMessage = null },
+    setOrderError: (state, action: PayloadAction<string | null>) => { state.errorMessage = action.payload; state.successMessage = null },
   },
 })
 
-export const { selectOrder } = ordersSlice.actions
+export const { selectOrder, setOrderSuccess, setOrderError } = ordersSlice.actions
 
 export const receiveOrders = () => (dispatch: AppDispatch) =>
   axios
@@ -37,11 +41,15 @@ export function submitOrder(cart: CartItem[], navigate?: NavigateFunction) {
     axios
       .post('/api/orders/', order)
       .then(() => {
-        alert('Cookies are on the way!')
+        dispatch(setOrderSuccess('Cookies are on the way!'))
         dispatch(emptyCart())
         navigate && navigate('/myorders')
       })
-      .catch(err => alert(err))
+      .catch(err => {
+        const message = err?.response?.data?.message || err?.message || 'Order submission failed. Please try again.'
+        console.error('Order submission error:', err)
+        dispatch(setOrderError(message))
+      })
 }
 
 export default ordersSlice.reducer

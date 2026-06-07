@@ -43,7 +43,7 @@ export function submitOrder(cart: CartItem[], navigate?: NavigateFunction) {
       .then(() => {
         dispatch(setOrderSuccess('Cookies are on the way!'))
         dispatch(emptyCart())
-        navigate && navigate('/myorders'))
+        navigate && navigate('/myorders')
       })
       .catch(err => {
         const message = err?.response?.data?.message || err?.message || 'Order submission failed. Please try again.'

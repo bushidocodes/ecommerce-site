@@ -28,6 +28,7 @@ const Order = db.define(
     },
   },
   {
+    indexes: [{ fields: ['userId'] }],
     getterMethods: {
       total: function () {
         let runningTotal = 0.0;

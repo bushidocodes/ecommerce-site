@@ -32,6 +32,7 @@ const OrderLineItem = db.define(
     },
   },
   {
+    indexes: [{ fields: ['orderId'] }, { fields: ['productId'] }],
     getterMethods: {
       subtotal: function () {
         return this.quantity * this.price;

@@ -10,13 +10,25 @@ interface CartViewProps {
   submitOrder: (cart: CartItem[]) => void
   removeFromCart: (productId: number) => void
   navigateToLogin: () => void
+  successMessage?: string | null
+  errorMessage?: string | null
 }
 
-export default function CartView({ cart, auth, submitOrder, removeFromCart, navigateToLogin }: CartViewProps) {
+export default function CartView({ cart, auth, submitOrder, removeFromCart, navigateToLogin, successMessage, errorMessage }: CartViewProps) {
   return (
     <div id="cart-view" className="container">
       <Hero />
       <br />
+      {successMessage && (
+        <div className="alert alert-success" role="alert">
+          {successMessage}
+        </div>
+      )}
+      {errorMessage && (
+        <div className="alert alert-danger" role="alert">
+          {errorMessage}
+        </div>
+      )}
       <div className="row">
         <div className="col-sm-6 col-xs-12">
           {cart.length < 1 ? (

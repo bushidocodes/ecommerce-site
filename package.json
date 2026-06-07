@@ -9,8 +9,8 @@
   },
   "packageManager": "pnpm@11.5.0",
   "scripts": {
-    "test": "mocha --require ./babel-register.js --require ./test-setup.js app/**/*.test.jsx db/**/*.test.js server/**/*.test.js",
-    "test-watch": "mocha --require ./babel-register.js --require ./test-setup.js --watch app/**/*.test.jsx db/**/*.test.js server/**/*.test.js",
+    "test": "mocha --require ./babel-register.js --require ./test-setup.js \"app/**/*.test.{jsx,tsx}\" db/**/*.test.js server/**/*.test.js",
+    "test-watch": "mocha --require ./babel-register.js --require ./test-setup.js --watch \"app/**/*.test.{jsx,tsx}\" db/**/*.test.js server/**/*.test.js",
     "build": "webpack",
     "build-watch": "webpack --watch",
     "start[dev]": "check-node-version --node >=18.0.0 && nodemon server/start.js",

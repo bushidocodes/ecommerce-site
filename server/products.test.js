@@ -1,62 +1,115 @@
-const request = require('supertest')
-const { expect } = require('chai')
-const db = require('../db')
-const Product = require('../db/models/product')
-const app = require('./start')
+const request = require("supertest")
+const { expect } = require("chai")
+const db = require("../db")
+const Product = require("../db/models/product")
+const User = require("../db/models/user")
+const app = require("./start")
 
-describe('/api/products', () => {
-  describe('GET /', () => {
-    // We should insert two products using Sequelize, call the route, and check that
-    // the output returned 200 and contained the products we inserted.
-    xit('returns all types of cookies', () =>
-      request(app).get(`/api/products`).expect(200))
-  })
+const testAdminUser = {
+  name: "Product Admin",
+  username: "productadmin@example.com",
+  password: "adminpass",
+}
 
-  describe('GET /:id', () => {
-    // We should insert a product using Sequelize, retrieve the product ID, and
-    // then inoke the get /:id route with the product ID we retrieved to check
-    // that we got the new product
-    xit('returns (1) type of cookie by id', () =>
-      request(app).get('/api/reviews/1').expect(200))
-  })
+describe("/api/products", () => {
+  const agent = request.agent(app)
+  let product, adminUser
 
-  describe('POST / (????)', () => {
-    // We should call the post route to create a product, and then check that
-    // Sequelize returns what we passed into the post route.
-    xit('creates a type of cookie', () =>
-      request(app)
-        .post('/api/reviews')
-        .send({
-          title: 'Your products are terrible!',
-          email: 'angrycustomer@altivista.net',
-          rating: 1,
+  before("sync db, create admin user and log in", () =>
+    db.didSync
+      .then(() =>
+        User.create({
+          name: testAdminUser.name,
+          email: testAdminUser.username,
+          password: testAdminUser.password,
+          isAdmin: true,
         })
-        .expect(201))
+      )
+      .then(_user => {
+        adminUser = _user
+        return agent.post("/api/auth/local/login").send(testAdminUser)
+      })
+  )
+
+  before("create a test product", () =>
+    Product.create({
+      name: "Test Cookie",
+      description: "A delicious test cookie",
+      price: 2.99,
+      quantity: 100,
+      categories: ["test"],
+    }).then(_product => {
+      product = _product
+    })
+  )
+
+  describe("GET /", () => {
+    it("returns all products (public, no auth required)", () =>
+      request(app)
+        .get("/api/products")
+        .expect(200)
+        .then(res => {
+          expect(res.body).to.be.an("array")
+          expect(res.body.length).to.be.greaterThan(0)
+        }))
   })
 
-  describe('PUT / (????)', () => {
-    // Modify a cookie by id
-    xit('modifies the characteristics of a type of cookie', () =>
+  describe("GET /:id", () => {
+    it("returns a single product by id", () =>
       request(app)
-        .post('/api/reviews')
-        .send({
-          title: 'Your products are terrible!',
-          email: 'angrycustomer@altivista.net',
-          rating: 1,
-        })
-        .expect(201))
+        .get("/api/products/" + product.id)
+        .expect(200)
+        .then(res => {
+          expect(res.body).to.have.property("id", product.id)
+          expect(res.body).to.have.property("name", "Test Cookie")
+        }))
+
+    it("returns 404 for a non-existent product", () =>
+      request(app)
+        .get("/api/products/999999")
+        .expect(404))
   })
 
-  describe('DELETE /:id', () => {
-    // Modify a cookie by id
-    xit('removes a type of cookie', () =>
-      request(app)
-        .post('/api/reviews')
+  describe("POST / (admin)", () => {
+    let createdId
+
+    it("creates a new product when logged in as admin", () =>
+      agent
+        .post("/api/products")
         .send({
-          title: 'Your products are terrible!',
-          email: 'angrycustomer@altivista.net',
-          rating: 1,
+          name: "New Cookie",
+          description: "A freshly baked cookie",
+          price: 3.49,
+          quantity: 50,
+          categories: ["new"],
         })
-        .expect(201))
+        .expect(200)
+        .then(res => {
+          createdId = res.body.id
+          expect(res.body).to.have.property("name", "New Cookie")
+          expect(res.body).to.have.property("description", "A freshly baked cookie")
+        }))
+
+    describe("PUT /:id (admin)", () => {
+      it("updates an existing product when logged in as admin", function () {
+        if (!createdId) return this.skip()
+        return agent
+          .put("/api/products/" + createdId)
+          .send({ name: "Updated Cookie", price: 4.99 })
+          .expect(200)
+          .then(res => {
+            expect(res.body).to.have.property("name", "Updated Cookie")
+          })
+      })
+    })
+
+    describe("DELETE /:id (admin)", () => {
+      it("deletes a product when logged in as admin", function () {
+        if (!createdId) return this.skip()
+        return agent
+          .delete("/api/products/" + createdId)
+          .expect(200)
+      })
+    })
   })
 })

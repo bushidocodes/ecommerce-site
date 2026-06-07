@@ -83,15 +83,15 @@ module.exports = require('express')
     let orderLineItems =
       req.body && req.body.orderLineItems ? req.body.orderLineItems : null
     let productIds = orderLineItems ? Object.keys(orderLineItems) : []
-    console.log('-------------------', req.param.userId)
+    console.log('-------------------', req.params.userId)
 
     // if the user is an admin
     if (req.user && req.user.isAdmin) {
       console.log('User is an admin')
       // ...and the admin specifies a userID for whom to create an order
-      if (req.param && req.param.userId) {
-        console.log('User ', req.param.userId, ' specified as param')
-        User.findByPk(req.param.userId)
+      if (req.params && req.params.userId) {
+        console.log('User ', req.params.userId, ' specified as param')
+        User.findByPk(req.params.userId)
           .then(user => user.createOrder(req.body)) // filter out only the Order attributes???
           .then(_order => {
             order = _order

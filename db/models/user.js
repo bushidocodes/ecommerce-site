@@ -24,12 +24,18 @@ const User = db.define(
     billingAddress: Sequelize.STRING,
     billingCity: Sequelize.STRING,
     billingState: Sequelize.STRING,
-    billingZip: Sequelize.INTEGER,
+    billingZip: {
+      type: Sequelize.STRING,
+      validate: { is: /^\d{5}(-\d{4})?$/ },
+    },
 
     shippingAddress: Sequelize.STRING,
     shippingCity: Sequelize.STRING,
     shippingState: Sequelize.STRING,
-    shippingZip: Sequelize.INTEGER,
+    shippingZip: {
+      type: Sequelize.STRING,
+      validate: { is: /^\d{5}(-\d{4})?$/ },
+    },
 
     // We support oauth, so users may or may not have passwords.
     password_digest: Sequelize.STRING,

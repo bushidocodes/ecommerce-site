@@ -46,14 +46,14 @@ OAuth.setupStrategy({
   passport,
 })
 
-// Google needs the GOOGLE_CONSUMER_SECRET AND GOOGLE_CONSUMER_KEY
+// Google needs the GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET
 // environment variables.
 OAuth.setupStrategy({
   provider: 'google',
-  strategy: require('passport-google-oauth').Strategy,
+  strategy: require('passport-google-oauth20').Strategy,
   config: {
-    consumerKey: env.GOOGLE_CONSUMER_KEY,
-    consumerSecret: env.GOOGLE_CONSUMER_SECRET,
+    clientID: env.GOOGLE_CLIENT_ID,
+    clientSecret: env.GOOGLE_CLIENT_SECRET,
     callbackURL: `${app.baseUrl}/api/auth/login/google`,
   },
   passport,

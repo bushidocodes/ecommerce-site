@@ -2,14 +2,16 @@
 
 const path = require('path')
 
+const isProd = process.env.NODE_ENV === 'production'
+
 module.exports = {
-  mode: 'development',
+  mode: isProd ? 'production' : 'development',
   entry: './app/main.tsx',
   output: {
     path: path.join(__dirname, 'public'),
     filename: 'bundle.js',
   },
-  devtool: 'source-map',
+  devtool: isProd ? false : 'source-map',
   resolve: {
     extensions: ['.ts', '.tsx', '.js', '.jsx'],
   },

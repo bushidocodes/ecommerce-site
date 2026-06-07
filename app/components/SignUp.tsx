@@ -4,7 +4,7 @@ import { signup } from '../reducers/auth'
 import type { AppDispatch } from '../store'
 
 interface SignupProps {
-  signup: (username: string, password: string) => void
+  signup: (name: string, email: string, password: string) => void
 }
 
 export const Signup = ({ signup }: SignupProps) => (
@@ -14,15 +14,22 @@ export const Signup = ({ signup }: SignupProps) => (
       onSubmit={evt => {
         evt.preventDefault()
         const form = evt.currentTarget
-        const username = (form.elements.namedItem('username') as HTMLInputElement).value
+        const name = (form.elements.namedItem('name') as HTMLInputElement).value
+        const email = (form.elements.namedItem('email') as HTMLInputElement).value
         const password = (form.elements.namedItem('password') as HTMLInputElement).value
-        signup(username, password)
+        signup(name, email, password)
       }}
     >
       <input
         className="form-control auth-field"
-        name="username"
-        placeholder="Username"
+        name="name"
+        placeholder="Full Name"
+      />
+      <input
+        className="form-control auth-field"
+        name="email"
+        type="email"
+        placeholder="Email"
       />
       <input
         className="form-control auth-field"
@@ -37,8 +44,8 @@ export const Signup = ({ signup }: SignupProps) => (
 
 function mapDispatchToProps(dispatch: AppDispatch) {
   return {
-    signup: (username: string, password: string) =>
-      dispatch(signup(username, password)),
+    signup: (name: string, email: string, password: string) =>
+      dispatch(signup(name, email, password)),
   }
 }
 

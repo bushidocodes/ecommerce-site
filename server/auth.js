@@ -117,6 +117,21 @@ passport.use(
 
 auth.get('/whoami', (req, res) => res.send(req.user))
 
+auth.post('/local/signup', (req, res, next) => {
+  if (req.user) {
+    return res.status(403).send('Already logged in')
+  }
+  const { name, email, password } = req.body
+  User.create({ name, email, password })
+    .then(user => {
+      req.login(user, err => {
+        if (err) return next(err)
+        res.status(201).json(user)
+      })
+    })
+    .catch(next)
+})
+
 auth.post('/:strategy/login', (req, res, next) =>
   passport.authenticate(req.params.strategy, {
     successRedirect: '/',

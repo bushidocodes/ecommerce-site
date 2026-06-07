@@ -27,9 +27,9 @@ export const login = (username: string, password: string) => (dispatch: AppDispa
     .then(() => dispatch(whoami()))
     .catch(() => dispatch(whoami()))
 
-export const signup = (username: string, password: string) => (dispatch: AppDispatch) =>
+export const signup = (name: string, email: string, password: string) => (dispatch: AppDispatch) =>
   axios
-    .post('/api/auth/local/signup', { username, password })
+    .post('/api/auth/local/signup', { name, email, password })
     .then(() => dispatch(whoami()))
     .catch(() => dispatch(whoami()))
 

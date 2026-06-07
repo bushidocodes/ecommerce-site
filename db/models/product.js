@@ -1,6 +1,5 @@
 'use strict'
 
-const bcrypt = require('bcrypt')
 const Sequelize = require('sequelize')
 const db = require('../../db')
 const Review = require('./review')

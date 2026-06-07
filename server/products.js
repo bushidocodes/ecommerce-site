@@ -2,6 +2,7 @@
 
 const db = require('../db')
 const Product = require('../db/models/product')
+const { mustBeLoggedIn } = require('./auth.filters.js')
 
 module.exports = require('express')
   .Router()
@@ -22,11 +23,12 @@ module.exports = require('express')
 
   // Action: Create a new type of cookie
   // Roles: Admin
-  .post('/', (req, res, next) =>
+  .post('/', mustBeLoggedIn, (req, res, next) => {
+    if (!req.user.isAdmin) return res.sendStatus(403)
     Product.create(req.body)
       .then(product => res.json(product))
       .catch(next)
-  )
+  })
 
   // Use Param to DRY subsequent routes
   .param('id', function (req, res, next) {
@@ -50,7 +52,8 @@ module.exports = require('express')
 
   // Action: Modify a cookie by id
   // Roles: Admin
-  .put('/:id', (req, res, next) => {
+  .put('/:id', mustBeLoggedIn, (req, res, next) => {
+    if (!req.user.isAdmin) return res.sendStatus(403)
     req.product
       .update(req.body)
       .then(order => res.status(200).json(order))
@@ -59,7 +62,8 @@ module.exports = require('express')
 
   // Action: Delete a cookie by id. Oh NOOO!!!
   // Roles: Admin
-  .delete('/:id', (req, res, next) => {
+  .delete('/:id', mustBeLoggedIn, (req, res, next) => {
+    if (!req.user.isAdmin) return res.sendStatus(403)
     req.product
       .destroy()
       .then(() => res.sendStatus(200))

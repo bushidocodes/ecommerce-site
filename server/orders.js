@@ -51,22 +51,7 @@ module.exports = require('express')
         .then(orders => res.status(200).json(orders))
         .catch(next)
     } else {
-      // TEMP to test
-      return Order.findAll({
-        include: [
-          {
-            model: Product,
-            through: {
-              attributes: ['quantity', 'price'],
-            },
-          },
-        ],
-      })
-        .then(orders => _promisifyOrderProps(orders))
-        .then(orders => Promise.all(orders))
-        .then(orders => res.json(orders))
-        .catch(next)
-      // res.status(403).send("Cannot view without req.user");
+      res.status(403).send('Cannot view without req.user')
     }
   })
 

@@ -124,8 +124,18 @@ auth.post('/:strategy/login', (req, res, next) =>
 )
 
 auth.post('/logout', (req, res, next) => {
-  req.logout()
-  res.redirect('/api/auth/whoami')
+  const done = err => {
+    if (err) return next(err)
+    res.redirect('/api/auth/whoami')
+  }
+  // Passport 0.6+ made req.logout() asynchronous and requires a callback.
+  // Older versions are synchronous and ignore the callback argument.
+  if (req.logout.length > 0) {
+    req.logout(done)
+  } else {
+    req.logout()
+    done()
+  }
 })
 
 module.exports = auth

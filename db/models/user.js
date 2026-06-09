@@ -55,6 +55,12 @@ const User = db.define(
   }
 );
 
+User.prototype.toJSON = function () {
+  const values = Object.assign({}, this.dataValues)
+  delete values.password_digest
+  return values
+}
+
 User.prototype.authenticate = function (plaintext) {
   return new Promise((resolve, reject) =>
     bcrypt.compare(plaintext, this.password_digest, (err, result) =>

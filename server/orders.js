@@ -114,6 +114,11 @@ module.exports = require('express')
               return Promise.all(
                 products.map(product => {
                   const qty = orderLineItems[product.id].quantity
+                  if (product.quantity < qty) {
+                    return res.status(409).json({
+                      error: `Insufficient inventory for product ${product.id}`,
+                    })
+                  }
                   return order
                     .addProduct(product, {
                       through: { quantity: qty, price: product.price },
@@ -159,6 +164,11 @@ module.exports = require('express')
             return Promise.all(
               products.map(product => {
                 const qty = orderLineItems[product.id].quantity
+                if (product.quantity < qty) {
+                  return res.status(409).json({
+                    error: `Insufficient inventory for product ${product.id}`,
+                  })
+                }
                 return order
                   .addProduct(product, {
                     through: { quantity: qty, price: product.price },

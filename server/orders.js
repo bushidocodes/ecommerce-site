@@ -200,15 +200,31 @@ module.exports = require('express')
         })
         .then(products => {
           if (products) {
-            products.forEach(product =>
-              order.addProduct(product, {
-                quantity: orderLineItems[product.id].quantity,
-                price: product.price,
-              })
+            return Promise.all(
+              products.map(product =>
+                order.addProduct(product, {
+                  through: {
+                    quantity: orderLineItems[product.id].quantity,
+                    price: product.price,
+                  },
+                })
+              )
             )
           }
         })
-        .then(() => res.sendStatus(200))
+        .then(() =>
+          Order.findByPk(order.id, {
+            include: [
+              {
+                model: Product,
+                through: {
+                  attributes: ['quantity', 'price'],
+                },
+              },
+            ],
+          })
+        )
+        .then(order => res.status(200).json(order))
         .catch(next)
     }
   })

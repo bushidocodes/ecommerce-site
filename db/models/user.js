@@ -56,10 +56,10 @@ const User = db.define(
 );
 
 User.prototype.toJSON = function () {
-  const values = Object.assign({}, this.dataValues)
-  delete values.password_digest
-  return values
-}
+  const values = Object.assign({}, this.dataValues);
+  delete values.password_digest;
+  return values;
+};
 
 User.prototype.authenticate = function (plaintext) {
   return new Promise((resolve, reject) =>

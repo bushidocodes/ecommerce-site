@@ -6,6 +6,7 @@ const Product = require('../db/models/product')
 const User = require('../db/models/user')
 const Promise = require('bluebird')
 const { mustBeLoggedIn, selfOnly, forbidden } = require('./auth.filters.js')
+const debug = require('debug')('cookie-monsters:orders')
 
 module.exports = require('express')
   .Router()
@@ -13,10 +14,10 @@ module.exports = require('express')
   // Action: Retrieve all orders, including products and orderlineitem details
   // Roles: Admin
   .get('/', (req, res, next) => {
-    console.log('get /api/orders/')
+    debug('get /api/orders/')
     // .get('/', mustBeLoggedIn, (req, res, next) => {
     if (req.user && req.user.isAdmin) {
-      console.log('is an admin')
+      debug('is an admin')
       return Order.findAll({
         include: [
           {
@@ -34,7 +35,7 @@ module.exports = require('express')
     }
     // If not an admin, retrieve your own orders
     else if (req.user) {
-      console.log('else if req.user')
+      debug('else if req.user')
       req.user
         .getOrders({
           include: [
@@ -68,14 +69,14 @@ module.exports = require('express')
     let orderLineItems =
       req.body && req.body.orderLineItems ? req.body.orderLineItems : null
     let productIds = orderLineItems ? Object.keys(orderLineItems) : []
-    console.log('-------------------', req.params.userId)
+    debug('POST /:userId? userId=%s', req.params.userId)
 
     // if the user is an admin
     if (req.user && req.user.isAdmin) {
-      console.log('User is an admin')
+      debug('user is an admin')
       // ...and the admin specifies a userID for whom to create an order
       if (req.params && req.params.userId) {
-        console.log('User ', req.params.userId, ' specified as param')
+        debug('userId=%s specified as param', req.params.userId)
         User.findByPk(req.params.userId)
           .then(user => user.createOrder(req.body)) // filter out only the Order attributes???
           .then(_order => {
@@ -101,7 +102,7 @@ module.exports = require('express')
       }
       // ... and the user does not specify a userID
       else {
-        console.log('No user specified as param')
+        debug('no userId param, creating unassociated order')
         Order.create(req.body)
           .then(_order => {
             order = _order
@@ -150,7 +151,7 @@ module.exports = require('express')
     }
     // ... and the user is not an admin
     else if (req.user) {
-      console.log('user is not an admin')
+      debug('user is not an admin')
       req.user
         .createOrder(req.body)
         .then(_order => {
@@ -193,14 +194,14 @@ module.exports = require('express')
           })
         )
         .then(order => {
-          console.log(order)
+          debug('order=%O', order)
           return res.status(200).json(order)
         })
         .catch(next)
     }
     // Guest User
     else {
-      console.log('No user logged in so guest')
+      debug('no user logged in, creating guest order')
       Order.create(req.body)
         .then(_order => {
           order = _order

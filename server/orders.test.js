@@ -93,7 +93,62 @@ describe('/api/orders/', () => {
     })
   })
 
-  xdescribe('POST / (as Guest)', () => {})
+  describe('POST / (as Guest)', () => {
+    let product, orderId
+    before('Create product', () =>
+      db.didSync.then(() =>
+        Product.create({
+          name: 'Sugar Cookie',
+          description: 'Simple and sweet',
+          price: 2.0,
+          quantity: 50,
+          categories: [],
+        })
+      ).then(_product => {
+        product = _product
+      })
+    )
+    it('returns 200 with JSON order body (not a bare status)', () =>
+      request(app)
+        .post('/api/orders/')
+        .send({
+          shippingCarrier: 'FedEx',
+          orderLineItems: {
+            [product.id]: { quantity: 3 },
+          },
+        })
+        .expect(200)
+        .then(res => {
+          orderId = res.body.id
+          expect(res.body).to.be.an('object')
+          expect(res.body).to.have.property('id')
+          expect(res.body.shippingCarrier).to.equal('FedEx')
+        }))
+    it('persists quantity and price on the join table (through: {} fix)', () =>
+      request(app)
+        .post('/api/orders/')
+        .send({
+          shippingCarrier: 'FedEx',
+          orderLineItems: {
+            [product.id]: { quantity: 5 },
+          },
+        })
+        .expect(200)
+        .then(res => {
+          expect(res.body.products).to.be.an('array').with.lengthOf(1)
+          const lineItem = res.body.products[0].orderLineItems
+          expect(lineItem).to.have.property('quantity', 5)
+          expect(Number(lineItem.price)).to.equal(Number(product.price))
+        }))
+    after('destroy product and any created orders', () =>
+      Promise.all([
+        product.destroy(),
+        orderId
+          ? Order.findByPk(orderId).then(o => o && o.destroy())
+          : Promise.resolve(),
+      ])
+    )
+  })
   describe('POST / (as Non-Admin)', () => {
     const agent = request.agent(app)
     let user, product, id

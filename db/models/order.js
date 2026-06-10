@@ -1,7 +1,7 @@
-'use strict'
+'use strict';
 
-const Sequelize = require('sequelize')
-const db = require('../../db')
+const Sequelize = require('sequelize');
+const db = require('../../db');
 
 const Order = db.define(
   'orders',
@@ -30,18 +30,18 @@ const Order = db.define(
   {
     getterMethods: {
       total: function () {
-        let runningTotal = 0.0
+        let runningTotal = 0.0;
         return this.getProducts().then(products => {
           products.forEach(
             product => (runningTotal += product.orderLineItems.subtotal)
-          )
-          runningTotal += parseFloat(this.shippingRate)
-          console.log(runningTotal)
-          return runningTotal
-        })
+          );
+          runningTotal += parseFloat(this.shippingRate);
+          console.log(runningTotal);
+          return runningTotal;
+        });
       },
     },
   }
-)
+);
 
-module.exports = Order
+module.exports = Order;

@@ -1,20 +1,28 @@
-import React from 'react'
-import Hero from './Hero'
-import CartEmpty from './CartEmpty'
-import CartLineItem from './CartLineItem'
-import type { CartItem, User } from '../types'
+import React from 'react';
+import Hero from './Hero';
+import CartEmpty from './CartEmpty';
+import CartLineItem from './CartLineItem';
+import type { CartItem, User } from '../types';
 
 interface CartViewProps {
-  cart: CartItem[]
-  auth: User | null
-  submitOrder: (cart: CartItem[]) => void
-  removeFromCart: (productId: number) => void
-  navigateToLogin: () => void
-  successMessage?: string | null
-  errorMessage?: string | null
+  cart: CartItem[];
+  auth: User | null;
+  submitOrder: (cart: CartItem[]) => void;
+  removeFromCart: (productId: number) => void;
+  navigateToLogin: () => void;
+  successMessage?: string | null;
+  errorMessage?: string | null;
 }
 
-export default function CartView({ cart, auth, submitOrder, removeFromCart, navigateToLogin, successMessage, errorMessage }: CartViewProps) {
+export default function CartView({
+  cart,
+  auth,
+  submitOrder,
+  removeFromCart,
+  navigateToLogin,
+  successMessage,
+  errorMessage,
+}: CartViewProps) {
   return (
     <div id="cart-view" className="container">
       <Hero />
@@ -52,11 +60,11 @@ export default function CartView({ cart, auth, submitOrder, removeFromCart, navi
         <div className="text-center">
           <button
             onClick={evt => {
-              evt.preventDefault()
+              evt.preventDefault();
               if (!auth) {
-                navigateToLogin()
+                navigateToLogin();
               } else {
-                submitOrder(cart)
+                submitOrder(cart);
               }
             }}
             className="btn btn-success btn-lg"
@@ -69,5 +77,5 @@ export default function CartView({ cart, auth, submitOrder, removeFromCart, navi
       )}
       <br />
     </div>
-  )
+  );
 }

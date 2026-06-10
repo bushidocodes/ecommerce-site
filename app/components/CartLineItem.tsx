@@ -1,16 +1,23 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import { Link } from 'react-router-dom';
 
 interface CartLineItemProps {
-  name: string
-  quantity: number
-  photo: string
-  description: string
-  price: number
-  onRemove: () => void
+  name: string;
+  quantity: number;
+  photo: string;
+  description: string;
+  price: number;
+  onRemove: () => void;
 }
 
-export default function CartLineItem({ name, quantity, photo, description, price, onRemove }: CartLineItemProps) {
+export default function CartLineItem({
+  name,
+  quantity,
+  photo,
+  description,
+  price,
+  onRemove,
+}: CartLineItemProps) {
   return (
     <div id="cart-line-item" className="container">
       <div className="card border-success">
@@ -23,7 +30,10 @@ export default function CartLineItem({ name, quantity, photo, description, price
               <button
                 id="remove-from-cart"
                 className="btn btn-sm btn-danger"
-                onClick={evt => { evt.preventDefault(); onRemove() }}
+                onClick={evt => {
+                  evt.preventDefault();
+                  onRemove();
+                }}
               >
                 Remove
               </button>
@@ -35,11 +45,7 @@ export default function CartLineItem({ name, quantity, photo, description, price
             <div className="thumbContainer">
               <Link to="/reviews">
                 {' '}
-                <img
-                  className="thumbImg"
-                  src={photo}
-                  alt={name}
-                />
+                <img className="thumbImg" src={photo} alt={name} />
               </Link>
             </div>
             <div>
@@ -51,5 +57,5 @@ export default function CartLineItem({ name, quantity, photo, description, price
         </div>
       </div>
     </div>
-  )
+  );
 }

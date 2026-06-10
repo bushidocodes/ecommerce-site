@@ -1,11 +1,11 @@
-import React from 'react'
-import Product from './Product'
-import Hero from './Hero'
-import type { Product as ProductType } from '../types'
+import React from 'react';
+import Product from './Product';
+import Hero from './Hero';
+import type { Product as ProductType } from '../types';
 
 interface ProductsProps {
-  products: ProductType[]
-  plusItemzToCart: (product: ProductType, quantity: number) => void
+  products: ProductType[];
+  plusItemzToCart: (product: ProductType, quantity: number) => void;
 }
 
 export default function Products({ products, plusItemzToCart }: ProductsProps) {
@@ -15,7 +15,7 @@ export default function Products({ products, plusItemzToCart }: ProductsProps) {
         <Hero />
         <div className="container">
           <div className="row">
-            {products.map((cookie) => (
+            {products.map(cookie => (
               <Product
                 key={cookie.id}
                 cookie={cookie}
@@ -26,5 +26,5 @@ export default function Products({ products, plusItemzToCart }: ProductsProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

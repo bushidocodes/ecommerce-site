@@ -1,7 +1,7 @@
 {
   "root": true,
   "parserOptions": {
-    "ecmaVersion": 2018,
+    "ecmaVersion": "latest",
     "sourceType": "module",
     "ecmaFeatures": {
       "jsx": true
@@ -42,6 +42,21 @@
             "message": "Non-test .jsx files are banned; use .tsx for React components or .ts for plain modules."
           }
         ]
+      }
+    },
+    {
+      "files": ["**/*.ts", "**/*.tsx"],
+      "parser": "@typescript-eslint/parser",
+      "plugins": ["@typescript-eslint"],
+      "rules": {
+        "no-unused-vars": "off",
+        "@typescript-eslint/no-unused-vars": ["warn", { "argsIgnorePattern": "^_" }]
+      }
+    },
+    {
+      "files": ["db/index.js"],
+      "rules": {
+        "no-console": "off"
       }
     }
   ]

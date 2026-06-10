@@ -1,7 +1,7 @@
-import React from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faStar } from '@fortawesome/free-solid-svg-icons'
-import { Link } from 'react-router-dom'
+import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faStar } from '@fortawesome/free-solid-svg-icons';
+import { Link } from 'react-router-dom';
 
 export default function Reviews() {
   return (
@@ -31,12 +31,13 @@ export default function Reviews() {
           </h4>
           <div className="review">
             <p className="reviewBody">
-              I&apos;m now fat and an addict. Thanks, Cookie Monsters. Nom nom nom.
+              I&apos;m now fat and an addict. Thanks, Cookie Monsters. Nom nom
+              nom.
             </p>
             <p className="reviewUser">submitted by Rachel</p>
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }

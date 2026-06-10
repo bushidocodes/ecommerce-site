@@ -1,11 +1,11 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import MyOrdersItem from './MyOrdersItem'
-import type { Order } from '../types'
+import React from 'react';
+import { Link } from 'react-router-dom';
+import MyOrdersItem from './MyOrdersItem';
+import type { Order } from '../types';
 
 interface MyOrdersProps {
-  orders: Order[]
-  selectOrder: (order: Partial<Order>) => void
+  orders: Order[];
+  selectOrder: (order: Partial<Order>) => void;
 }
 
 export default function MyOrders({ orders, selectOrder }: MyOrdersProps) {
@@ -14,7 +14,10 @@ export default function MyOrders({ orders, selectOrder }: MyOrdersProps) {
       <h1 className="display-4">My Orders</h1>
       {orders.length === 0 ? (
         <div className="container">
-          <div id="no-orders" className="p-5 mb-4 bg-light rounded-3 text-center">
+          <div
+            id="no-orders"
+            className="p-5 mb-4 bg-light rounded-3 text-center"
+          >
             <div>
               <p>
                 You haven&apos;t placed any orders yet. <br />
@@ -41,5 +44,5 @@ export default function MyOrders({ orders, selectOrder }: MyOrdersProps) {
         ))}
       </div>
     </div>
-  )
+  );
 }

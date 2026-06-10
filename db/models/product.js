@@ -1,8 +1,8 @@
-'use strict'
+'use strict';
 
-const Sequelize = require('sequelize')
-const db = require('../../db')
-const Review = require('./review')
+const Sequelize = require('sequelize');
+const db = require('../../db');
+const Review = require('./review');
 
 const Product = db.define('products', {
   name: {
@@ -40,6 +40,6 @@ const Product = db.define('products', {
     type: Sequelize.STRING,
   },
   categories: Sequelize.ARRAY(Sequelize.STRING),
-})
+});
 
-module.exports = Product
+module.exports = Product;

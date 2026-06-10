@@ -1,15 +1,15 @@
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-import type { User } from '../types'
+import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
+import type { User } from '../types';
 
 interface NavProps {
-  auth: User | null
-  logout: () => void
-  selectUser: (user: Partial<User>) => void
+  auth: User | null;
+  logout: () => void;
+  selectUser: (user: Partial<User>) => void;
 }
 
 export default function Nav({ auth, logout, selectUser }: NavProps) {
-  const [navOpen, setNavOpen] = useState(false)
+  const [navOpen, setNavOpen] = useState(false);
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light">
       <div className="container-fluid">
@@ -37,8 +37,8 @@ export default function Nav({ auth, logout, selectUser }: NavProps) {
                   Hello,{' '}
                   <a
                     onClick={evt => {
-                      evt.preventDefault()
-                      selectUser(auth)
+                      evt.preventDefault();
+                      selectUser(auth);
                     }}
                   >
                     {auth.name}
@@ -47,11 +47,15 @@ export default function Nav({ auth, logout, selectUser }: NavProps) {
                 </p>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/myorders">My Orders</Link>
+                <Link className="nav-link" to="/myorders">
+                  My Orders
+                </Link>
               </li>
               {auth.isAdmin ? (
                 <li className="nav-item">
-                  <Link className="nav-link" to="/users">Users</Link>
+                  <Link className="nav-link" to="/users">
+                    Users
+                  </Link>
                 </li>
               ) : (
                 ''
@@ -60,8 +64,8 @@ export default function Nav({ auth, logout, selectUser }: NavProps) {
                 <a
                   className="nav-link"
                   onClick={evt => {
-                    evt.preventDefault()
-                    logout()
+                    evt.preventDefault();
+                    logout();
                   }}
                 >
                   Logout
@@ -71,15 +75,19 @@ export default function Nav({ auth, logout, selectUser }: NavProps) {
           ) : (
             <ul className="navbar-nav ms-auto">
               <li className="nav-item">
-                <Link className="nav-link" to="/signup">Sign Up</Link>
+                <Link className="nav-link" to="/signup">
+                  Sign Up
+                </Link>
               </li>
               <li className="nav-item">
-                <Link className="nav-link" to="/login">Login</Link>
+                <Link className="nav-link" to="/login">
+                  Login
+                </Link>
               </li>
             </ul>
           )}
         </div>
       </div>
     </nav>
-  )
+  );
 }

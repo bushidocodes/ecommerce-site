@@ -1,4 +1,4 @@
-const db = require('../db')
+const db = require('../db');
 
 const seedUsers = () =>
   Promise.all(
@@ -28,7 +28,7 @@ const seedUsers = () =>
         isAdmin: false,
       },
     ].map(user => db.model('users').create(user))
-  )
+  );
 
 const seedProducts = () =>
   Promise.all(
@@ -130,7 +130,7 @@ const seedProducts = () =>
         categories: ['classic', 'regal', 'award-winning'],
       },
     ].map(product => db.model('products').create(product))
-  )
+  );
 
 const seedReviews = () =>
   Promise.all(
@@ -157,7 +157,7 @@ const seedReviews = () =>
         product_id: 9,
       },
     ].map(review => db.model('reviews').create(review))
-  )
+  );
 
 db.didSync
   .then(() => db.sync({ force: true }))
@@ -168,4 +168,4 @@ db.didSync
   .then(seedReviews)
   .then(reviews => console.log(`Seeded ${reviews.length} reviews OK`))
   .catch(error => console.error(error))
-  .finally(() => db.close())
+  .finally(() => db.close());

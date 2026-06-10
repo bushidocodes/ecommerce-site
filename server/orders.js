@@ -1,11 +1,12 @@
-'use strict'
+'use strict';
 
-const db = require('../db')
-const Order = require('../db/models/order')
-const Product = require('../db/models/product')
-const User = require('../db/models/user')
-const Promise = require('bluebird')
-const { mustBeLoggedIn, selfOnly, forbidden } = require('./auth.filters.js')
+const db = require('../db');
+const Order = require('../db/models/order');
+const Product = require('../db/models/product');
+const User = require('../db/models/user');
+const Promise = require('bluebird');
+const { mustBeLoggedIn, selfOnly, forbidden } = require('./auth.filters.js');
+const debug = require('debug')('cookie-monsters:orders');
 
 module.exports = require('express')
   .Router()
@@ -13,10 +14,10 @@ module.exports = require('express')
   // Action: Retrieve all orders, including products and orderlineitem details
   // Roles: Admin
   .get('/', (req, res, next) => {
-    console.log('get /api/orders/')
+    debug('get /api/orders/');
     // .get('/', mustBeLoggedIn, (req, res, next) => {
     if (req.user && req.user.isAdmin) {
-      console.log('is an admin')
+      debug('is an admin');
       return Order.findAll({
         include: [
           {
@@ -30,11 +31,11 @@ module.exports = require('express')
         .then(orders => _promisifyOrderProps(orders))
         .then(orders => Promise.all(orders))
         .then(orders => res.json(orders))
-        .catch(next)
+        .catch(next);
     }
     // If not an admin, retrieve your own orders
     else if (req.user) {
-      console.log('else if req.user')
+      debug('else if req.user');
       req.user
         .getOrders({
           include: [
@@ -49,9 +50,9 @@ module.exports = require('express')
         .then(orders => _promisifyOrderProps(orders))
         .then(orders => Promise.all(orders))
         .then(orders => res.status(200).json(orders))
-        .catch(next)
+        .catch(next);
     } else {
-      res.status(403).send('Cannot view without req.user')
+      res.status(403).send('Cannot view without req.user');
     }
   })
 
@@ -64,25 +65,25 @@ module.exports = require('express')
   //   User has actually ordered.
 
   .post('/:userId?', (req, res, next) => {
-    let order
+    let order;
     let orderLineItems =
-      req.body && req.body.orderLineItems ? req.body.orderLineItems : null
-    let productIds = orderLineItems ? Object.keys(orderLineItems) : []
-    console.log('-------------------', req.params.userId)
+      req.body && req.body.orderLineItems ? req.body.orderLineItems : null;
+    let productIds = orderLineItems ? Object.keys(orderLineItems) : [];
+    debug('POST /:userId? userId=%s', req.params.userId);
 
     // if the user is an admin
     if (req.user && req.user.isAdmin) {
-      console.log('User is an admin')
+      debug('user is an admin');
       // ...and the admin specifies a userID for whom to create an order
       if (req.params && req.params.userId) {
-        console.log('User ', req.params.userId, ' specified as param')
+        debug('userId=%s specified as param', req.params.userId);
         User.findByPk(req.params.userId)
           .then(user => user.createOrder(req.body)) // filter out only the Order attributes???
           .then(_order => {
-            order = _order
+            order = _order;
             return Promise.all(
               productIds.map(productId => Product.findByPk(productId))
-            )
+            );
           })
           .then(products => {
             if (products) {
@@ -93,41 +94,39 @@ module.exports = require('express')
                     price: product.price,
                   },
                 })
-              )
+              );
             }
           })
           .then(() => res.sendStatus(200))
-          .catch(next)
+          .catch(next);
       }
       // ... and the user does not specify a userID
       else {
-        console.log('No user specified as param')
+        debug('no userId param, creating unassociated order');
         Order.create(req.body)
           .then(_order => {
-            order = _order
+            order = _order;
             return Promise.all(
               productIds.map(productId => Product.findByPk(productId))
-            )
+            );
           })
           .then(products => {
             if (products) {
               return Promise.all(
                 products.map(product => {
-                  const qty = orderLineItems[product.id].quantity
+                  const qty = orderLineItems[product.id].quantity;
                   if (product.quantity < qty) {
                     return res.status(409).json({
                       error: `Insufficient inventory for product ${product.id}`,
-                    })
+                    });
                   }
                   return order
                     .addProduct(product, {
                       through: { quantity: qty, price: product.price },
                     })
-                    .then(() =>
-                      product.decrement('quantity', { by: qty })
-                    )
+                    .then(() => product.decrement('quantity', { by: qty }));
                 })
-              )
+              );
             }
           })
           .then(() =>
@@ -143,41 +142,39 @@ module.exports = require('express')
             })
           )
           .then(order => {
-            return res.status(200).json(order)
+            return res.status(200).json(order);
           })
-          .catch(next)
+          .catch(next);
       }
     }
     // ... and the user is not an admin
     else if (req.user) {
-      console.log('user is not an admin')
+      debug('user is not an admin');
       req.user
         .createOrder(req.body)
         .then(_order => {
-          order = _order
+          order = _order;
           return Promise.all(
             productIds.map(productId => Product.findByPk(productId))
-          )
+          );
         })
         .then(products => {
           if (products) {
             return Promise.all(
               products.map(product => {
-                const qty = orderLineItems[product.id].quantity
+                const qty = orderLineItems[product.id].quantity;
                 if (product.quantity < qty) {
                   return res.status(409).json({
                     error: `Insufficient inventory for product ${product.id}`,
-                  })
+                  });
                 }
                 return order
                   .addProduct(product, {
                     through: { quantity: qty, price: product.price },
                   })
-                  .then(() =>
-                    product.decrement('quantity', { by: qty })
-                  )
+                  .then(() => product.decrement('quantity', { by: qty }));
               })
-            )
+            );
           }
         })
         .then(() =>
@@ -193,20 +190,20 @@ module.exports = require('express')
           })
         )
         .then(order => {
-          console.log(order)
-          return res.status(200).json(order)
+          debug('order=%O', order);
+          return res.status(200).json(order);
         })
-        .catch(next)
+        .catch(next);
     }
     // Guest User
     else {
-      console.log('No user logged in so guest')
+      debug('no user logged in, creating guest order');
       Order.create(req.body)
         .then(_order => {
-          order = _order
+          order = _order;
           return Promise.all(
             productIds.map(productId => Product.findByPk(productId))
-          )
+          );
         })
         .then(products => {
           if (products) {
@@ -219,7 +216,7 @@ module.exports = require('express')
                   },
                 })
               )
-            )
+            );
           }
         })
         .then(() =>
@@ -235,7 +232,7 @@ module.exports = require('express')
           })
         )
         .then(order => res.status(200).json(order))
-        .catch(next)
+        .catch(next);
     }
   })
 
@@ -284,9 +281,9 @@ module.exports = require('express')
       })
         .then(orders => _promisifyOrderProps(orders))
         .then(order => res.json(order))
-        .catch(next)
+        .catch(next);
     } else {
-      return forbidden(res, 'You are not authorized to do this.')
+      return forbidden(res, 'You are not authorized to do this.');
     }
   })
 
@@ -297,9 +294,9 @@ module.exports = require('express')
       return Order.findByPk(req.params.id)
         .then(order => order.update(req.body))
         .then(order => res.status(200).json(order))
-        .catch(next)
+        .catch(next);
     } else {
-      return forbidden(res, 'You are not authorized to do this.')
+      return forbidden(res, 'You are not authorized to do this.');
     }
   })
 
@@ -310,9 +307,9 @@ module.exports = require('express')
       return Order.findByPk(req.params.id)
         .then(order => order.destroy())
         .then(() => res.sendStatus(200))
-        .catch(next)
+        .catch(next);
     } else {
-      return forbidden(res, 'You are not authorized to do this.')
+      return forbidden(res, 'You are not authorized to do this.');
     }
   })
 
@@ -325,15 +322,15 @@ module.exports = require('express')
   // }}
   .post('/:id/products/', mustBeLoggedIn, (req, res, next) => {
     if (req.user.isAdmin) {
-      let orderLineItems = req.body.orderLineItems
-      let productIds = Object.keys(orderLineItems)
-      let order
+      let orderLineItems = req.body.orderLineItems;
+      let productIds = Object.keys(orderLineItems);
+      let order;
       Order.findByPk(req.params.id)
         .then(_order => {
-          order = _order
+          order = _order;
           return Promise.all(
             productIds.map(productId => Product.findByPk(productId))
-          )
+          );
         })
         .then(products => {
           products.forEach(product =>
@@ -343,12 +340,12 @@ module.exports = require('express')
                 price: product.price,
               },
             })
-          )
+          );
         })
         .then(() => res.sendStatus(200))
-        .catch(next)
+        .catch(next);
     } else {
-      return forbidden(res, 'You are not authorized to do this.')
+      return forbidden(res, 'You are not authorized to do this.');
     }
   })
 
@@ -359,11 +356,11 @@ module.exports = require('express')
       return Order.findByPk(req.params.orderId)
         .then(order => order.removeProduct(req.params.productId))
         .then(() => res.sendStatus(200))
-        .catch(next)
+        .catch(next);
     } else {
-      return forbidden(res, 'You are not authorized to do this.')
+      return forbidden(res, 'You are not authorized to do this.');
     }
-  })
+  });
 
 // This is a kludgey looking helper function to deal with resolving a Promise
 // returned by a Sequelize getter
@@ -390,5 +387,5 @@ function _promisifyOrderProps(orders) {
         products,
         total,
       })
-  )
+  );
 }

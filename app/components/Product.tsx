@@ -1,14 +1,14 @@
-import React, { useRef } from 'react'
-import { Link } from 'react-router-dom'
-import type { Product as ProductType } from '../types'
+import React, { useRef } from 'react';
+import { Link } from 'react-router-dom';
+import type { Product as ProductType } from '../types';
 
 interface ProductProps {
-  cookie: ProductType
-  plusItemzToCart: (product: ProductType, quantity: number) => void
+  cookie: ProductType;
+  plusItemzToCart: (product: ProductType, quantity: number) => void;
 }
 
 export default function Product({ cookie, plusItemzToCart }: ProductProps) {
-  const quantityRef = useRef<HTMLInputElement>(null)
+  const quantityRef = useRef<HTMLInputElement>(null);
   return (
     <div className="col-12 col-sm-6 col-md-3">
       <div className="card">
@@ -44,10 +44,10 @@ export default function Product({ cookie, plusItemzToCart }: ProductProps) {
               className="btn btn-info btn-sm"
               role="button"
               onClick={evt => {
-                evt.preventDefault()
-                const quantity = parseInt(quantityRef.current?.value ?? '1')
-                plusItemzToCart(cookie, quantity)
-                alert(`Added ${quantity} ${cookie.name} to cart`)
+                evt.preventDefault();
+                const quantity = parseInt(quantityRef.current?.value ?? '1');
+                plusItemzToCart(cookie, quantity);
+                alert(`Added ${quantity} ${cookie.name} to cart`);
               }}
             >
               Add to cart
@@ -56,5 +56,5 @@ export default function Product({ cookie, plusItemzToCart }: ProductProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

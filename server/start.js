@@ -1,17 +1,17 @@
-'use strict'
+'use strict';
 
-const express = require('express')
-const bodyParser = require('body-parser')
-const { resolve } = require('path')
-const passport = require('passport')
+const express = require('express');
+const bodyParser = require('body-parser');
+const { resolve } = require('path');
+const passport = require('passport');
 
-const pkg = require('../index.js')
+const pkg = require('../index.js');
 
-const app = express()
+const app = express();
 
 if (!pkg.isProduction && !pkg.isTesting) {
   // Logging middleware (dev only)
-  app.use(require('volleyball'))
+  app.use(require('volleyball'));
 }
 
 module.exports = app
@@ -20,12 +20,12 @@ module.exports = app
     require('cookie-session')({
       name: 'session',
       keys: [
-      (() => {
-        if (!process.env.SESSION_SECRET)
-          throw new Error('SESSION_SECRET environment variable is required')
-        return process.env.SESSION_SECRET
-      })(),
-    ],
+        (() => {
+          if (!process.env.SESSION_SECRET)
+            throw new Error('SESSION_SECRET environment variable is required');
+          return process.env.SESSION_SECRET;
+        })(),
+      ],
     })
   )
 
@@ -46,14 +46,14 @@ module.exports = app
   // Send index.html for anything else.
   .get('/*', (_, res) =>
     res.sendFile(resolve(__dirname, '..', 'public', 'index.html'))
-  )
+  );
 
 if (module === require.main) {
   // Start listening only if we're the main module.
   //
   // https://nodejs.org/api/modules.html#modules_accessing_the_main_module
   const server = app.listen(process.env.PORT || 1337, () => {
-    console.log(`--- Started HTTP Server for ${pkg.name} ---`)
-    console.log(`Listening on ${JSON.stringify(server.address())}`)
-  })
+    console.log(`--- Started HTTP Server for ${pkg.name} ---`);
+    console.log(`Listening on ${JSON.stringify(server.address())}`);
+  });
 }

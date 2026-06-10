@@ -1,20 +1,20 @@
-const request = require('supertest')
-const { expect } = require('chai')
-const db = require('../db')
-const Review = require('../db/models/review')
-const User = require('../db/models/user')
-const Product = require('../db/models/product')
-const app = require('./start')
+const request = require('supertest');
+const { expect } = require('chai');
+const db = require('../db');
+const Review = require('../db/models/review');
+const User = require('../db/models/user');
+const Product = require('../db/models/product');
+const app = require('./start');
 
 const testUser = {
   name: 'Review Tester',
   username: 'reviewer@example.com',
   password: 'testpass',
-}
+};
 
 describe('/api/reviews', () => {
-  const agent = request.agent(app)
-  let user, product
+  const agent = request.agent(app);
+  let user, product;
 
   before('create product, user, and log in', () =>
     db.didSync
@@ -28,74 +28,77 @@ describe('/api/reviews', () => {
         })
       )
       .then(_product => {
-        product = _product
+        product = _product;
         return User.create({
           name: testUser.name,
           email: testUser.username,
           password: testUser.password,
-        })
+        });
       })
       .then(_user => {
-        user = _user
-        return agent.post('/api/auth/local/login').send(testUser)
+        user = _user;
+        return agent.post('/api/auth/local/login').send(testUser);
       })
-  )
+  );
 
   describe('GET /', () => {
     it('returns all reviews (public, no auth required)', () =>
-      request(app).get('/api/reviews').expect(200))
-  })
+      request(app).get('/api/reviews').expect(200));
+  });
 
   describe('POST / (authenticated)', () => {
-    let createdId
+    let createdId;
 
     it('creates a review when logged in with a productId', () =>
       agent
         .post('/api/reviews')
-        .send({ title: 'Absolutely delicious', body: 'Would order again.', rating: 5, productId: product.id })
+        .send({
+          title: 'Absolutely delicious',
+          body: 'Would order again.',
+          rating: 5,
+          productId: product.id,
+        })
         .expect(201)
         .then(res => {
-          createdId = res.body.id
-          expect(res.body.title).to.equal('Absolutely delicious')
-        }))
+          createdId = res.body.id;
+          expect(res.body.title).to.equal('Absolutely delicious');
+        }));
 
     it('rejects review creation without auth (401)', () =>
       request(app)
         .post('/api/reviews')
         .send({ title: 'Ghost review', rating: 3, productId: product.id })
-        .expect(401))
+        .expect(401));
 
     it('rejects review creation without productId (400)', () =>
       agent
         .post('/api/reviews')
         .send({ title: 'No product', rating: 3 })
-        .expect(400))
+        .expect(400));
 
     describe('GET /:id', () => {
       it('returns the created review by id', function () {
-        if (!createdId) return this.skip()
-        return request(app).get(`/api/reviews/${createdId}`).expect(200)
-      })
-    })
+        if (!createdId) return this.skip();
+        return request(app).get(`/api/reviews/${createdId}`).expect(200);
+      });
+    });
 
     describe('PUT /:id', () => {
       it('updates a review the user owns', function () {
-        if (!createdId) return this.skip()
+        if (!createdId) return this.skip();
         return agent
           .put(`/api/reviews/${createdId}`)
           .send({ title: 'Updated title', rating: 4 })
           .expect(200)
-          .then(res => expect(res.body.title).to.equal('Updated title'))
-      })
-    })
+          .then(res => expect(res.body.title).to.equal('Updated title'));
+      });
+    });
 
     describe('DELETE /:id', () => {
       it('deletes a review the user owns', function () {
-        if (!createdId) return this.skip()
-        return agent
-          .delete(`/api/reviews/${createdId}`)
-          .expect(204)
-      })
-    })
-  })
-})
+        if (!createdId) return this.skip();
+        return agent.delete(`/api/reviews/${createdId}`).expect(204);
+      });
+    });
+  });
+});

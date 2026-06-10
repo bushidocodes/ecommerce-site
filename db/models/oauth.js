@@ -1,10 +1,10 @@
-'use strict'
+'use strict';
 
-const debug = require('debug')('oauth')
-const Sequelize = require('sequelize')
-const db = require('../../db')
-const Promise = require('bluebird')
-const User = require('./user')
+const debug = require('debug')('oauth');
+const Sequelize = require('sequelize');
+const db = require('../../db');
+const Promise = require('bluebird');
+const User = require('./user');
 
 const OAuth = db.define(
   'oauths',
@@ -26,7 +26,7 @@ const OAuth = db.define(
   {
     indexes: [{ fields: ['uid'], unique: true }],
   }
-)
+);
 
 OAuth.V2 = (accessToken, refreshToken, profile, done) =>
   OAuth.findOrCreate({
@@ -41,13 +41,13 @@ OAuth.V2 = (accessToken, refreshToken, profile, done) =>
         profile.provider,
         profile.displayName,
         oauth.uid
-      )
-      oauth.profileJson = profile
+      );
+      oauth.profileJson = profile;
       return Promise.props({
         oauth,
         user: oauth.getUser(),
         _saveProfile: oauth.save(),
-      })
+      });
     })
     .then(
       ({ oauth, user }) =>
@@ -62,7 +62,7 @@ OAuth.V2 = (accessToken, refreshToken, profile, done) =>
         )
     )
     .then(({ user }) => done(null, user))
-    .catch(done)
+    .catch(done);
 
 OAuth.setupStrategy = ({
   provider,
@@ -73,17 +73,17 @@ OAuth.setupStrategy = ({
 }) => {
   const undefinedKeys = Object.keys(config)
     .map(k => config[k])
-    .filter(value => typeof value === 'undefined')
+    .filter(value => typeof value === 'undefined');
   if (undefinedKeys.length) {
     undefinedKeys.forEach(key =>
       debug('provider:%s: needs environment var %s', provider, key)
-    )
-    debug('provider:%s will not initialize', provider)
-    return
+    );
+    debug('provider:%s will not initialize', provider);
+    return;
   }
 
-  debug('initializing provider:%s', provider)
-  passport.use(new strategy(config, oauth))
-}
+  debug('initializing provider:%s', provider);
+  passport.use(new strategy(config, oauth));
+};
 
-module.exports = OAuth
+module.exports = OAuth;

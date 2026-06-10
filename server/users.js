@@ -1,9 +1,13 @@
-'use strict'
+'use strict';
 
-const db = require('../db')
-const User = db.model('users')
+const db = require('../db');
+const User = db.model('users');
 
-const { mustBeLoggedIn, selfOnlyOrAdmin, forbidden } = require('./auth.filters')
+const {
+  mustBeLoggedIn,
+  selfOnlyOrAdmin,
+  forbidden,
+} = require('./auth.filters');
 // const selfOrAdmin = selfOnlyOrAdmin("select");
 // console.log(selfOnlyOrAdmin("select"));
 module.exports = require('express')
@@ -16,9 +20,9 @@ module.exports = require('express')
     if (req.user.isAdmin) {
       User.findAll()
         .then(users => res.json(users))
-        .catch(next)
+        .catch(next);
     } else {
-      return forbidden(res, 'only admins can list all users')
+      return forbidden(res, 'only admins can list all users');
     }
   })
 
@@ -28,12 +32,12 @@ module.exports = require('express')
   // set via the public registration endpoint.
   .post('/', (req, res, next) => {
     if (req.user) {
-      return res.status(403).send('Already logged in')
+      return res.status(403).send('Already logged in');
     }
-    const { name, email, password } = req.body
+    const { name, email, password } = req.body;
     return User.create({ name, email, password })
       .then(user => res.status(201).json(user))
-      .catch(next)
+      .catch(next);
   })
 
   // Action: Param for User ID
@@ -44,19 +48,19 @@ module.exports = require('express')
     User.findByPk(req.params.id)
       .then(user => {
         if (user) {
-          req.foundUser = user //DO NOT KLOBBER PASSPORT BY USING REQ.USER!!!!
-          next()
+          req.foundUser = user; //DO NOT KLOBBER PASSPORT BY USING REQ.USER!!!!
+          next();
         } else {
-          res.sendStatus(404)
+          res.sendStatus(404);
         }
       })
-      .catch(next)
+      .catch(next);
   })
 
   // Action: Get user by ID
   // Roles: User, Admin
   // Notes:
-  .get('/:id', (req, res, next) => res.status(200).json(req.foundUser))
+  .get('/:id', (req, res, next) => res.status(200).json(req.foundUser));
 
 // Action: Modify user by ID
 // Roles: User, Admin

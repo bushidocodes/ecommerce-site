@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 export default function CartEmpty() {
   return (
@@ -20,5 +20,5 @@ export default function CartEmpty() {
         </div>
       </div>
     </div>
-  )
+  );
 }

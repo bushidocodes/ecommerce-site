@@ -1,12 +1,12 @@
-import React from 'react'
-import { connect } from 'react-redux'
-import { logout } from '../reducers/auth'
-import type { RootState, AppDispatch } from '../store'
-import type { User } from '../types'
+import React from 'react';
+import { connect } from 'react-redux';
+import { logout } from '../reducers/auth';
+import type { RootState, AppDispatch } from '../store';
+import type { User } from '../types';
 
 interface WhoAmIProps {
-  user: User | null
-  logout: () => void
+  user: User | null;
+  logout: () => void;
 }
 
 export const WhoAmI = ({ user, logout }: WhoAmIProps) => (
@@ -16,14 +16,14 @@ export const WhoAmI = ({ user, logout }: WhoAmIProps) => (
       Logout
     </button>
   </div>
-)
+);
 
 function mapStateToProps(state: RootState) {
-  return { user: state.auth }
+  return { user: state.auth };
 }
 
 function mapDispatchToProps(dispatch: AppDispatch) {
-  return { logout: () => dispatch(logout()) }
+  return { logout: () => dispatch(logout()) };
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(WhoAmI)
+export default connect(mapStateToProps, mapDispatchToProps)(WhoAmI);

@@ -1,15 +1,15 @@
-import React from 'react'
-import type { User as UserType } from '../types'
+import React from 'react';
+import type { User as UserType } from '../types';
 
 interface UsersState {
-  users: UserType[]
-  selectedUser: Partial<UserType>
+  users: UserType[];
+  selectedUser: Partial<UserType>;
 }
 
 interface UsersProps {
-  users: UsersState
-  auth: UserType | null
-  selectUser: (user: Partial<UserType>) => void
+  users: UsersState;
+  auth: UserType | null;
+  selectUser: (user: Partial<UserType>) => void;
 }
 
 export default function Users({ users, selectUser }: UsersProps) {
@@ -25,8 +25,8 @@ export default function Users({ users, selectUser }: UsersProps) {
             >
               <a
                 onClick={evt => {
-                  evt.preventDefault()
-                  selectUser(user)
+                  evt.preventDefault();
+                  selectUser(user);
                 }}
               >
                 {user.name}
@@ -36,5 +36,5 @@ export default function Users({ users, selectUser }: UsersProps) {
         </div>
       </div>
     </div>
-  )
+  );
 }

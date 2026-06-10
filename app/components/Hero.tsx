@@ -1,5 +1,5 @@
-import React from 'react'
-import Cart from '../containers/CartContainer'
+import React from 'react';
+import Cart from '../containers/CartContainer';
 
 export default function Hero() {
   return (
@@ -14,5 +14,5 @@ export default function Hero() {
       </div>
       <br />
     </div>
-  )
+  );
 }

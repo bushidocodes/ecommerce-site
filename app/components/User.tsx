@@ -1,15 +1,15 @@
-import React from 'react'
-import { Link, Navigate } from 'react-router-dom'
-import type { User as UserType } from '../types'
+import React from 'react';
+import { Link, Navigate } from 'react-router-dom';
+import type { User as UserType } from '../types';
 
 interface UserProps {
-  user: Partial<UserType>
-  auth: UserType | null
+  user: Partial<UserType>;
+  auth: UserType | null;
 }
 
 export default function User({ user, auth }: UserProps) {
   if (!user || !user.name) {
-    return <Navigate to="/login" replace />
+    return <Navigate to="/login" replace />;
   }
   return (
     <div className="container">
@@ -168,5 +168,5 @@ export default function User({ user, auth }: UserProps) {
         </Link>
       </div>
     </div>
-  )
+  );
 }

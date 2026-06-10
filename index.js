@@ -1,10 +1,10 @@
-'use strict'
+'use strict';
 
-const { resolve } = require('path')
-const { homedir } = require('os')
-const chalk = require('chalk')
-const pkg = require('./package.json')
-const debug = require('debug')(`${pkg.name}:boot`)
+const { resolve } = require('path');
+const { homedir } = require('os');
+const chalk = require('chalk');
+const pkg = require('./package.json');
+const debug = require('debug')(`${pkg.name}:boot`);
 
 // This will load a secrets file from
 //
@@ -13,30 +13,30 @@ const debug = require('debug')(`${pkg.name}:boot`)
 //
 // and add it to the environment.
 const env = Object.create(process.env),
-  secretsFile = resolve(homedir(), `.${pkg.name}.env`)
+  secretsFile = resolve(homedir(), `.${pkg.name}.env`);
 try {
-  Object.assign(env, require(secretsFile))
+  Object.assign(env, require(secretsFile));
 } catch (error) {
-  debug('%s: %s', secretsFile, error.message)
-  debug('%s: env file not found or invalid, moving on', secretsFile)
+  debug('%s: %s', secretsFile, error.message);
+  debug('%s: env file not found or invalid, moving on', secretsFile);
 }
 
 module.exports = {
   get name() {
-    return pkg.name
+    return pkg.name;
   },
   get isTesting() {
-    return !!global.it
+    return !!global.it;
   },
   get isProduction() {
-    return process.env.NODE_ENV === 'production'
+    return process.env.NODE_ENV === 'production';
   },
   get baseUrl() {
-    return env.BASE_URL || `http://localhost:${this.port}`
+    return env.BASE_URL || `http://localhost:${this.port}`;
   },
   get port() {
-    return env.PORT || 1337
+    return env.PORT || 1337;
   },
   package: pkg,
   env,
-}
+};

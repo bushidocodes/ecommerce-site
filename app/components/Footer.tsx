@@ -1,6 +1,6 @@
-import React from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faGraduationCap } from '@fortawesome/free-solid-svg-icons'
+import React from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGraduationCap } from '@fortawesome/free-solid-svg-icons';
 
 export default function Footer() {
   return (
@@ -20,7 +20,11 @@ export default function Footer() {
             Evan
           </a>
           , and{' '}
-          <a href="http://rachelbird.com/" target="_blank" rel="noopener noreferrer">
+          <a
+            href="http://rachelbird.com/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Rachel
           </a>
           : the Cookie Monsters of Fullstack Academy{' '}
@@ -28,5 +32,5 @@ export default function Footer() {
         </p>
       </div>
     </div>
-  )
+  );
 }

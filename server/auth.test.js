@@ -1,14 +1,14 @@
-const request = require('supertest')
-const { expect } = require('chai')
-const db = require('../db')
-const User = require('../db/models/user')
-const app = require('./start')
+const request = require('supertest');
+const { expect } = require('chai');
+const db = require('../db');
+const User = require('../db/models/user');
+const app = require('./start');
 
 const alice = {
   name: 'Alice Malice',
   username: 'alice@secrets.org',
   password: '12345',
-}
+};
 
 describe('/api/auth', () => {
   before('create a user', () =>
@@ -19,7 +19,7 @@ describe('/api/auth', () => {
         password: alice.password,
       })
     )
-  )
+  );
 
   describe('POST /local/login (username, password)', () => {
     it('succeeds with a valid username and password', () =>
@@ -28,19 +28,19 @@ describe('/api/auth', () => {
         .send(alice)
         .expect(302)
         .expect('Set-Cookie', /session=.*/)
-        .expect('Location', '/'))
+        .expect('Location', '/'));
 
     it('fails with an invalid username and password', () =>
       request(app)
         .post('/api/auth/local/login')
         .send({ username: alice.username, password: 'wrong' })
-        .expect(401))
-  })
+        .expect(401));
+  });
 
   describe('GET /whoami', () => {
     describe('when logged in,', () => {
-      const agent = request.agent(app)
-      before('log in', () => agent.post('/api/auth/local/login').send(alice))
+      const agent = request.agent(app);
+      before('log in', () => agent.post('/api/auth/local/login').send(alice));
 
       it('responds with the currently logged in user', () =>
         agent
@@ -51,20 +51,20 @@ describe('/api/auth', () => {
             expect(res.body).to.contain({
               email: alice.username,
             })
-          ))
-    })
+          ));
+    });
 
     it('when not logged in, responds with an empty object', () =>
       request(app)
         .get('/api/auth/whoami')
         .expect(200)
-        .then(res => expect(res.body).to.eql({})))
-  })
+        .then(res => expect(res.body).to.eql({})));
+  });
 
   describe('POST /logout when logged in', () => {
-    const agent = request.agent(app)
+    const agent = request.agent(app);
 
-    before('log in', () => agent.post('/api/auth/local/login').send(alice))
+    before('log in', () => agent.post('/api/auth/local/login').send(alice));
 
     it('logs you out and redirects to whoami', () =>
       agent
@@ -76,6 +76,6 @@ describe('/api/auth', () => {
             .get('/api/auth/whoami')
             .expect(200)
             .then(rsp => expect(rsp.body).eql({}))
-        ))
-  })
-})
+        ));
+  });
+});

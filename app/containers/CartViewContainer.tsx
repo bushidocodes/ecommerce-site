@@ -1,10 +1,10 @@
-import { connect } from 'react-redux'
-import CartView from '../components/CartView'
-import { submitOrder } from '../reducers/orders'
-import { removeFromCart } from '../reducers/cart'
-import withNavigate, { WithNavigateProps } from '../utils/withNavigate'
-import type { RootState, AppDispatch } from '../store'
-import type { CartItem } from '../types'
+import { connect } from 'react-redux';
+import CartView from '../components/CartView';
+import { submitOrder } from '../reducers/orders';
+import { removeFromCart } from '../reducers/cart';
+import withNavigate, { WithNavigateProps } from '../utils/withNavigate';
+import type { RootState, AppDispatch } from '../store';
+import type { CartItem } from '../types';
 
 function mapStateToProps(state: RootState) {
   return {
@@ -12,21 +12,26 @@ function mapStateToProps(state: RootState) {
     auth: state.auth,
     successMessage: state.orders.successMessage,
     errorMessage: state.orders.errorMessage,
-  }
+  };
 }
 
-function mapDispatchToProps(dispatch: AppDispatch, ownProps: WithNavigateProps) {
+function mapDispatchToProps(
+  dispatch: AppDispatch,
+  ownProps: WithNavigateProps
+) {
   return {
     submitOrder: (cart: CartItem[]) => {
-      dispatch(submitOrder(cart, ownProps.navigate))
+      dispatch(submitOrder(cart, ownProps.navigate));
     },
     removeFromCart: (productId: number) => {
-      dispatch(removeFromCart(productId))
+      dispatch(removeFromCart(productId));
     },
     navigateToLogin: () => {
-      ownProps.navigate('/login')
+      ownProps.navigate('/login');
     },
-  }
+  };
 }
 
-export default withNavigate(connect(mapStateToProps, mapDispatchToProps)(CartView))
+export default withNavigate(
+  connect(mapStateToProps, mapDispatchToProps)(CartView)
+);

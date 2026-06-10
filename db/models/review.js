@@ -1,8 +1,8 @@
-'use strict'
+'use strict';
 
-const bcrypt = require('bcrypt')
-const Sequelize = require('sequelize')
-const db = require('../../db')
+const bcrypt = require('bcrypt');
+const Sequelize = require('sequelize');
+const db = require('../../db');
 
 const Review = db.define('reviews', {
   title: {
@@ -27,6 +27,6 @@ const Review = db.define('reviews', {
       isUrl: true,
     },
   },
-})
+});
 
-module.exports = Review
+module.exports = Review;

@@ -1,7 +1,5 @@
 'use strict';
 
-const Order = require('./order.js');
-const Product = require('./product.js');
 const Sequelize = require('sequelize');
 const db = require('../../db');
 

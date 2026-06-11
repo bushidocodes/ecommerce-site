@@ -30,7 +30,7 @@ const Review = db.define(
     },
   },
   {
-    indexes: [{ fields: ['productId'] }, { fields: ['userId'] }],
+    indexes: [{ fields: ['product_id'] }, { fields: ['user_id'] }],
   }
 );
 

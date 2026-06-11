@@ -58,9 +58,14 @@ module.exports = require('express')
   })
 
   // Action: Get user by ID
-  // Roles: User, Admin
-  // Notes:
-  .get('/:id', (req, res, next) => res.status(200).json(req.foundUser));
+  // Roles: User (own profile only), Admin
+  // Notes: Users may only read their own profile; admins may read any profile.
+  .get('/:id', (req, res, next) => {
+    if (!req.user.isAdmin && String(req.user.id) !== String(req.params.id)) {
+      return forbidden(res, 'You may only view your own profile');
+    }
+    return res.status(200).json(req.foundUser);
+  });
 
 // Action: Modify user by ID
 // Roles: User, Admin

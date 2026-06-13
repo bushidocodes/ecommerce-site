@@ -1,13 +1,14 @@
 import React from 'react';
 import { expect } from 'chai';
-import { shallow } from 'enzyme';
+import { render, cleanup } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import Products from './Products';
 import rootReducer from '../reducers';
 
-// Minimal store for component tests — no middleware, no side effects
+afterEach(cleanup);
+
 function makeTestStore() {
   return configureStore({ reducer: rootReducer });
 }
@@ -42,38 +43,38 @@ describe('<Products/>', () => {
   ];
 
   it('renders a card for each product', () => {
-    const root = shallow(
+    const { container } = render(
       <Provider store={makeTestStore()}>
         <MemoryRouter>
           <Products products={sampleProducts} plusItemzToCart={noop} />
         </MemoryRouter>
       </Provider>
     );
-    expect(root.html()).to.contain('Chocolate Chip');
-    expect(root.html()).to.contain('Oatmeal Raisin');
-    expect(root.html()).to.contain('Sugar Cookie');
+    expect(container.innerHTML).to.contain('Chocolate Chip');
+    expect(container.innerHTML).to.contain('Oatmeal Raisin');
+    expect(container.innerHTML).to.contain('Sugar Cookie');
   });
 
   it('renders nothing for an empty product list', () => {
-    const root = shallow(
+    const { container } = render(
       <Provider store={makeTestStore()}>
         <MemoryRouter>
           <Products products={[]} plusItemzToCart={noop} />
         </MemoryRouter>
       </Provider>
     );
-    expect(root.html()).to.not.contain('Add to cart');
+    expect(container.innerHTML).to.not.contain('Add to cart');
   });
 
   it('shows category tags for each product', () => {
-    const root = shallow(
+    const { container } = render(
       <Provider store={makeTestStore()}>
         <MemoryRouter>
           <Products products={sampleProducts} plusItemzToCart={noop} />
         </MemoryRouter>
       </Provider>
     );
-    expect(root.html()).to.contain('chocolate');
-    expect(root.html()).to.contain('oatmeal');
+    expect(container.innerHTML).to.contain('chocolate');
+    expect(container.innerHTML).to.contain('oatmeal');
   });
 });

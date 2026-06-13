@@ -1,18 +1,17 @@
 process.env.SESSION_SECRET = 'test-session-secret';
 
-const Enzyme = require('enzyme');
-const Adapter = require('@cfaester/enzyme-adapter-react-18').default;
+const { JSDOM } = require('jsdom');
 
-Enzyme.configure({ adapter: new Adapter() });
+const dom = new JSDOM('<!DOCTYPE html><html><body></body></html>', {
+  url: 'http://localhost',
+});
 
-// Minimal browser globals for component tests running in Node
-if (typeof window === 'undefined') {
-  global.window = { location: { pathname: '/' } };
-}
-if (typeof localStorage === 'undefined') {
-  global.localStorage = {
-    getItem: () => null,
-    setItem: () => {},
-    removeItem: () => {},
-  };
-}
+global.window = dom.window;
+global.document = dom.window.document;
+// global.navigator is already defined as a getter in Node 24+; skip it
+global.HTMLElement = dom.window.HTMLElement;
+global.localStorage = {
+  getItem: () => null,
+  setItem: () => {},
+  removeItem: () => {},
+};

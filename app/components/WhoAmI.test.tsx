@@ -1,32 +1,34 @@
 import React from 'react';
 import chai, { expect } from 'chai';
-import { shallow } from 'enzyme';
+import { render, cleanup, fireEvent } from '@testing-library/react';
 import { spy } from 'sinon';
 chai.use(require('sinon-chai'));
 
 import { WhoAmI } from './WhoAmI';
+
+afterEach(cleanup);
 
 describe('<WhoAmI/>', () => {
   const user = {
     name: 'Dr. Bones',
   };
   const logout = spy();
-  let root;
-  beforeEach(
-    'render the root',
-    () => (root = shallow(<WhoAmI user={user} logout={logout} />))
-  );
+  let container: HTMLElement;
+  beforeEach(() => {
+    logout.resetHistory();
+    ({ container } = render(<WhoAmI user={user} logout={logout} />));
+  });
 
   it('greets the user', () => {
-    expect(root.text()).to.contain(user.name);
+    expect(container.textContent).to.contain(user.name);
   });
 
   it('has a logout button', () => {
-    expect(root.find('button.logout').length).to.equal(1);
+    expect(container.querySelectorAll('button.logout').length).to.equal(1);
   });
 
   it('calls props.logout when logout is tapped', () => {
-    root.find('button.logout').simulate('click');
+    fireEvent.click(container.querySelector('button.logout')!);
     expect(logout).to.have.been.called;
   });
 });

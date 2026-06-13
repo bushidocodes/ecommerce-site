@@ -1,18 +1,20 @@
 import React from 'react';
 import { expect } from 'chai';
-import { shallow } from 'enzyme';
+import { render, cleanup } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Cart from './Cart';
 
+afterEach(cleanup);
+
 describe('<Cart/>', () => {
   it('shows 0 items and $0.00 when cart is empty', () => {
-    const root = shallow(
+    const { container } = render(
       <MemoryRouter>
         <Cart cart={[]} />
       </MemoryRouter>
     );
-    expect(root.html()).to.contain('0');
-    expect(root.html()).to.contain('$0.00');
+    expect(container.innerHTML).to.contain('0');
+    expect(container.innerHTML).to.contain('$0.00');
   });
 
   it('shows correct item count and total for one item', () => {
@@ -29,13 +31,13 @@ describe('<Cart/>', () => {
         quantity: 2,
       },
     ];
-    const root = shallow(
+    const { container } = render(
       <MemoryRouter>
         <Cart cart={cart} />
       </MemoryRouter>
     );
-    expect(root.html()).to.contain('2');
-    expect(root.html()).to.contain('$3.00');
+    expect(container.innerHTML).to.contain('2');
+    expect(container.innerHTML).to.contain('$3.00');
   });
 
   it('accumulates totals across multiple items', () => {
@@ -63,13 +65,13 @@ describe('<Cart/>', () => {
         quantity: 1,
       },
     ];
-    const root = shallow(
+    const { container } = render(
       <MemoryRouter>
         <Cart cart={cart} />
       </MemoryRouter>
     );
     // 2 + 1 = 3 items, 2*1.5 + 1*2.0 = $5.00
-    expect(root.html()).to.contain('3');
-    expect(root.html()).to.contain('$5.00');
+    expect(container.innerHTML).to.contain('3');
+    expect(container.innerHTML).to.contain('$5.00');
   });
 });

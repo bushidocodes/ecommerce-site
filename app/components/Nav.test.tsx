@@ -1,32 +1,34 @@
 import React from 'react';
 import { expect } from 'chai';
-import { shallow } from 'enzyme';
+import { render, cleanup } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Nav from './Nav';
+
+afterEach(cleanup);
 
 describe('<Nav/>', () => {
   const noop = () => {};
 
   describe('when logged out', () => {
-    let root;
+    let container: HTMLElement;
     beforeEach(() => {
-      root = shallow(
+      ({ container } = render(
         <MemoryRouter>
           <Nav auth={null} logout={noop} selectUser={noop} />
         </MemoryRouter>
-      );
+      ));
     });
 
     it('shows Sign Up link', () => {
-      expect(root.html()).to.contain('Sign Up');
+      expect(container.innerHTML).to.contain('Sign Up');
     });
 
     it('shows Login link', () => {
-      expect(root.html()).to.contain('Login');
+      expect(container.innerHTML).to.contain('Login');
     });
 
     it('does not show Logout', () => {
-      expect(root.html()).to.not.contain('Logout');
+      expect(container.innerHTML).to.not.contain('Logout');
     });
   });
 
@@ -37,25 +39,25 @@ describe('<Nav/>', () => {
       email: 'rachel@example.com',
       isAdmin: false,
     };
-    let root;
+    let container: HTMLElement;
     beforeEach(() => {
-      root = shallow(
+      ({ container } = render(
         <MemoryRouter>
           <Nav auth={user} logout={noop} selectUser={noop} />
         </MemoryRouter>
-      );
+      ));
     });
 
     it('greets the user by name', () => {
-      expect(root.html()).to.contain('Rachel');
+      expect(container.innerHTML).to.contain('Rachel');
     });
 
     it('shows Logout', () => {
-      expect(root.html()).to.contain('Logout');
+      expect(container.innerHTML).to.contain('Logout');
     });
 
     it('does not show Users link (not admin)', () => {
-      expect(root.html()).to.not.contain('>Users<');
+      expect(container.innerHTML).to.not.contain('>Users<');
     });
   });
 
@@ -66,17 +68,17 @@ describe('<Nav/>', () => {
       email: 'evan@example.com',
       isAdmin: true,
     };
-    let root;
+    let container: HTMLElement;
     beforeEach(() => {
-      root = shallow(
+      ({ container } = render(
         <MemoryRouter>
           <Nav auth={admin} logout={noop} selectUser={noop} />
         </MemoryRouter>
-      );
+      ));
     });
 
     it('shows Users link for admin', () => {
-      expect(root.html()).to.contain('Users');
+      expect(container.innerHTML).to.contain('Users');
     });
   });
 });

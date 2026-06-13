@@ -33,6 +33,19 @@ module.exports = app
   .use(bodyParser.urlencoded({ extended: true }))
   .use(bodyParser.json())
 
+  // Passport 0.6+ calls req.session.regenerate() and req.session.save() on login
+  // to prevent session fixation. cookie-session does not implement these methods,
+  // so we add no-op stubs to keep passport happy.
+  .use((req, _res, next) => {
+    if (req.session && !req.session.regenerate) {
+      req.session.regenerate = cb => cb();
+    }
+    if (req.session && !req.session.save) {
+      req.session.save = cb => cb();
+    }
+    next();
+  })
+
   // Authentication middleware
   .use(passport.initialize())
   .use(passport.session())

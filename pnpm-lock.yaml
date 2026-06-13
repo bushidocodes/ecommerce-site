@@ -45,8 +45,8 @@ importers:
         specifier: ^4.14.0
         version: 4.22.2
       passport:
-        specifier: ^0.3.2
-        version: 0.3.2
+        specifier: ^0.7.0
+        version: 0.7.0
       passport-facebook:
         specifier: ^3.0.0
         version: 3.0.0
@@ -2629,8 +2629,8 @@ packages:
     resolution: {integrity: sha512-CB97UUvDKJde2V0KDWWB3lyf6PC3FaZP7YxZ2G8OAtn9p4HI9j9JLP9qjOGZFvyl8uwNT8qM+hGnz/n16NI7oA==}
     engines: {node: '>= 0.4.0'}
 
-  passport@0.3.2:
-    resolution: {integrity: sha512-aqgxMQxuRz79M4LVo8fl3/bsh6Ozcb34G8MVDs7Oavy88ROLSVvTgYoWnX3TpxdQg66HiXvpb+lcuFPnDrmiOA==}
+  passport@0.7.0:
+    resolution: {integrity: sha512-cPLl+qZpSc+ireUvt+IzqbED1cHHkDoVYMo30jbJIdOOjQ1MQYZBPiNvmi8UM6lJuOpTPXJGZQk0DtC4y61MYQ==}
     engines: {node: '>= 0.4.0'}
 
   path-exists@3.0.0:
@@ -6435,10 +6435,11 @@ snapshots:
 
   passport-strategy@1.0.0: {}
 
-  passport@0.3.2:
+  passport@0.7.0:
     dependencies:
       passport-strategy: 1.0.0
       pause: 0.0.1
+      utils-merge: 1.0.1
 
   path-exists@3.0.0: {}
 

@@ -3,7 +3,6 @@ import { resolve } from 'path';
 import { fileURLToPath } from 'url';
 import passport from 'passport';
 import cookieSession from 'cookie-session';
-import volleyball from 'volleyball';
 import pkg from '../index.js';
 import api from './api.js';
 
@@ -12,6 +11,7 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const app = express();
 
 if (!pkg.isProduction && !pkg.isTesting) {
+  const { default: volleyball } = await import('volleyball');
   app.use(volleyball);
 }
 

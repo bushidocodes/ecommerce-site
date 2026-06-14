@@ -1,17 +1,5 @@
-'use strict';
-
-const Sequelize = require('sequelize');
-const db = require('../../db');
-
-// An OrderLineItem is effectively a join table with extra attributes
-
-// Example Syntax for adding a product to an order
-// TODO: Make sure that we're passing by value
-
-// currentOrder.addProduct(selectedProduct, {
-//   quantity: 1,
-//   price: selectedProduct.price
-// })
+import Sequelize from 'sequelize';
+import db from '../sequelize.js';
 
 const OrderLineItem = db.define(
   'orderLineItems',
@@ -41,4 +29,4 @@ const OrderLineItem = db.define(
   }
 );
 
-module.exports = OrderLineItem;
+export default OrderLineItem;

@@ -1,43 +1,21 @@
-const app = require('../index.js'),
-  { env } = app;
-const debug = require('debug')(`${app.name}:auth`);
-const passport = require('passport');
+import createDebug from 'debug';
+import passport from 'passport';
+import express from 'express';
+import passportFacebook from 'passport-facebook';
+import passportGoogle from 'passport-google-oauth20';
+import passportGithub from 'passport-github2';
+import passportLocal from 'passport-local';
+import app from '../index.js';
+import User from '../db/models/user.js';
+import OAuth from '../db/models/oauth.js';
 
-const User = require('../db/models/user');
-const OAuth = require('../db/models/oauth');
-const auth = require('express').Router();
+const { env } = app;
+const debug = createDebug(`${app.name}:auth`);
+const auth = express.Router();
 
-/*************************
- * Auth strategies
- *
- * The OAuth model knows how to configure Passport middleware.
- * To enable an auth strategy, ensure that the appropriate
- * environment variables are set.
- *
- * You can do it on the command line:
- *
- *   FACEBOOK_CLIENT_ID=abcd FACEBOOK_CLIENT_SECRET=1234 npm start
- *
- * Or, better, you can create a ~/.$your_app_name.env.json file in
- * your home directory, and set them in there:
- *
- * {
- *   FACEBOOK_CLIENT_ID: 'abcd',
- *   FACEBOOK_CLIENT_SECRET: '1234',
- * }
- *
- * Concentrating your secrets this way will make it less likely that you
- * accidentally push them to Github, for example.
- *
- * When you deploy to production, you'll need to set up these environment
- * variables with your hosting provider.
- **/
-
-// Facebook needs the FACEBOOK_CLIENT_ID and FACEBOOK_CLIENT_SECRET
-// environment variables.
 OAuth.setupStrategy({
   provider: 'facebook',
-  strategy: require('passport-facebook').Strategy,
+  strategy: passportFacebook.Strategy,
   config: {
     clientID: env.FACEBOOK_CLIENT_ID,
     clientSecret: env.FACEBOOK_CLIENT_SECRET,
@@ -46,11 +24,9 @@ OAuth.setupStrategy({
   passport,
 });
 
-// Google needs the GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET
-// environment variables.
 OAuth.setupStrategy({
   provider: 'google',
-  strategy: require('passport-google-oauth20').Strategy,
+  strategy: passportGoogle.Strategy,
   config: {
     clientID: env.GOOGLE_CLIENT_ID,
     clientSecret: env.GOOGLE_CLIENT_SECRET,
@@ -59,11 +35,9 @@ OAuth.setupStrategy({
   passport,
 });
 
-// Github needs the GITHUB_CLIENT_ID AND GITHUB_CLIENT_SECRET
-// environment variables.
 OAuth.setupStrategy({
   provider: 'github',
-  strategy: require('passport-github2').Strategy,
+  strategy: passportGithub.Strategy,
   config: {
     clientID: env.GITHUB_CLIENT_ID,
     clientSecret: env.GITHUB_CLIENT_SECRET,
@@ -71,8 +45,6 @@ OAuth.setupStrategy({
   },
   passport,
 });
-
-// Other passport configuration:
 
 passport.serializeUser((user, done) => {
   debug('will serialize user.id=%d', user.id);
@@ -94,7 +66,7 @@ passport.deserializeUser((id, done) => {
 });
 
 passport.use(
-  new (require('passport-local').Strategy)((email, password, done) => {
+  new passportLocal.Strategy((email, password, done) => {
     debug('will authenticate user(email: "%s")', email);
     User.findOne({ where: { email } })
       .then(user => {
@@ -145,4 +117,4 @@ auth.post('/logout', (req, res, next) => {
   });
 });
 
-module.exports = auth;
+export default auth;

@@ -1,8 +1,6 @@
-'use strict';
-
-const db = require('../../db');
-const Product = require('./product');
-const { expect } = require('chai');
+import db from '../../db/index.js';
+import Product from './product.js';
+import { expect } from 'chai';
 
 describe('Product', () => {
   before('wait for the db', () => db.didSync);

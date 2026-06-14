@@ -1,10 +1,10 @@
-const request = require('supertest');
-const { expect } = require('chai');
-const db = require('../db');
-const Review = require('../db/models/review');
-const User = require('../db/models/user');
-const Product = require('../db/models/product');
-const app = require('./start');
+import request from 'supertest';
+import { expect } from 'chai';
+import db from '../db/index.js';
+import Review from '../db/models/review.js';
+import User from '../db/models/user.js';
+import Product from '../db/models/product.js';
+import app from './start.js';
 
 const testUser = {
   name: 'Review Tester',

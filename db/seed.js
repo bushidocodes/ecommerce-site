@@ -1,37 +1,18 @@
 import db from './index.js';
 
-const seedUsers = () =>
-  Promise.all(
+async function seedUsers() {
+  return Promise.all(
     [
-      {
-        name: 'Evan',
-        email: 'evan@example.com',
-        password: '1234',
-        isAdmin: true,
-      },
-      {
-        name: 'Sean',
-        email: 'sean@example.com',
-        password: '1234',
-        isAdmin: true,
-      },
-      {
-        name: 'Rachel',
-        email: 'rachel@example.com',
-        password: '1234',
-        isAdmin: true,
-      },
-      {
-        name: 'Test1',
-        email: 'test1@example.com',
-        password: '1234',
-        isAdmin: false,
-      },
+      { name: 'Evan', email: 'evan@example.com', password: '1234', isAdmin: true },
+      { name: 'Sean', email: 'sean@example.com', password: '1234', isAdmin: true },
+      { name: 'Rachel', email: 'rachel@example.com', password: '1234', isAdmin: true },
+      { name: 'Test1', email: 'test1@example.com', password: '1234', isAdmin: false },
     ].map(user => db.model('users').create(user))
   );
+}
 
-const seedProducts = () =>
-  Promise.all(
+async function seedProducts() {
+  return Promise.all(
     [
       {
         name: 'Chocolate Chip',
@@ -131,9 +112,10 @@ const seedProducts = () =>
       },
     ].map(product => db.model('products').create(product))
   );
+}
 
-const seedReviews = () =>
-  Promise.all(
+async function seedReviews() {
+  return Promise.all(
     [
       {
         title: 'Gross!',
@@ -158,14 +140,14 @@ const seedReviews = () =>
       },
     ].map(review => db.model('reviews').create(review))
   );
+}
 
-db.didSync
-  .then(() => db.sync({ force: true }))
-  .then(seedUsers)
-  .then(users => console.log(`Seeded ${users.length} users OK`))
-  .then(seedProducts)
-  .then(products => console.log(`Seeded ${products.length} products OK`))
-  .then(seedReviews)
-  .then(reviews => console.log(`Seeded ${reviews.length} reviews OK`))
-  .catch(error => console.error(error))
-  .finally(() => db.close());
+await db.didSync;
+await db.sync({ force: true });
+const users = await seedUsers();
+console.log(`Seeded ${users.length} users OK`);
+const products = await seedProducts();
+console.log(`Seeded ${products.length} products OK`);
+const reviews = await seedReviews();
+console.log(`Seeded ${reviews.length} reviews OK`);
+db.close();

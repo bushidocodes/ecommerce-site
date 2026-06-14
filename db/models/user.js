@@ -61,25 +61,16 @@ User.prototype.toJSON = function () {
   return values;
 };
 
+// bcrypt v5+ returns a Promise when called without a callback
 User.prototype.authenticate = function (plaintext) {
-  return new Promise((resolve, reject) =>
-    bcrypt.compare(plaintext, this.password_digest, (err, result) =>
-      err ? reject(err) : resolve(result)
-    )
-  );
+  return bcrypt.compare(plaintext, this.password_digest);
 };
 
-function setEmailAndPassword(user) {
-  user.email = user.email && user.email.toLowerCase();
-  if (!user.password) return Promise.resolve(user);
-
-  return new Promise((resolve, reject) =>
-    bcrypt.hash(user.get('password'), 10, (err, hash) => {
-      if (err) reject(err);
-      user.set('password_digest', hash);
-      resolve(user);
-    })
-  );
+async function setEmailAndPassword(user) {
+  user.email = user.email?.toLowerCase();
+  if (!user.password) return user;
+  user.set('password_digest', await bcrypt.hash(user.get('password'), 10));
+  return user;
 }
 
 export default User;

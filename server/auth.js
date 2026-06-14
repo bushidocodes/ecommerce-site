@@ -52,56 +52,54 @@ passport.serializeUser((user, done) => {
   debug('did serialize user.id=%d', user.id);
 });
 
-passport.deserializeUser((id, done) => {
+passport.deserializeUser(async (id, done) => {
   debug('will deserialize user.id=%d', id);
-  User.findByPk(id)
-    .then(user => {
-      debug('deserialize did ok user.id=%d', user.id);
-      done(null, user);
-    })
-    .catch(err => {
-      debug('deserialize did fail err=%s', err);
-      done(err);
-    });
+  try {
+    const user = await User.findByPk(id);
+    debug('deserialize did ok user.id=%d', user.id);
+    done(null, user);
+  } catch (err) {
+    debug('deserialize did fail err=%s', err);
+    done(err);
+  }
 });
 
 passport.use(
-  new passportLocal.Strategy((email, password, done) => {
+  new passportLocal.Strategy(async (email, password, done) => {
     debug('will authenticate user(email: "%s")', email);
-    User.findOne({ where: { email } })
-      .then(user => {
-        if (!user) {
-          debug('authenticate user(email: "%s") did fail: no such user', email);
-          return done(null, false, { message: 'Login incorrect' });
-        }
-        return user.authenticate(password).then(ok => {
-          if (!ok) {
-            debug('authenticate user(email: "%s") did fail: bad password');
-            return done(null, false, { message: 'Login incorrect' });
-          }
-          debug('authenticate user(email: "%s") did ok: user.id=%d', user.id);
-          done(null, user);
-        });
-      })
-      .catch(done);
+    try {
+      const user = await User.findOne({ where: { email } });
+      if (!user) {
+        debug('authenticate user(email: "%s") did fail: no such user', email);
+        return done(null, false, { message: 'Login incorrect' });
+      }
+      const ok = await user.authenticate(password);
+      if (!ok) {
+        debug('authenticate user(email: "%s") did fail: bad password');
+        return done(null, false, { message: 'Login incorrect' });
+      }
+      debug('authenticate user(email: "%s") did ok: user.id=%d', email, user.id);
+      done(null, user);
+    } catch (err) {
+      done(err);
+    }
   })
 );
 
 auth.get('/whoami', (req, res) => res.send(req.user));
 
-auth.post('/local/signup', (req, res, next) => {
-  if (req.user) {
-    return res.status(403).send('Already logged in');
-  }
+auth.post('/local/signup', async (req, res, next) => {
+  if (req.user) return res.status(403).send('Already logged in');
   const { name, email, password } = req.body;
-  User.create({ name, email, password })
-    .then(user => {
-      req.login(user, err => {
-        if (err) return next(err);
-        res.status(201).json(user);
-      });
-    })
-    .catch(next);
+  try {
+    const user = await User.create({ name, email, password });
+    req.login(user, err => {
+      if (err) return next(err);
+      res.status(201).json(user);
+    });
+  } catch (err) {
+    next(err);
+  }
 });
 
 auth.post('/:strategy/login', (req, res, next) =>

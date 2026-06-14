@@ -1,5 +1,4 @@
 import express from 'express';
-import bodyParser from 'body-parser';
 import { resolve } from 'path';
 import { fileURLToPath } from 'url';
 import passport from 'passport';
@@ -29,8 +28,8 @@ app
       ],
     })
   )
-  .use(bodyParser.urlencoded({ extended: true }))
-  .use(bodyParser.json())
+  .use(express.urlencoded({ extended: true }))
+  .use(express.json())
   // Passport 0.6+ calls req.session.regenerate/save; cookie-session lacks these,
   // so we add no-op stubs.
   .use((req, _res, next) => {

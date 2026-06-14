@@ -1,6 +1,5 @@
 import { exec } from 'child_process';
-import { promisify } from 'util';
-import chalk from 'chalk';
+import { promisify, styleText } from 'util';
 import db, { dbName, dbUrl } from './sequelize.js';
 import app from '../index.js';
 
@@ -14,11 +13,11 @@ async function sync(force = app.isTesting, retries = 0, maxRetries = 5) {
     console.log(`Synced models to db ${dbUrl}`);
   } catch (fail) {
     if (app.isProduction || retries > maxRetries) {
-      console.error(chalk.red(`********** database error ***********`));
-      console.error(chalk.red(`    Couldn't connect to ${dbUrl}`));
+      console.error(styleText('red',`********** database error ***********`));
+      console.error(styleText('red',`    Couldn't connect to ${dbUrl}`));
       console.error();
-      console.error(chalk.red(fail));
-      console.error(chalk.red(`*************************************`));
+      console.error(styleText('red',fail));
+      console.error(styleText('red',`*************************************`));
       return;
     }
     console.log(

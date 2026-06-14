@@ -1,14 +1,10 @@
-'use strict';
+import express from 'express';
+import Product from '../db/models/product.js';
+import { mustBeLoggedIn } from './auth.filters.js';
 
-const db = require('../db');
-const Product = require('../db/models/product');
-const { mustBeLoggedIn } = require('./auth.filters.js');
-
-module.exports = require('express')
+export default express
   .Router()
 
-  // Action: List all the cookies
-  // Roles: Guest, User, Admin
   .get('/', (req, res, next) =>
     Product.findAll()
       .then(products => {
@@ -21,8 +17,6 @@ module.exports = require('express')
       .catch(next)
   )
 
-  // Action: Create a new type of cookie
-  // Roles: Admin
   .post('/', mustBeLoggedIn, (req, res, next) => {
     if (!req.user.isAdmin) return res.sendStatus(403);
     Product.create(req.body)
@@ -30,7 +24,6 @@ module.exports = require('express')
       .catch(next);
   })
 
-  // Use Param to DRY subsequent routes
   .param('id', function (req, res, next) {
     Product.findByPk(req.params.id)
       .then(product => {
@@ -44,14 +37,10 @@ module.exports = require('express')
       .catch(next);
   })
 
-  // Action: List a single type of cookie by cookie id
-  // Roles: Guest, User, Admin
   .get('/:id', (req, res, next) => {
     res.status(200).json(req.product);
   })
 
-  // Action: Modify a cookie by id
-  // Roles: Admin
   .put('/:id', mustBeLoggedIn, (req, res, next) => {
     if (!req.user.isAdmin) return res.sendStatus(403);
     req.product
@@ -60,8 +49,6 @@ module.exports = require('express')
       .catch(next);
   })
 
-  // Action: Delete a cookie by id. Oh NOOO!!!
-  // Roles: Admin
   .delete('/:id', mustBeLoggedIn, (req, res, next) => {
     if (!req.user.isAdmin) return res.sendStatus(403);
     req.product

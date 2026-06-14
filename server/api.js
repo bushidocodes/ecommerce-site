@@ -1,21 +1,26 @@
-'use strict';
+import express from 'express';
+import '../db/index.js';
+import auth from './auth.js';
+import users from './users.js';
+import products from './products.js';
+import orders from './orders.js';
+import reviews from './reviews.js';
 
-const db = require('../db');
-const api = (module.exports = require('express').Router());
+const api = express.Router();
 
 api
   .get('/heartbeat', (req, res) => res.send({ ok: true }))
-  .use('/auth', require('./auth'))
-  .use('/users', require('./users'))
-  .use('/products', require('./products'))
-  .use('/orders', require('./orders'))
-  .use('/reviews', require('./reviews'));
+  .use('/auth', auth)
+  .use('/users', users)
+  .use('/products', products)
+  .use('/orders', orders)
+  .use('/reviews', reviews);
 
-// Send along any errors AND LOG OUT TO SERVER
 api.use((err, req, res, next) => {
   console.error(err);
   res.status(500).json({ error: 'Internal server error' });
 });
 
-// No routes matched? 404.
 api.use((req, res) => res.status(404).end());
+
+export default api;

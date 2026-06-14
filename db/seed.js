@@ -1,4 +1,4 @@
-const db = require('../db');
+import db from './index.js';
 
 const seedUsers = () =>
   Promise.all(

@@ -1,7 +1,5 @@
-'use strict';
-
-const Sequelize = require('sequelize');
-const db = require('../../db');
+import Sequelize from 'sequelize';
+import db from '../sequelize.js';
 
 const Review = db.define(
   'reviews',
@@ -34,4 +32,4 @@ const Review = db.define(
   }
 );
 
-module.exports = Review;
+export default Review;

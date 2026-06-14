@@ -1,10 +1,10 @@
-'use strict';
+import createDebug from 'debug';
+import Sequelize from 'sequelize';
+import Promise from 'bluebird';
+import db from '../sequelize.js';
+import User from './user.js';
 
-const debug = require('debug')('oauth');
-const Sequelize = require('sequelize');
-const db = require('../../db');
-const Promise = require('bluebird');
-const User = require('./user');
+const debug = createDebug('oauth');
 
 const OAuth = db.define(
   'oauths',
@@ -12,15 +12,12 @@ const OAuth = db.define(
     uid: Sequelize.STRING,
     provider: Sequelize.STRING,
 
-    // OAuth v2 fields
     accessToken: Sequelize.STRING,
     refreshToken: Sequelize.STRING,
 
-    // OAuth v1 fields
     token: Sequelize.STRING,
     tokenSecret: Sequelize.STRING,
 
-    // The whole profile as JSON
     profileJson: Sequelize.JSON,
   },
   {
@@ -86,4 +83,4 @@ OAuth.setupStrategy = ({
   passport.use(new strategy(config, oauth));
 };
 
-module.exports = OAuth;
+export default OAuth;

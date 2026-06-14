@@ -1,23 +1,24 @@
-'use strict';
+import express from 'express';
+import bodyParser from 'body-parser';
+import { resolve } from 'path';
+import { fileURLToPath } from 'url';
+import passport from 'passport';
+import cookieSession from 'cookie-session';
+import volleyball from 'volleyball';
+import pkg from '../index.js';
+import api from './api.js';
 
-const express = require('express');
-const bodyParser = require('body-parser');
-const { resolve } = require('path');
-const passport = require('passport');
-
-const pkg = require('../index.js');
+const __dirname = fileURLToPath(new URL('.', import.meta.url));
 
 const app = express();
 
 if (!pkg.isProduction && !pkg.isTesting) {
-  // Logging middleware (dev only)
-  app.use(require('volleyball'));
+  app.use(volleyball);
 }
 
-module.exports = app
-  // We'll store the whole session in a cookie
+app
   .use(
-    require('cookie-session')({
+    cookieSession({
       name: 'session',
       keys: [
         (() => {
@@ -28,14 +29,10 @@ module.exports = app
       ],
     })
   )
-
-  // Body parsing middleware
   .use(bodyParser.urlencoded({ extended: true }))
   .use(bodyParser.json())
-
-  // Passport 0.6+ calls req.session.regenerate() and req.session.save() on login
-  // to prevent session fixation. cookie-session does not implement these methods,
-  // so we add no-op stubs to keep passport happy.
+  // Passport 0.6+ calls req.session.regenerate/save; cookie-session lacks these,
+  // so we add no-op stubs.
   .use((req, _res, next) => {
     if (req.session && !req.session.regenerate) {
       req.session.regenerate = cb => cb();
@@ -45,28 +42,19 @@ module.exports = app
     }
     next();
   })
-
-  // Authentication middleware
   .use(passport.initialize())
   .use(passport.session())
-
-  // Serve static files from ../public
   .use(express.static(resolve(__dirname, '..', 'public')))
-
-  // Serve our api
-  .use('/api', require('./api'))
-
-  // Send index.html for anything else.
+  .use('/api', api)
   .get('/*', (_, res) =>
     res.sendFile(resolve(__dirname, '..', 'public', 'index.html'))
   );
 
-if (module === require.main) {
-  // Start listening only if we're the main module.
-  //
-  // https://nodejs.org/api/modules.html#modules_accessing_the_main_module
+if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const server = app.listen(process.env.PORT || 1337, () => {
     console.log(`--- Started HTTP Server for ${pkg.name} ---`);
     console.log(`Listening on ${JSON.stringify(server.address())}`);
   });
 }
+
+export default app;

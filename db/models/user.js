@@ -1,11 +1,6 @@
-'use strict';
-
-const bcrypt = require('bcrypt');
-const Sequelize = require('sequelize');
-const db = require('../../db');
-
-const Review = require('./review');
-// const Order = require('./order');
+import bcrypt from 'bcrypt';
+import Sequelize from 'sequelize';
+import db from '../sequelize.js';
 
 const User = db.define(
   'users',
@@ -37,7 +32,6 @@ const User = db.define(
       validate: { is: /^\d{5}(-\d{4})?$/ },
     },
 
-    // We support oauth, so users may or may not have passwords.
     password_digest: Sequelize.STRING,
     password: Sequelize.VIRTUAL,
     resetPassword: Sequelize.BOOLEAN,
@@ -88,4 +82,4 @@ function setEmailAndPassword(user) {
   );
 }
 
-module.exports = User;
+export default User;

@@ -1,8 +1,5 @@
-'use strict';
-
-const Sequelize = require('sequelize');
-const db = require('../../db');
-const Review = require('./review');
+import Sequelize from 'sequelize';
+import db from '../sequelize.js';
 
 const Product = db.define('products', {
   name: {
@@ -10,7 +7,6 @@ const Product = db.define('products', {
     allowNull: false,
     validate: {
       notEmpty: true,
-      // TODO: Enforce unique names for products
     },
   },
   description: {
@@ -28,7 +24,6 @@ const Product = db.define('products', {
     },
   },
   quantity: {
-    // This is the remaining product inventory
     type: Sequelize.INTEGER,
     allowNull: false,
     validate: {
@@ -42,4 +37,4 @@ const Product = db.define('products', {
   categories: Sequelize.ARRAY(Sequelize.STRING),
 });
 
-module.exports = Product;
+export default Product;

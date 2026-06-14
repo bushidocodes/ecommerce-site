@@ -1,21 +1,16 @@
-const Review = require('../db/models/review');
-const { mustBeLoggedIn } = require('./auth.filters');
+import Review from '../db/models/review.js';
+import { mustBeLoggedIn } from './auth.filters.js';
+import express from 'express';
 
-module.exports = require('express')
+export default express
   .Router()
 
-  // Action: View all reviews (includes product and user associations)
-  // Roles: Guest, User, Admin
   .get('/', (req, res, next) =>
     Review.findAll()
       .then(reviews => res.json(reviews))
       .catch(next)
   )
 
-  // Action: Create a new review
-  // Roles: User, Admin (must be logged in)
-  // Hardened (#80): requires auth; only whitelisted fields accepted;
-  //   productId is required so every review is associated with a product.
   .post('/', mustBeLoggedIn, (req, res, next) => {
     const { title, body, rating, photo, productId } = req.body;
     if (!productId) {
@@ -33,8 +28,6 @@ module.exports = require('express')
       .catch(next);
   })
 
-  // Action: View a single review by ID
-  // Roles: Guest, User, Admin
   .get('/:id', (req, res, next) =>
     Review.findByPk(req.params.id)
       .then(review => {
@@ -44,8 +37,6 @@ module.exports = require('express')
       .catch(next)
   )
 
-  // Action: Update a single review by ID (#78)
-  // Roles: review author or Admin
   .put('/:id', mustBeLoggedIn, (req, res, next) =>
     Review.findByPk(req.params.id)
       .then(review => {
@@ -60,8 +51,6 @@ module.exports = require('express')
       .catch(next)
   )
 
-  // Action: Delete a single review by ID (#78)
-  // Roles: review author or Admin
   .delete('/:id', mustBeLoggedIn, (req, res, next) =>
     Review.findByPk(req.params.id)
       .then(review => {

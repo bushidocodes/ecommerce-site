@@ -1,7 +1,5 @@
-'use strict';
-
-const Sequelize = require('sequelize');
-const db = require('../../db');
+import Sequelize from 'sequelize';
+import db from '../sequelize.js';
 
 const Order = db.define(
   'orders',
@@ -45,4 +43,4 @@ const Order = db.define(
   }
 );
 
-module.exports = Order;
+export default Order;

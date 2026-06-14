@@ -1,19 +1,16 @@
-'use strict';
+import { resolve } from 'path';
+import { homedir } from 'os';
+import { createRequire } from 'module';
+import createDebug from 'debug';
 
-const { resolve } = require('path');
-const { homedir } = require('os');
-const chalk = require('chalk');
+const require = createRequire(import.meta.url);
 const pkg = require('./package.json');
-const debug = require('debug')(`${pkg.name}:boot`);
+const debug = createDebug(`${pkg.name}:boot`);
 
-// This will load a secrets file from
-//
-//      ~/.your_app_name.env.js
-//   or ~/.your_app_name.env.json
-//
-// and add it to the environment.
-const env = Object.create(process.env),
-  secretsFile = resolve(homedir(), `.${pkg.name}.env`);
+// Load a secrets file from ~/.cookie-monsters.env.js or .env.json
+// and merge it into the environment.
+const env = Object.create(process.env);
+const secretsFile = resolve(homedir(), `.${pkg.name}.env`);
 try {
   Object.assign(env, require(secretsFile));
 } catch (error) {
@@ -21,7 +18,7 @@ try {
   debug('%s: env file not found or invalid, moving on', secretsFile);
 }
 
-module.exports = {
+export default {
   get name() {
     return pkg.name;
   },

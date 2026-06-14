@@ -1,9 +1,9 @@
-const request = require('supertest');
-const { expect } = require('chai');
-const db = require('../db');
-const Product = require('../db/models/product');
-const User = require('../db/models/user');
-const app = require('./start');
+import request from 'supertest';
+import { expect } from 'chai';
+import db from '../db/index.js';
+import Product from '../db/models/product.js';
+import User from '../db/models/user.js';
+import app from './start.js';
 
 const testAdminUser = {
   name: 'Product Admin',

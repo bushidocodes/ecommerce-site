@@ -1,21 +1,18 @@
-'use strict';
+import createDebug from 'debug';
+import express from 'express';
+import Promise from 'bluebird';
+import Order from '../db/models/order.js';
+import Product from '../db/models/product.js';
+import User from '../db/models/user.js';
+import { mustBeLoggedIn, forbidden } from './auth.filters.js';
 
-const db = require('../db');
-const Order = require('../db/models/order');
-const Product = require('../db/models/product');
-const User = require('../db/models/user');
-const Promise = require('bluebird');
-const { mustBeLoggedIn, selfOnly, forbidden } = require('./auth.filters.js');
-const debug = require('debug')('cookie-monsters:orders');
+const debug = createDebug('cookie-monsters:orders');
 
-module.exports = require('express')
+export default express
   .Router()
 
-  // Action: Retrieve all orders, including products and orderlineitem details
-  // Roles: Admin
   .get('/', (req, res, next) => {
     debug('get /api/orders/');
-    // .get('/', mustBeLoggedIn, (req, res, next) => {
     if (req.user && req.user.isAdmin) {
       debug('is an admin');
       return Order.findAll({
@@ -32,9 +29,7 @@ module.exports = require('express')
         .then(orders => Promise.all(orders))
         .then(orders => res.json(orders))
         .catch(next);
-    }
-    // If not an admin, retrieve your own orders
-    else if (req.user) {
+    } else if (req.user) {
       debug('else if req.user');
       req.user
         .getOrders({
@@ -56,14 +51,6 @@ module.exports = require('express')
     }
   })
 
-  // Action: Create a new order
-  // Roles: Guest, User, Admin
-  // Notes: The behavior of this action differs slightly
-  //   based on the role of the user. If the user is a
-  //   guest, they create an order unassociated with
-  //   any single user
-  //   User has actually ordered.
-
   .post('/:userId?', (req, res, next) => {
     let order;
     let orderLineItems =
@@ -71,14 +58,12 @@ module.exports = require('express')
     let productIds = orderLineItems ? Object.keys(orderLineItems) : [];
     debug('POST /:userId? userId=%s', req.params.userId);
 
-    // if the user is an admin
     if (req.user && req.user.isAdmin) {
       debug('user is an admin');
-      // ...and the admin specifies a userID for whom to create an order
       if (req.params && req.params.userId) {
         debug('userId=%s specified as param', req.params.userId);
         User.findByPk(req.params.userId)
-          .then(user => user.createOrder(req.body)) // filter out only the Order attributes???
+          .then(user => user.createOrder(req.body))
           .then(_order => {
             order = _order;
             return Promise.all(
@@ -99,9 +84,7 @@ module.exports = require('express')
           })
           .then(() => res.sendStatus(200))
           .catch(next);
-      }
-      // ... and the user does not specify a userID
-      else {
+      } else {
         debug('no userId param, creating unassociated order');
         Order.create(req.body)
           .then(_order => {
@@ -141,14 +124,10 @@ module.exports = require('express')
               ],
             })
           )
-          .then(order => {
-            return res.status(200).json(order);
-          })
+          .then(order => res.status(200).json(order))
           .catch(next);
       }
-    }
-    // ... and the user is not an admin
-    else if (req.user) {
+    } else if (req.user) {
       debug('user is not an admin');
       req.user
         .createOrder(req.body)
@@ -194,9 +173,7 @@ module.exports = require('express')
           return res.status(200).json(order);
         })
         .catch(next);
-    }
-    // Guest User
-    else {
+    } else {
       debug('no user logged in, creating guest order');
       Order.create(req.body)
         .then(_order => {
@@ -236,37 +213,6 @@ module.exports = require('express')
     }
   })
 
-  // TODO: Enhance to be able to create items at the same time once
-  //   Using this structure:
-
-  // "order": {
-  // 	"status": "cancelled",
-  //   "shippingRate": 9.99,
-  //   "shippingCarrier": null,
-  //   "trackingNumber": null,
-  // 	"orderLineItems": {
-  // 		"2": { "quantity": 10 },
-  // 		"10": { "quantity": 2 }
-  // 	}
-  // }
-
-  // This is a non-functional starting point
-  // .post('/', (req, res, next) =>
-  // 	Order.create(req.body, {
-  // 		include: [{
-  // 			model: Product,
-  // 			through: {
-  // 				attributes: ['quantity', 'price']
-  // 			}
-  // 		}]
-  // 	})
-  // 		.then((order) => { })
-  // 		.then(order => res.json(order))
-  // 		.catch(next))
-
-  // Action: Retrieve a single order, including products and orderlineitem details
-  // Roles: Admin.
-  // Notes: Perhaps a user should be able to view this for their orders...
   .get('/:id', mustBeLoggedIn, (req, res, next) => {
     if (req.user.isAdmin) {
       return Order.findByPk(req.params.id, {
@@ -287,8 +233,6 @@ module.exports = require('express')
     }
   })
 
-  // Action: Update an order
-  // Roles: Admin.
   .put('/:id', mustBeLoggedIn, (req, res, next) => {
     if (req.user.isAdmin) {
       return Order.findByPk(req.params.id)
@@ -300,8 +244,6 @@ module.exports = require('express')
     }
   })
 
-  // Action: Delete an order
-  // Roles: Admin.
   .delete('/:id/', mustBeLoggedIn, (req, res, next) => {
     if (req.user.isAdmin) {
       return Order.findByPk(req.params.id)
@@ -313,13 +255,6 @@ module.exports = require('express')
     }
   })
 
-  // Action: Add several items to an order or update the item count in an order
-  // Roles: Admin.
-  // Example Request Body
-  // {"orderLineItems": {
-  // 	"2": {"quantity": 10},
-  //  	"10": {"quantity": 2}
-  // }}
   .post('/:id/products/', mustBeLoggedIn, (req, res, next) => {
     if (req.user.isAdmin) {
       let orderLineItems = req.body.orderLineItems;
@@ -349,8 +284,6 @@ module.exports = require('express')
     }
   })
 
-  // Action: Remove an item from an order
-  // Roles: Admin.
   .delete('/:orderId/products/:productId', mustBeLoggedIn, (req, res, next) => {
     if (req.user.isAdmin) {
       return Order.findByPk(req.params.orderId)
@@ -362,9 +295,6 @@ module.exports = require('express')
     }
   });
 
-// This is a kludgey looking helper function to deal with resolving a Promise
-// returned by a Sequelize getter
-// TODO : Clean up this nightmare somehow
 function _promisifyOrderProps(orders) {
   return orders.map(
     ({

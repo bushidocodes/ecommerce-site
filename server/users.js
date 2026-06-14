@@ -7,42 +7,44 @@ const User = db.model('users');
 export default express
   .Router()
 
-  .get('/', mustBeLoggedIn, (req, res, next) => {
-    if (req.user.isAdmin) {
-      User.findAll()
-        .then(users => res.json(users))
-        .catch(next);
-    } else {
-      return forbidden(res, 'only admins can list all users');
+  .get('/', mustBeLoggedIn, async (req, res, next) => {
+    if (!req.user.isAdmin) return forbidden(res, 'only admins can list all users');
+    try {
+      const users = await User.findAll();
+      res.json(users);
+    } catch (err) {
+      next(err);
     }
   })
 
-  .post('/', (req, res, next) => {
-    if (req.user) {
-      return res.status(403).send('Already logged in');
-    }
+  .post('/', async (req, res, next) => {
+    if (req.user) return res.status(403).send('Already logged in');
     const { name, email, password } = req.body;
-    return User.create({ name, email, password })
-      .then(user => res.status(201).json(user))
-      .catch(next);
+    try {
+      const user = await User.create({ name, email, password });
+      res.status(201).json(user);
+    } catch (err) {
+      next(err);
+    }
   })
 
-  .param('id', mustBeLoggedIn, function (req, res, next) {
-    User.findByPk(req.params.id)
-      .then(user => {
-        if (user) {
-          req.foundUser = user;
-          next();
-        } else {
-          res.sendStatus(404);
-        }
-      })
-      .catch(next);
+  .param('id', mustBeLoggedIn, async function (req, res, next) {
+    try {
+      const user = await User.findByPk(req.params.id);
+      if (user) {
+        req.foundUser = user;
+        next();
+      } else {
+        res.sendStatus(404);
+      }
+    } catch (err) {
+      next(err);
+    }
   })
 
-  .get('/:id', (req, res, next) => {
+  .get('/:id', (req, res) => {
     if (!req.user.isAdmin && String(req.user.id) !== String(req.params.id)) {
       return forbidden(res, 'You may only view your own profile');
     }
-    return res.status(200).json(req.foundUser);
+    res.status(200).json(req.foundUser);
   });

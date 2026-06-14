@@ -51,7 +51,7 @@ app
   );
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  const server = app.listen(process.env.PORT || 1337, () => {
+  const server = app.listen(process.env.PORT ?? 1337, () => {
     console.log(`--- Started HTTP Server for ${pkg.name} ---`);
     console.log(`Listening on ${JSON.stringify(server.address())}`);
   });

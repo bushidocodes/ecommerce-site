@@ -5,54 +5,63 @@ import { mustBeLoggedIn } from './auth.filters.js';
 export default express
   .Router()
 
-  .get('/', (req, res, next) =>
-    Product.findAll()
-      .then(products => {
-        if (products.length > 0) {
-          res.json(products);
-        } else {
-          res.sendStatus(404);
-        }
-      })
-      .catch(next)
-  )
+  .get('/', async (req, res, next) => {
+    try {
+      const products = await Product.findAll();
+      if (products.length > 0) {
+        res.json(products);
+      } else {
+        res.sendStatus(404);
+      }
+    } catch (err) {
+      next(err);
+    }
+  })
 
-  .post('/', mustBeLoggedIn, (req, res, next) => {
+  .post('/', mustBeLoggedIn, async (req, res, next) => {
     if (!req.user.isAdmin) return res.sendStatus(403);
-    Product.create(req.body)
-      .then(product => res.json(product))
-      .catch(next);
+    try {
+      const product = await Product.create(req.body);
+      res.json(product);
+    } catch (err) {
+      next(err);
+    }
   })
 
-  .param('id', function (req, res, next) {
-    Product.findByPk(req.params.id)
-      .then(product => {
-        if (product) {
-          req.product = product;
-          next();
-        } else {
-          res.sendStatus(404);
-        }
-      })
-      .catch(next);
+  .param('id', async function (req, res, next) {
+    try {
+      const product = await Product.findByPk(req.params.id);
+      if (product) {
+        req.product = product;
+        next();
+      } else {
+        res.sendStatus(404);
+      }
+    } catch (err) {
+      next(err);
+    }
   })
 
-  .get('/:id', (req, res, next) => {
+  .get('/:id', (req, res) => {
     res.status(200).json(req.product);
   })
 
-  .put('/:id', mustBeLoggedIn, (req, res, next) => {
+  .put('/:id', mustBeLoggedIn, async (req, res, next) => {
     if (!req.user.isAdmin) return res.sendStatus(403);
-    req.product
-      .update(req.body)
-      .then(order => res.status(200).json(order))
-      .catch(next);
+    try {
+      const product = await req.product.update(req.body);
+      res.status(200).json(product);
+    } catch (err) {
+      next(err);
+    }
   })
 
-  .delete('/:id', mustBeLoggedIn, (req, res, next) => {
+  .delete('/:id', mustBeLoggedIn, async (req, res, next) => {
     if (!req.user.isAdmin) return res.sendStatus(403);
-    req.product
-      .destroy()
-      .then(() => res.sendStatus(200))
-      .catch(next);
+    try {
+      await req.product.destroy();
+      res.sendStatus(200);
+    } catch (err) {
+      next(err);
+    }
   });

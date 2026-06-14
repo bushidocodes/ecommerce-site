@@ -63,6 +63,7 @@
     "react-router-dom": "^6.30.3",
     "redux": "^5.0.1",
     "redux-logger": "^3.0.6",
+    "debug": "^4.0.0",
     "sequelize": "^6.37.8"
   },
   "devDependencies": {
@@ -83,7 +84,6 @@
     "babel-loader": "^10.1.1",
     "chai": "^4.5.0",
     "cheerio": "1.0.0-rc.12",
-    "debug": "^2.6.0",
     "jsdom": "^29.1.1",
     "eslint": "^8.57.1",
     "eslint-config-prettier": "^8.10.2",

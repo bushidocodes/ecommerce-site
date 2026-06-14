@@ -1,5 +1,5 @@
+import { styleText } from 'util';
 import createDebug from 'debug';
-import chalk from 'chalk';
 import Sequelize from 'sequelize';
 import app from '../index.js';
 
@@ -10,7 +10,7 @@ export const dbName =
 export const dbUrl =
   process.env.DATABASE_URL || `postgres://localhost:5432/${dbName}`;
 
-console.log(chalk.yellow(`Opening database connection to ${dbUrl}`));
+console.log(styleText('yellow', `Opening database connection to ${dbUrl}`));
 
 const db = new Sequelize(dbUrl, {
   logging: debug,

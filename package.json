@@ -89,7 +89,7 @@
     "eslint-config-prettier": "^8.10.2",
     "eslint-plugin-react": "^7.37.5",
     "mocha": "^10.8.2",
-    "prettier": "^2.8.8",
+    "prettier": "^3.0.0",
     "sinon": "^22.0.0",
     "sinon-chai": "^3.7.0",
     "supertest": "^7.2.2",

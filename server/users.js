@@ -8,7 +8,8 @@ export default express
   .Router()
 
   .get('/', mustBeLoggedIn, async (req, res, next) => {
-    if (!req.user.isAdmin) return forbidden(res, 'only admins can list all users');
+    if (!req.user.isAdmin)
+      return forbidden(res, 'only admins can list all users');
     try {
       const users = await User.findAll();
       res.json(users);

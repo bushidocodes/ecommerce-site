@@ -59,7 +59,7 @@ export default express
     }
   })
 
-  .post('/:userId?', async (req, res, next) => {
+  .post('{/:userId}', async (req, res, next) => {
     const orderLineItems = req.body?.orderLineItems ?? null;
     const productIds = orderLineItems ? Object.keys(orderLineItems) : [];
     debug('POST /:userId? userId=%s', req.params.userId);

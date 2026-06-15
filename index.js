@@ -1,18 +1,16 @@
+import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { homedir } from 'os';
-import { createRequire } from 'module';
 import createDebug from 'debug';
+import pkg from './package.json' with { type: 'json' };
 
-const require = createRequire(import.meta.url);
-const pkg = require('./package.json');
 const debug = createDebug(`${pkg.name}:boot`);
 
-// Load a secrets file from ~/.cookie-monsters.env.js or .env.json
-// and merge it into the environment.
+// Load a secrets file from ~/.cookie-monsters.env.json and merge into env.
 const env = Object.create(process.env);
-const secretsFile = resolve(homedir(), `.${pkg.name}.env`);
+const secretsFile = resolve(homedir(), `.${pkg.name}.env.json`);
 try {
-  Object.assign(env, require(secretsFile));
+  Object.assign(env, JSON.parse(readFileSync(secretsFile, 'utf-8')));
 } catch (error) {
   debug('%s: %s', secretsFile, error.message);
   debug('%s: env file not found or invalid, moving on', secretsFile);

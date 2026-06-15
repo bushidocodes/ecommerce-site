@@ -1,8 +1,9 @@
 import React from 'react';
 import chai, { expect } from 'chai';
+import sinonChai from 'sinon-chai';
 import { render, cleanup, fireEvent } from '@testing-library/react';
 import { spy } from 'sinon';
-chai.use(require('sinon-chai'));
+chai.use(sinonChai);
 
 import { WhoAmI } from './WhoAmI';
 

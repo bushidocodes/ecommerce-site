@@ -27,7 +27,7 @@ importers:
         specifier: ^5.1.1
         version: 5.1.1
       cookie-session:
-        specifier: ^2.0.0-alpha.1
+        specifier: ^2.1.1
         version: 2.1.1
       debug:
         specifier: ^4.0.0

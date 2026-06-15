@@ -3,10 +3,30 @@ import db from './index.js';
 async function seedUsers() {
   return Promise.all(
     [
-      { name: 'Evan', email: 'evan@example.com', password: '1234', isAdmin: true },
-      { name: 'Sean', email: 'sean@example.com', password: '1234', isAdmin: true },
-      { name: 'Rachel', email: 'rachel@example.com', password: '1234', isAdmin: true },
-      { name: 'Test1', email: 'test1@example.com', password: '1234', isAdmin: false },
+      {
+        name: 'Evan',
+        email: 'evan@example.com',
+        password: '1234',
+        isAdmin: true,
+      },
+      {
+        name: 'Sean',
+        email: 'sean@example.com',
+        password: '1234',
+        isAdmin: true,
+      },
+      {
+        name: 'Rachel',
+        email: 'rachel@example.com',
+        password: '1234',
+        isAdmin: true,
+      },
+      {
+        name: 'Test1',
+        email: 'test1@example.com',
+        password: '1234',
+        isAdmin: false,
+      },
     ].map(user => db.model('users').create(user))
   );
 }

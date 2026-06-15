@@ -13,11 +13,11 @@ async function sync(force = app.isTesting, retries = 0, maxRetries = 5) {
     console.log(`Synced models to db ${dbUrl}`);
   } catch (fail) {
     if (app.isProduction || retries > maxRetries) {
-      console.error(styleText('red',`********** database error ***********`));
-      console.error(styleText('red',`    Couldn't connect to ${dbUrl}`));
+      console.error(styleText('red', `********** database error ***********`));
+      console.error(styleText('red', `    Couldn't connect to ${dbUrl}`));
       console.error();
-      console.error(styleText('red',fail));
-      console.error(styleText('red',`*************************************`));
+      console.error(styleText('red', fail));
+      console.error(styleText('red', `*************************************`));
       return;
     }
     console.log(

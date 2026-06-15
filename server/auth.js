@@ -78,7 +78,11 @@ passport.use(
         debug('authenticate user(email: "%s") did fail: bad password');
         return done(null, false, { message: 'Login incorrect' });
       }
-      debug('authenticate user(email: "%s") did ok: user.id=%d', email, user.id);
+      debug(
+        'authenticate user(email: "%s") did ok: user.id=%d',
+        email,
+        user.id
+      );
       done(null, user);
     } catch (err) {
       done(err);

@@ -13,8 +13,26 @@ const PRODUCT_INCLUDE = {
 };
 
 async function resolveOrder(order) {
-  const { id, status, shippingRate, shippingCarrier, trackingNumber, created_at, products, total } = order;
-  return { id, status, shippingRate, shippingCarrier, trackingNumber, created_at, products, total: await total };
+  const {
+    id,
+    status,
+    shippingRate,
+    shippingCarrier,
+    trackingNumber,
+    created_at,
+    products,
+    total,
+  } = order;
+  return {
+    id,
+    status,
+    shippingRate,
+    shippingCarrier,
+    trackingNumber,
+    created_at,
+    products,
+    total: await total,
+  };
 }
 
 export default express
@@ -30,7 +48,9 @@ export default express
       } else if (req.user) {
         debug('else if req.user');
         const orders = await req.user.getOrders({ include: [PRODUCT_INCLUDE] });
-        return res.status(200).json(await Promise.all(orders.map(resolveOrder)));
+        return res
+          .status(200)
+          .json(await Promise.all(orders.map(resolveOrder)));
       } else {
         res.status(403).send('Cannot view without req.user');
       }
@@ -51,7 +71,9 @@ export default express
           debug('userId=%s specified as param', req.params.userId);
           const user = await User.findByPk(req.params.userId);
           const order = await user.createOrder(req.body);
-          const products = await Promise.all(productIds.map(id => Product.findByPk(id)));
+          const products = await Promise.all(
+            productIds.map(id => Product.findByPk(id))
+          );
           if (products) {
             products.forEach(product =>
               order.addProduct(product, {
@@ -66,7 +88,9 @@ export default express
         } else {
           debug('no userId param, creating unassociated order');
           const order = await Order.create(req.body);
-          const products = await Promise.all(productIds.map(id => Product.findByPk(id)));
+          const products = await Promise.all(
+            productIds.map(id => Product.findByPk(id))
+          );
           if (products) {
             await Promise.all(
               products.map(product => {
@@ -84,13 +108,17 @@ export default express
               })
             );
           }
-          const fullOrder = await Order.findByPk(order.id, { include: [PRODUCT_INCLUDE] });
+          const fullOrder = await Order.findByPk(order.id, {
+            include: [PRODUCT_INCLUDE],
+          });
           return res.status(200).json(fullOrder);
         }
       } else if (req.user) {
         debug('user is not an admin');
         const order = await req.user.createOrder(req.body);
-        const products = await Promise.all(productIds.map(id => Product.findByPk(id)));
+        const products = await Promise.all(
+          productIds.map(id => Product.findByPk(id))
+        );
         if (products) {
           await Promise.all(
             products.map(product => {
@@ -108,13 +136,17 @@ export default express
             })
           );
         }
-        const fullOrder = await Order.findByPk(order.id, { include: [PRODUCT_INCLUDE] });
+        const fullOrder = await Order.findByPk(order.id, {
+          include: [PRODUCT_INCLUDE],
+        });
         debug('order=%O', fullOrder);
         return res.status(200).json(fullOrder);
       } else {
         debug('no user logged in, creating guest order');
         const order = await Order.create(req.body);
-        const products = await Promise.all(productIds.map(id => Product.findByPk(id)));
+        const products = await Promise.all(
+          productIds.map(id => Product.findByPk(id))
+        );
         if (products) {
           await Promise.all(
             products.map(product =>
@@ -127,7 +159,9 @@ export default express
             )
           );
         }
-        const fullOrder = await Order.findByPk(order.id, { include: [PRODUCT_INCLUDE] });
+        const fullOrder = await Order.findByPk(order.id, {
+          include: [PRODUCT_INCLUDE],
+        });
         return res.status(200).json(fullOrder);
       }
     } catch (err) {
@@ -136,9 +170,12 @@ export default express
   })
 
   .get('/:id', mustBeLoggedIn, async (req, res, next) => {
-    if (!req.user.isAdmin) return forbidden(res, 'You are not authorized to do this.');
+    if (!req.user.isAdmin)
+      return forbidden(res, 'You are not authorized to do this.');
     try {
-      const order = await Order.findByPk(req.params.id, { include: [PRODUCT_INCLUDE] });
+      const order = await Order.findByPk(req.params.id, {
+        include: [PRODUCT_INCLUDE],
+      });
       res.json(await resolveOrder(order));
     } catch (err) {
       next(err);
@@ -146,7 +183,8 @@ export default express
   })
 
   .put('/:id', mustBeLoggedIn, async (req, res, next) => {
-    if (!req.user.isAdmin) return forbidden(res, 'You are not authorized to do this.');
+    if (!req.user.isAdmin)
+      return forbidden(res, 'You are not authorized to do this.');
     try {
       const order = await Order.findByPk(req.params.id);
       const updated = await order.update(req.body);
@@ -157,7 +195,8 @@ export default express
   })
 
   .delete('/:id/', mustBeLoggedIn, async (req, res, next) => {
-    if (!req.user.isAdmin) return forbidden(res, 'You are not authorized to do this.');
+    if (!req.user.isAdmin)
+      return forbidden(res, 'You are not authorized to do this.');
     try {
       const order = await Order.findByPk(req.params.id);
       await order.destroy();
@@ -168,12 +207,15 @@ export default express
   })
 
   .post('/:id/products/', mustBeLoggedIn, async (req, res, next) => {
-    if (!req.user.isAdmin) return forbidden(res, 'You are not authorized to do this.');
+    if (!req.user.isAdmin)
+      return forbidden(res, 'You are not authorized to do this.');
     const orderLineItems = req.body.orderLineItems;
     const productIds = Object.keys(orderLineItems);
     try {
       const order = await Order.findByPk(req.params.id);
-      const products = await Promise.all(productIds.map(id => Product.findByPk(id)));
+      const products = await Promise.all(
+        productIds.map(id => Product.findByPk(id))
+      );
       products.forEach(product =>
         order.addProduct(product, {
           through: {
@@ -188,13 +230,18 @@ export default express
     }
   })
 
-  .delete('/:orderId/products/:productId', mustBeLoggedIn, async (req, res, next) => {
-    if (!req.user.isAdmin) return forbidden(res, 'You are not authorized to do this.');
-    try {
-      const order = await Order.findByPk(req.params.orderId);
-      await order.removeProduct(req.params.productId);
-      res.sendStatus(200);
-    } catch (err) {
-      next(err);
+  .delete(
+    '/:orderId/products/:productId',
+    mustBeLoggedIn,
+    async (req, res, next) => {
+      if (!req.user.isAdmin)
+        return forbidden(res, 'You are not authorized to do this.');
+      try {
+        const order = await Order.findByPk(req.params.orderId);
+        await order.removeProduct(req.params.productId);
+        res.sendStatus(200);
+      } catch (err) {
+        next(err);
+      }
     }
-  });
+  );

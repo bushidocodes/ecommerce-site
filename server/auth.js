@@ -1,8 +1,6 @@
 import createDebug from 'debug';
 import passport from 'passport';
 import express from 'express';
-import passportFacebook from 'passport-facebook';
-import passportGoogle from 'passport-google-oauth20';
 import passportGithub from 'passport-github';
 import passportLocal from 'passport-local';
 import app from '../index.js';
@@ -12,28 +10,6 @@ import OAuth from '../db/models/oauth.js';
 const { env } = app;
 const debug = createDebug(`${app.name}:auth`);
 const auth = express.Router();
-
-OAuth.setupStrategy({
-  provider: 'facebook',
-  strategy: passportFacebook.Strategy,
-  config: {
-    clientID: env.FACEBOOK_CLIENT_ID,
-    clientSecret: env.FACEBOOK_CLIENT_SECRET,
-    callbackURL: `${app.baseUrl}/api/auth/login/facebook`,
-  },
-  passport,
-});
-
-OAuth.setupStrategy({
-  provider: 'google',
-  strategy: passportGoogle.Strategy,
-  config: {
-    clientID: env.GOOGLE_CLIENT_ID,
-    clientSecret: env.GOOGLE_CLIENT_SECRET,
-    callbackURL: `${app.baseUrl}/api/auth/login/google`,
-  },
-  passport,
-});
 
 OAuth.setupStrategy({
   provider: 'github',

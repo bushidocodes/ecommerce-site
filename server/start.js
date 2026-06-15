@@ -11,8 +11,8 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const app = express();
 
 if (!pkg.isProduction && !pkg.isTesting) {
-  const { default: volleyball } = await import('volleyball');
-  app.use(volleyball);
+  const { default: morgan } = await import('morgan');
+  app.use(morgan('dev'));
 }
 
 app

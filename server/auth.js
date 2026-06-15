@@ -3,7 +3,7 @@ import passport from 'passport';
 import express from 'express';
 import passportFacebook from 'passport-facebook';
 import passportGoogle from 'passport-google-oauth20';
-import passportGithub from 'passport-github2';
+import passportGithub from 'passport-github';
 import passportLocal from 'passport-local';
 import app from '../index.js';
 import User from '../db/models/user.js';

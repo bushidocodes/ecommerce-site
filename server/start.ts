@@ -34,10 +34,10 @@ app
   // so we add no-op stubs.
   .use((req, _res, next) => {
     if (req.session && !req.session.regenerate) {
-      req.session.regenerate = cb => cb();
+      req.session.regenerate = (cb: () => void) => cb();
     }
     if (req.session && !req.session.save) {
-      req.session.save = cb => cb();
+      req.session.save = (cb: () => void) => cb();
     }
     next();
   })
@@ -50,7 +50,7 @@ app
   );
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  const server = app.listen(process.env.PORT ?? 1337, () => {
+  const server = app.listen(Number(process.env.PORT ?? 1337), () => {
     console.log(`--- Started HTTP Server for ${pkg.name} ---`);
     console.log(`Listening on ${JSON.stringify(server.address())}`);
   });

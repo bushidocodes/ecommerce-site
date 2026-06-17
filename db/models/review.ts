@@ -1,18 +1,28 @@
-import Sequelize from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 import db from '../sequelize.js';
 
-const Review = db.define(
+export interface ReviewInstance extends Model {
+  id: number;
+  title: string;
+  body: string | null;
+  rating: number;
+  photo: string | null;
+  userId: number | null;
+  productId: number | null;
+}
+
+const Review = db.define<ReviewInstance>(
   'reviews',
   {
     title: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       allowNull: false,
     },
     body: {
-      type: Sequelize.TEXT,
+      type: DataTypes.TEXT,
     },
     rating: {
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         notEmpty: true,
@@ -21,7 +31,7 @@ const Review = db.define(
       },
     },
     photo: {
-      type: Sequelize.STRING,
+      type: DataTypes.STRING,
       validate: {
         isUrl: true,
       },

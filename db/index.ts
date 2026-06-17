@@ -7,7 +7,11 @@ import './models/index.js';
 
 const execAsync = promisify(exec);
 
-async function sync(force = app.isTesting, retries = 0, maxRetries = 5) {
+async function sync(
+  force = app.isTesting,
+  retries = 0,
+  maxRetries = 5
+): Promise<void> {
   try {
     await db.sync({ force });
     console.log(`Synced models to db ${dbUrl}`);
@@ -16,7 +20,7 @@ async function sync(force = app.isTesting, retries = 0, maxRetries = 5) {
       console.error(styleText('red', `********** database error ***********`));
       console.error(styleText('red', `    Couldn't connect to ${dbUrl}`));
       console.error();
-      console.error(styleText('red', fail));
+      console.error(styleText('red', String(fail)));
       console.error(styleText('red', `*************************************`));
       return;
     }
@@ -28,6 +32,8 @@ async function sync(force = app.isTesting, retries = 0, maxRetries = 5) {
   }
 }
 
-db.didSync = sync();
+// Guard against the module being evaluated more than once (see sequelize.ts):
+// only kick off a single sync on the shared instance.
+db.didSync ||= sync();
 
 export default db;

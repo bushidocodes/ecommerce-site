@@ -2,8 +2,11 @@ import request from 'supertest';
 import { expect } from 'chai';
 import db from '../db/index.js';
 import User from '../db/models/user.js';
+import type { UserInstance } from '../db/models/user.js';
 import Order from '../db/models/order.js';
+import type { OrderInstance } from '../db/models/order.js';
 import Product from '../db/models/product.js';
+import type { ProductInstance } from '../db/models/product.js';
 import app from './start.js';
 
 const bobTheAdmin = {
@@ -23,7 +26,10 @@ const dallas = {
 describe('/api/orders/', () => {
   describe('GET / (as Non-Admin)', () => {
     const agent = request.agent(app);
-    let user, product, associatedOrder, unassociatedOrder;
+    let user: UserInstance,
+      product: ProductInstance,
+      associatedOrder: OrderInstance,
+      unassociatedOrder: OrderInstance;
     before('Create non-admin user and login', () =>
       db.didSync
         .then(() =>
@@ -61,7 +67,7 @@ describe('/api/orders/', () => {
   });
 
   describe('GET / (as Admin)', () => {
-    let user, order;
+    let user: UserInstance, order: OrderInstance;
     const agent = request.agent(app);
     before('Create Admin user and Login', () =>
       db.didSync
@@ -94,7 +100,7 @@ describe('/api/orders/', () => {
   });
 
   describe('POST / (as Guest)', () => {
-    let product, orderId;
+    let product: ProductInstance, orderId: number;
     before('Create product', () =>
       db.didSync
         .then(() =>
@@ -153,7 +159,7 @@ describe('/api/orders/', () => {
   });
   describe('POST / (as Non-Admin)', () => {
     const agent = request.agent(app);
-    let user, product, id;
+    let user: UserInstance, product: ProductInstance, id: number;
     before('Create Non-Admin user, product, and Login', () =>
       db.didSync
         .then(() =>
@@ -210,7 +216,7 @@ describe('/api/orders/', () => {
   });
   describe('POST / (as Admin)', () => {
     const agent = request.agent(app);
-    let user, id;
+    let user: UserInstance, id: number;
     before('Create Admin user and Login', () =>
       db.didSync
         .then(() =>
@@ -241,7 +247,7 @@ describe('/api/orders/', () => {
     after('logoff, destroy posts, and destroy admin user', () => {
       agent.post('/logout');
       user.destroy();
-      Order.findByPk(id).then(order => order.destroy());
+      Order.findByPk(id).then(order => order?.destroy());
     });
   });
 });

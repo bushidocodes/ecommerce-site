@@ -76,9 +76,9 @@ export default [
     },
   },
 
-  // db/index.js — allow console
+  // db/index.ts — allow console
   {
-    files: ['db/index.js'],
+    files: ['db/index.ts'],
     rules: {
       'no-console': 'off',
     },

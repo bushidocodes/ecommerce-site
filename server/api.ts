@@ -1,4 +1,5 @@
 import express from 'express';
+import type { ErrorRequestHandler } from 'express';
 import '../db/index.js';
 import auth from './auth.js';
 import users from './users.js';
@@ -16,10 +17,11 @@ api
   .use('/orders', orders)
   .use('/reviews', reviews);
 
-api.use((err, req, res, next) => {
+const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
   console.error(err);
   res.status(500).json({ error: 'Internal server error' });
-});
+};
+api.use(errorHandler);
 
 api.use((req, res) => res.status(404).end());
 

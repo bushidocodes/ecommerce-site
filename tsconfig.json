@@ -13,8 +13,9 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react"
+    "jsx": "react",
+    "types": ["node", "mocha"]
   },
-  "include": ["app/**/*"],
+  "include": ["app/**/*", "server/**/*", "db/**/*", "index.ts"],
   "exclude": ["node_modules", "**/*.test.jsx"]
 }

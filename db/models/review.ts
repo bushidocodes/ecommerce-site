@@ -1,17 +1,30 @@
 import { DataTypes, Model } from 'sequelize';
+import type { Optional } from 'sequelize';
 import db from '../sequelize.js';
 
-export interface ReviewInstance extends Model {
+export interface ReviewAttributes {
   id: number;
   title: string;
   body: string | null;
   rating: number;
   photo: string | null;
-  userId: number | null;
   productId: number | null;
+  userId: number | null;
 }
 
-const Review = db.define<ReviewInstance>(
+type ReviewCreationAttributes = Optional<
+  ReviewAttributes,
+  'id' | 'body' | 'photo' | 'productId' | 'userId'
+>;
+
+export interface ReviewInstance
+  extends Model<ReviewAttributes, ReviewCreationAttributes>,
+    ReviewAttributes {}
+
+const Review = db.define<
+  ReviewInstance,
+  Omit<ReviewAttributes, 'id' | 'productId' | 'userId'>
+>(
   'reviews',
   {
     title: {

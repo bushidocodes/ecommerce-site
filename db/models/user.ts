@@ -3,11 +3,12 @@ import { DataTypes, Model } from 'sequelize';
 import type {
   HasManyCreateAssociationMixin,
   HasManyGetAssociationsMixin,
+  Optional,
 } from 'sequelize';
 import db from '../sequelize.js';
 import type { OrderInstance } from './order.js';
 
-export interface UserInstance extends Model {
+export interface UserAttributes {
   id: number;
   name: string;
   email: string | null;
@@ -24,14 +25,38 @@ export interface UserInstance extends Model {
   resetPassword: boolean | null;
   isAdmin: boolean;
   role: 'unauth' | 'auth';
+}
 
+// Everything except `name` is optional at creation (auto / defaulted / nullable).
+type UserCreationAttributes = Optional<
+  UserAttributes,
+  | 'id'
+  | 'email'
+  | 'billingAddress'
+  | 'billingCity'
+  | 'billingState'
+  | 'billingZip'
+  | 'shippingAddress'
+  | 'shippingCity'
+  | 'shippingState'
+  | 'shippingZip'
+  | 'password_digest'
+  | 'password'
+  | 'resetPassword'
+  | 'isAdmin'
+  | 'role'
+>;
+
+export interface UserInstance
+  extends Model<UserAttributes, UserCreationAttributes>,
+    UserAttributes {
   authenticate(plaintext: string): Promise<boolean>;
 
   getOrders: HasManyGetAssociationsMixin<OrderInstance>;
   createOrder: HasManyCreateAssociationMixin<OrderInstance>;
 }
 
-const User = db.define<UserInstance>(
+const User = db.define<UserInstance, Omit<UserAttributes, 'id'>>(
   'users',
   {
     name: {

@@ -3,18 +3,35 @@ import type {
   BelongsToManyAddAssociationMixin,
   BelongsToManyGetAssociationsMixin,
   BelongsToManyRemoveAssociationMixin,
+  Optional,
 } from 'sequelize';
 import db from '../sequelize.js';
 import type { ProductInstance } from './product.js';
 
-export interface OrderInstance extends Model {
+export interface OrderAttributes {
   id: number;
   status: 'created' | 'processing' | 'cancelled' | 'completed';
-  shippingRate: string;
+  // DECIMAL is read back as a string; writes accept a number or string.
+  shippingRate: number | string;
   shippingCarrier: 'USPS' | 'UPS' | 'FedEx' | null;
   trackingNumber: string | null;
   userId: number | null;
-  created_at?: Date;
+}
+
+type OrderCreationAttributes = Optional<
+  OrderAttributes,
+  | 'id'
+  | 'status'
+  | 'shippingRate'
+  | 'shippingCarrier'
+  | 'trackingNumber'
+  | 'userId'
+>;
+
+export interface OrderInstance
+  extends Model<OrderAttributes, OrderCreationAttributes>,
+    OrderAttributes {
+  readonly created_at?: Date;
 
   // Eager-loaded association + computed async getter (see getterMethods below).
   products?: ProductInstance[];
@@ -25,7 +42,7 @@ export interface OrderInstance extends Model {
   removeProduct: BelongsToManyRemoveAssociationMixin<ProductInstance, number>;
 }
 
-const Order = db.define<OrderInstance>(
+const Order = db.define<OrderInstance, Omit<OrderAttributes, 'id' | 'userId'>>(
   'orders',
   {
     status: {
@@ -58,7 +75,7 @@ const Order = db.define<OrderInstance>(
           products.forEach(
             product => (runningTotal += product.orderLineItems!.subtotal)
           );
-          runningTotal += parseFloat(this.shippingRate);
+          runningTotal += Number(this.shippingRate);
           console.log(runningTotal);
           return runningTotal;
         });

@@ -1,9 +1,15 @@
 import { DataTypes, Model } from 'sequelize';
 import db from '../sequelize.js';
 
-export interface OrderLineItemInstance extends Model {
+export interface OrderLineItemAttributes {
   quantity: number;
-  price: string;
+  // DECIMAL is read back as a string; writes accept a number or string.
+  price: number | string;
+}
+
+export interface OrderLineItemInstance
+  extends Model<OrderLineItemAttributes, OrderLineItemAttributes>,
+    OrderLineItemAttributes {
   readonly subtotal: number;
 }
 

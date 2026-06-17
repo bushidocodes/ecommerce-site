@@ -32,6 +32,8 @@ async function sync(
   }
 }
 
-db.didSync = sync();
+// Guard against the module being evaluated more than once (see sequelize.ts):
+// only kick off a single sync on the shared instance.
+db.didSync ||= sync();
 
 export default db;

@@ -1,18 +1,20 @@
 import createDebug from 'debug';
 import express from 'express';
+import type { IncludeOptions } from 'sequelize';
 import Order from '../db/models/order.js';
+import type { OrderInstance } from '../db/models/order.js';
 import Product from '../db/models/product.js';
 import User from '../db/models/user.js';
 import { mustBeLoggedIn, forbidden } from './auth.filters.js';
 
 const debug = createDebug('cookie-monsters:orders');
 
-const PRODUCT_INCLUDE = {
+const PRODUCT_INCLUDE: IncludeOptions = {
   model: Product,
   through: { attributes: ['quantity', 'price'] },
 };
 
-async function resolveOrder(order) {
+async function resolveOrder(order: OrderInstance) {
   const {
     id,
     status,
@@ -69,17 +71,17 @@ export default express
         debug('user is an admin');
         if (req.params?.userId) {
           debug('userId=%s specified as param', req.params.userId);
-          const user = await User.findByPk(req.params.userId);
-          const order = await user.createOrder(req.body);
+          const user = await User.findByPk(String(req.params.userId));
+          const order = await user!.createOrder(req.body);
           const products = await Promise.all(
             productIds.map(id => Product.findByPk(id))
           );
           if (products) {
             products.forEach(product =>
-              order.addProduct(product, {
+              order.addProduct(product!, {
                 through: {
-                  quantity: orderLineItems[product.id].quantity,
-                  price: product.price,
+                  quantity: orderLineItems[product!.id].quantity,
+                  price: product!.price,
                 },
               })
             );
@@ -94,17 +96,17 @@ export default express
           if (products) {
             await Promise.all(
               products.map(product => {
-                const qty = orderLineItems[product.id].quantity;
-                if (product.quantity < qty) {
+                const qty = orderLineItems[product!.id].quantity;
+                if (product!.quantity < qty) {
                   return res.status(409).json({
-                    error: `Insufficient inventory for product ${product.id}`,
+                    error: `Insufficient inventory for product ${product!.id}`,
                   });
                 }
                 return order
-                  .addProduct(product, {
-                    through: { quantity: qty, price: product.price },
+                  .addProduct(product!, {
+                    through: { quantity: qty, price: product!.price },
                   })
-                  .then(() => product.decrement('quantity', { by: qty }));
+                  .then(() => product!.decrement('quantity', { by: qty }));
               })
             );
           }
@@ -122,17 +124,17 @@ export default express
         if (products) {
           await Promise.all(
             products.map(product => {
-              const qty = orderLineItems[product.id].quantity;
-              if (product.quantity < qty) {
+              const qty = orderLineItems[product!.id].quantity;
+              if (product!.quantity < qty) {
                 return res.status(409).json({
-                  error: `Insufficient inventory for product ${product.id}`,
+                  error: `Insufficient inventory for product ${product!.id}`,
                 });
               }
               return order
-                .addProduct(product, {
-                  through: { quantity: qty, price: product.price },
+                .addProduct(product!, {
+                  through: { quantity: qty, price: product!.price },
                 })
-                .then(() => product.decrement('quantity', { by: qty }));
+                .then(() => product!.decrement('quantity', { by: qty }));
             })
           );
         }
@@ -150,10 +152,10 @@ export default express
         if (products) {
           await Promise.all(
             products.map(product =>
-              order.addProduct(product, {
+              order.addProduct(product!, {
                 through: {
-                  quantity: orderLineItems[product.id].quantity,
-                  price: product.price,
+                  quantity: orderLineItems[product!.id].quantity,
+                  price: product!.price,
                 },
               })
             )
@@ -170,24 +172,24 @@ export default express
   })
 
   .get('/:id', mustBeLoggedIn, async (req, res, next) => {
-    if (!req.user.isAdmin)
+    if (!req.user!.isAdmin)
       return forbidden(res, 'You are not authorized to do this.');
     try {
-      const order = await Order.findByPk(req.params.id, {
+      const order = await Order.findByPk(String(req.params.id), {
         include: [PRODUCT_INCLUDE],
       });
-      res.json(await resolveOrder(order));
+      res.json(await resolveOrder(order!));
     } catch (err) {
       next(err);
     }
   })
 
   .put('/:id', mustBeLoggedIn, async (req, res, next) => {
-    if (!req.user.isAdmin)
+    if (!req.user!.isAdmin)
       return forbidden(res, 'You are not authorized to do this.');
     try {
-      const order = await Order.findByPk(req.params.id);
-      const updated = await order.update(req.body);
+      const order = await Order.findByPk(String(req.params.id));
+      const updated = await order!.update(req.body);
       res.status(200).json(updated);
     } catch (err) {
       next(err);
@@ -195,11 +197,11 @@ export default express
   })
 
   .delete('/:id/', mustBeLoggedIn, async (req, res, next) => {
-    if (!req.user.isAdmin)
+    if (!req.user!.isAdmin)
       return forbidden(res, 'You are not authorized to do this.');
     try {
-      const order = await Order.findByPk(req.params.id);
-      await order.destroy();
+      const order = await Order.findByPk(String(req.params.id));
+      await order!.destroy();
       res.sendStatus(200);
     } catch (err) {
       next(err);
@@ -207,20 +209,20 @@ export default express
   })
 
   .post('/:id/products/', mustBeLoggedIn, async (req, res, next) => {
-    if (!req.user.isAdmin)
+    if (!req.user!.isAdmin)
       return forbidden(res, 'You are not authorized to do this.');
     const orderLineItems = req.body.orderLineItems;
     const productIds = Object.keys(orderLineItems);
     try {
-      const order = await Order.findByPk(req.params.id);
+      const order = await Order.findByPk(String(req.params.id));
       const products = await Promise.all(
         productIds.map(id => Product.findByPk(id))
       );
       products.forEach(product =>
-        order.addProduct(product, {
+        order!.addProduct(product!, {
           through: {
-            quantity: orderLineItems[product.id].quantity,
-            price: product.price,
+            quantity: orderLineItems[product!.id].quantity,
+            price: product!.price,
           },
         })
       );
@@ -234,11 +236,11 @@ export default express
     '/:orderId/products/:productId',
     mustBeLoggedIn,
     async (req, res, next) => {
-      if (!req.user.isAdmin)
+      if (!req.user!.isAdmin)
         return forbidden(res, 'You are not authorized to do this.');
       try {
-        const order = await Order.findByPk(req.params.orderId);
-        await order.removeProduct(req.params.productId);
+        const order = await Order.findByPk(String(req.params.orderId));
+        await order!.removeProduct(Number(req.params.productId));
         res.sendStatus(200);
       } catch (err) {
         next(err);

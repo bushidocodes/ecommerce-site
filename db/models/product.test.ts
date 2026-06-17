@@ -1,11 +1,12 @@
 import db from '../../db/index.js';
 import Product from './product.js';
+import type { ProductInstance } from './product.js';
 import { expect } from 'chai';
 
 describe('Product', () => {
   before('wait for the db', () => db.didSync);
 
-  let testCookie;
+  let testCookie: ProductInstance;
   before('make test cookie', () => {
     return Product.create({
       name: 'Chocolate Chip',

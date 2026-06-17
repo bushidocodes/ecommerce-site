@@ -3,7 +3,9 @@ import { expect } from 'chai';
 import db from '../db/index.js';
 import Review from '../db/models/review.js';
 import User from '../db/models/user.js';
+import type { UserInstance } from '../db/models/user.js';
 import Product from '../db/models/product.js';
+import type { ProductInstance } from '../db/models/product.js';
 import app from './start.js';
 
 const testUser = {
@@ -14,7 +16,7 @@ const testUser = {
 
 describe('/api/reviews', () => {
   const agent = request.agent(app);
-  let user, product;
+  let user: UserInstance, product: ProductInstance;
 
   before('create product, user, and log in', () =>
     db.didSync
@@ -47,7 +49,7 @@ describe('/api/reviews', () => {
   });
 
   describe('POST / (authenticated)', () => {
-    let createdId;
+    let createdId: number;
 
     it('creates a review when logged in with a productId', () =>
       agent

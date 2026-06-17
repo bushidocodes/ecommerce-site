@@ -4,7 +4,7 @@
     {
       "name": "Express Server",
       "runtimeExecutable": "node",
-      "runtimeArgs": ["start-preview.js"],
+      "runtimeArgs": ["--import", "tsx", "start-preview.ts"],
       "port": 1337,
       "autoPort": true
     }

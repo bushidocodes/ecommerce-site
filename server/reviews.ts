@@ -24,7 +24,7 @@ export default express
         rating,
         photo,
         productId,
-        userId: req.user.id,
+        userId: req.user!.id,
       });
       res.status(201).json(review);
     } catch (err) {
@@ -34,7 +34,7 @@ export default express
 
   .get('/:id', async (req, res, next) => {
     try {
-      const review = await Review.findByPk(req.params.id);
+      const review = await Review.findByPk(String(req.params.id));
       if (!review) return res.sendStatus(404);
       res.json(review);
     } catch (err) {
@@ -44,9 +44,9 @@ export default express
 
   .put('/:id', mustBeLoggedIn, async (req, res, next) => {
     try {
-      const review = await Review.findByPk(req.params.id);
+      const review = await Review.findByPk(String(req.params.id));
       if (!review) return res.sendStatus(404);
-      if (!req.user.isAdmin && review.userId !== req.user.id) {
+      if (!req.user!.isAdmin && review.userId !== req.user!.id) {
         return res.status(403).send('You can only edit your own reviews');
       }
       const { title, body, rating, photo } = req.body;
@@ -59,9 +59,9 @@ export default express
 
   .delete('/:id', mustBeLoggedIn, async (req, res, next) => {
     try {
-      const review = await Review.findByPk(req.params.id);
+      const review = await Review.findByPk(String(req.params.id));
       if (!review) return res.sendStatus(404);
-      if (!req.user.isAdmin && review.userId !== req.user.id) {
+      if (!req.user!.isAdmin && review.userId !== req.user!.id) {
         return res.status(403).send('You can only delete your own reviews');
       }
       await review.destroy();

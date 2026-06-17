@@ -19,7 +19,7 @@ export default express
   })
 
   .post('/', mustBeLoggedIn, async (req, res, next) => {
-    if (!req.user.isAdmin) return res.sendStatus(403);
+    if (!req.user!.isAdmin) return res.sendStatus(403);
     try {
       const product = await Product.create(req.body);
       res.json(product);
@@ -30,7 +30,7 @@ export default express
 
   .param('id', async function (req, res, next) {
     try {
-      const product = await Product.findByPk(req.params.id);
+      const product = await Product.findByPk(String(req.params.id));
       if (product) {
         req.product = product;
         next();
@@ -47,9 +47,9 @@ export default express
   })
 
   .put('/:id', mustBeLoggedIn, async (req, res, next) => {
-    if (!req.user.isAdmin) return res.sendStatus(403);
+    if (!req.user!.isAdmin) return res.sendStatus(403);
     try {
-      const product = await req.product.update(req.body);
+      const product = await req.product!.update(req.body);
       res.status(200).json(product);
     } catch (err) {
       next(err);
@@ -57,9 +57,9 @@ export default express
   })
 
   .delete('/:id', mustBeLoggedIn, async (req, res, next) => {
-    if (!req.user.isAdmin) return res.sendStatus(403);
+    if (!req.user!.isAdmin) return res.sendStatus(403);
     try {
-      await req.product.destroy();
+      await req.product!.destroy();
       res.sendStatus(200);
     } catch (err) {
       next(err);

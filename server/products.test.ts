@@ -2,7 +2,9 @@ import request from 'supertest';
 import { expect } from 'chai';
 import db from '../db/index.js';
 import Product from '../db/models/product.js';
+import type { ProductInstance } from '../db/models/product.js';
 import User from '../db/models/user.js';
+import type { UserInstance } from '../db/models/user.js';
 import app from './start.js';
 
 const testAdminUser = {
@@ -13,7 +15,7 @@ const testAdminUser = {
 
 describe('/api/products', () => {
   const agent = request.agent(app);
-  let product, adminUser;
+  let product: ProductInstance, adminUser: UserInstance;
 
   before('sync db, create admin user and log in', () =>
     db.didSync
@@ -69,7 +71,7 @@ describe('/api/products', () => {
   });
 
   describe('POST / (admin)', () => {
-    let createdId;
+    let createdId: number;
 
     it('creates a new product when logged in as admin', () =>
       agent

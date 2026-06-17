@@ -1,18 +1,24 @@
-import Sequelize from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 import db from '../sequelize.js';
 
-const OrderLineItem = db.define(
+export interface OrderLineItemInstance extends Model {
+  quantity: number;
+  price: string;
+  readonly subtotal: number;
+}
+
+const OrderLineItem = db.define<OrderLineItemInstance>(
   'orderLineItems',
   {
     quantity: {
-      type: Sequelize.INTEGER,
+      type: DataTypes.INTEGER,
       allowNull: false,
       validate: {
         notEmpty: true,
       },
     },
     price: {
-      type: Sequelize.DECIMAL(16, 2),
+      type: DataTypes.DECIMAL(16, 2),
       allowNull: false,
       validate: {
         notEmpty: true,
@@ -22,8 +28,8 @@ const OrderLineItem = db.define(
   {
     indexes: [{ fields: ['order_id'] }, { fields: ['product_id'] }],
     getterMethods: {
-      subtotal: function () {
-        return this.quantity * this.price;
+      subtotal(this: OrderLineItemInstance) {
+        return this.quantity * Number(this.price);
       },
     },
   }

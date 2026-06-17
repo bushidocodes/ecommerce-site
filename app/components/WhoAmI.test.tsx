@@ -1,17 +1,21 @@
 import React from 'react';
-import chai, { expect } from 'chai';
+import { expect, use } from 'chai';
 import sinonChai from 'sinon-chai';
 import { render, cleanup, fireEvent } from '@testing-library/react';
 import { spy } from 'sinon';
-chai.use(sinonChai);
+import type { User } from '../types';
+use(sinonChai);
 
 import { WhoAmI } from './WhoAmI';
 
 afterEach(cleanup);
 
 describe('<WhoAmI/>', () => {
-  const user = {
+  const user: User = {
+    id: 1,
     name: 'Dr. Bones',
+    email: 'bones@example.com',
+    isAdmin: false,
   };
   const logout = spy();
   let container: HTMLElement;

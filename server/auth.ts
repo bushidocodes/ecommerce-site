@@ -28,11 +28,11 @@ passport.serializeUser((user, done) => {
   debug('did serialize user.id=%d', user.id);
 });
 
-passport.deserializeUser(async (id, done) => {
+passport.deserializeUser(async (id: number, done) => {
   debug('will deserialize user.id=%d', id);
   try {
     const user = await User.findByPk(id);
-    debug('deserialize did ok user.id=%d', user.id);
+    debug('deserialize did ok user.id=%d', user?.id);
     done(null, user);
   } catch (err) {
     debug('deserialize did fail err=%s', err);

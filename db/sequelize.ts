@@ -1,6 +1,6 @@
 import { styleText } from 'util';
 import createDebug from 'debug';
-import Sequelize from 'sequelize';
+import { Sequelize } from 'sequelize';
 import app from '../index.js';
 
 const debug = createDebug('sql');
@@ -21,5 +21,12 @@ const db = new Sequelize(dbUrl, {
     timestamps: true,
   },
 });
+
+// `db.didSync` is assigned in db/index.ts and awaited throughout the app/tests.
+declare module 'sequelize' {
+  interface Sequelize {
+    didSync: Promise<void>;
+  }
+}
 
 export default db;

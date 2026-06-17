@@ -12,7 +12,7 @@ const secretsFile = resolve(homedir(), `.${pkg.name}.env.json`);
 try {
   Object.assign(env, JSON.parse(readFileSync(secretsFile, 'utf-8')));
 } catch (error) {
-  debug('%s: %s', secretsFile, error.message);
+  debug('%s: %s', secretsFile, error instanceof Error ? error.message : error);
   debug('%s: env file not found or invalid, moving on', secretsFile);
 }
 

@@ -31,19 +31,13 @@ export default express
     }
   })
 
-  // NOTE: Express's router.param only invokes the first handler, so the async
-  // lookup below never runs (req.foundUser is left unset) — preserved as-is
-  // from the original JavaScript to keep behavior identical.
-  // @ts-expect-error router.param accepts a single handler, not middleware + handler
-  .param('id', mustBeLoggedIn, async function (req, res, next) {
+  .param('id', async (req, res, next) => {
+    if (!req.user) return res.status(401).send('You must be logged in');
     try {
       const user = await User.findByPk(String(req.params.id));
-      if (user) {
-        req.foundUser = user;
-        next();
-      } else {
-        res.sendStatus(404);
-      }
+      if (!user) return res.sendStatus(404);
+      req.foundUser = user;
+      next();
     } catch (err) {
       next(err);
     }

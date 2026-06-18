@@ -4,6 +4,7 @@ import type {
   BelongsToGetAssociationMixin,
   BelongsToSetAssociationMixin,
   ModelStatic,
+  Optional,
 } from 'sequelize';
 import type { Profile, Strategy } from 'passport';
 import db from '../sequelize.js';
@@ -21,13 +22,15 @@ type OAuthVerify = (
 
 interface SetupStrategyArgs {
   provider: string;
-  strategy: new (...args: any[]) => Strategy;
+  // Passport strategy constructors vary per provider, so the option shape is
+  // intentionally open here; only the verify callback is pinned down.
+  strategy: new (options: never, verify: OAuthVerify) => Strategy;
   config: Record<string, unknown>;
   oauth?: OAuthVerify;
   passport: { use(strategy: Strategy): unknown };
 }
 
-export interface OAuthInstance extends Model {
+export interface OAuthAttributes {
   uid: string;
   provider: string;
   accessToken: string | null;
@@ -35,7 +38,13 @@ export interface OAuthInstance extends Model {
   token: string | null;
   tokenSecret: string | null;
   profileJson: unknown;
+}
 
+type OAuthCreationAttributes = Optional<OAuthAttributes, keyof OAuthAttributes>;
+
+export interface OAuthInstance
+  extends Model<OAuthAttributes, OAuthCreationAttributes>,
+    OAuthAttributes {
   getUser: BelongsToGetAssociationMixin<UserInstance>;
   setUser: BelongsToSetAssociationMixin<UserInstance, number>;
 }
@@ -102,7 +111,7 @@ OAuth.setupStrategy = ({
     return;
   }
   debug('initializing provider:%s', provider);
-  passport.use(new strategy(config, oauth));
+  passport.use(new strategy(config as never, oauth));
 };
 
 export default OAuth;

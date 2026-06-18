@@ -14,7 +14,10 @@
     "isolatedModules": true,
     "noEmit": true,
     "jsx": "react",
-    "types": ["node", "mocha"]
+    "types": ["node", "mocha"],
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noUncheckedIndexedAccess": true
   },
   "include": ["app/**/*", "server/**/*", "db/**/*", "index.ts"],
   "exclude": ["node_modules", "**/*.test.jsx"]

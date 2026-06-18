@@ -8,6 +8,7 @@ describe('Review', () => {
   describe('Persistence to the db', () => {
     xit('Does not allow a title to be null', () =>
       Review.create({
+        // @ts-expect-error intentionally passing null to verify the DB rejects it
         title: null,
         body: 'oops!',
         rating: 3,

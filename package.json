@@ -54,7 +54,7 @@
     "passport": "^0.7.0",
     "passport-github": "^1.1.0",
     "passport-local": "^1.0.0",
-    "pg": "^8.21.0",
+    "pg": "^8.22.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-redux": "^9.3.0",

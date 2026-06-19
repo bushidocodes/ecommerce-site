@@ -7,6 +7,9 @@ dist/
 # NPM errors
 npm-debug.log
 
+# This project uses pnpm (see packageManager); never commit an npm lockfile
+package-lock.json
+
 # Browser automation artifacts
 .playwright-mcp/
 

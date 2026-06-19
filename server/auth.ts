@@ -1,6 +1,7 @@
 import createDebug from 'debug';
 import passport from 'passport';
 import express from 'express';
+import rateLimit from 'express-rate-limit';
 import passportGithub from 'passport-github';
 import passportLocal from 'passport-local';
 import app from '../index.js';
@@ -10,6 +11,15 @@ import OAuth from '../db/models/oauth.js';
 const { env } = app;
 const debug = createDebug(`${app.name}:auth`);
 const auth = express.Router();
+
+// Throttle the credential endpoints (signup/login) to blunt brute-force and
+// account-enumeration attempts. Generous enough not to affect normal use.
+const authLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 OAuth.setupStrategy({
   provider: 'github',
@@ -68,7 +78,7 @@ passport.use(
 
 auth.get('/whoami', (req, res) => res.send(req.user));
 
-auth.post('/local/signup', async (req, res, next) => {
+auth.post('/local/signup', authLimiter, async (req, res, next) => {
   if (req.user) return res.status(403).send('Already logged in');
   const { name, email, password } = req.body;
   try {
@@ -82,7 +92,7 @@ auth.post('/local/signup', async (req, res, next) => {
   }
 });
 
-auth.post('/:strategy/login', (req, res, next) =>
+auth.post<{ strategy: string }>('/:strategy/login', authLimiter, (req, res, next) =>
   passport.authenticate(req.params.strategy, {
     successRedirect: '/',
   })(req, res, next)

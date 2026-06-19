@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import React from 'react';
 import { expect } from 'chai';
 import { render, cleanup } from '@testing-library/react';

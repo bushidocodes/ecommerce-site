@@ -4,10 +4,10 @@ import type { ProductInstance } from './product.js';
 import { expect } from 'chai';
 
 describe('Product', () => {
-  before('wait for the db', () => db.didSync);
+  beforeAll(() => db.didSync);
 
   let testCookie: ProductInstance;
-  before('make test cookie', () => {
+  beforeAll(() => {
     return Product.create({
       name: 'Chocolate Chip',
       description: 'The classic. Enjoy with a tall glass of cold milk.',

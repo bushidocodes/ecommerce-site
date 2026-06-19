@@ -17,7 +17,7 @@ describe('/api/products', () => {
   const agent = request.agent(app);
   let product: ProductInstance, adminUser: UserInstance;
 
-  before('sync db, create admin user and log in', () =>
+  beforeAll(() =>
     db.didSync
       .then(() =>
         User.create({
@@ -33,7 +33,7 @@ describe('/api/products', () => {
       })
   );
 
-  before('create a test product', () =>
+  beforeAll(() =>
     Product.create({
       name: 'Test Cookie',
       description: 'A delicious test cookie',
@@ -94,8 +94,8 @@ describe('/api/products', () => {
         }));
 
     describe('PUT /:id (admin)', () => {
-      it('updates an existing product when logged in as admin', function () {
-        if (!createdId) return this.skip();
+      it('updates an existing product when logged in as admin', ctx => {
+        if (!createdId) return ctx.skip();
         return agent
           .put('/api/products/' + createdId)
           .send({ name: 'Updated Cookie', price: 4.99 })
@@ -107,8 +107,8 @@ describe('/api/products', () => {
     });
 
     describe('DELETE /:id (admin)', () => {
-      it('deletes a product when logged in as admin', function () {
-        if (!createdId) return this.skip();
+      it('deletes a product when logged in as admin', ctx => {
+        if (!createdId) return ctx.skip();
         return agent.delete('/api/products/' + createdId).expect(200);
       });
     });

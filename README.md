@@ -49,8 +49,8 @@ pnpm start
 * Passport
 * React
 * Redux
-* Webpack
-* Mocha
+* Vite
+* Vitest
 * Chai
 * And so much more!
 

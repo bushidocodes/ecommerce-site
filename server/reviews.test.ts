@@ -18,7 +18,7 @@ describe('/api/reviews', () => {
   const agent = request.agent(app);
   let user: UserInstance, product: ProductInstance;
 
-  before('create product, user, and log in', () =>
+  beforeAll(() =>
     db.didSync
       .then(() =>
         Product.create({
@@ -79,15 +79,15 @@ describe('/api/reviews', () => {
         .expect(400));
 
     describe('GET /:id', () => {
-      it('returns the created review by id', function () {
-        if (!createdId) return this.skip();
+      it('returns the created review by id', ctx => {
+        if (!createdId) return ctx.skip();
         return request(app).get(`/api/reviews/${createdId}`).expect(200);
       });
     });
 
     describe('PUT /:id', () => {
-      it('updates a review the user owns', function () {
-        if (!createdId) return this.skip();
+      it('updates a review the user owns', ctx => {
+        if (!createdId) return ctx.skip();
         return agent
           .put(`/api/reviews/${createdId}`)
           .send({ title: 'Updated title', rating: 4 })
@@ -97,8 +97,8 @@ describe('/api/reviews', () => {
     });
 
     describe('DELETE /:id', () => {
-      it('deletes a review the user owns', function () {
-        if (!createdId) return this.skip();
+      it('deletes a review the user owns', ctx => {
+        if (!createdId) return ctx.skip();
         return agent.delete(`/api/reviews/${createdId}`).expect(204);
       });
     });

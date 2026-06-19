@@ -16,7 +16,7 @@ const adminUser = {
 
 describe('/api/users', () => {
   describe('when not logged in', () => {
-    before(() => db.didSync);
+    beforeAll(() => db.didSync);
 
     it('GET /:id fails 401 (Unauthorized)', () =>
       request(app).get(`/api/users/1`).expect(401));
@@ -31,7 +31,7 @@ describe('/api/users', () => {
         })
         .expect(201));
 
-    xit('POST redirects to the user it just made', () =>
+    it.skip('POST redirects to the user it just made', () =>
       request(app)
         .post('/api/users')
         .send({
@@ -50,7 +50,7 @@ describe('/api/users', () => {
     describe('as the owner', () => {
       const agent = request.agent(app);
       let user: UserInstance;
-      before(() =>
+      beforeAll(() =>
         db.didSync
           .then(() => User.create(alice))
           .then(_user => {
@@ -60,7 +60,7 @@ describe('/api/users', () => {
               .send({ username: alice.email, password: alice.password });
           })
       );
-      after(() => user.destroy());
+      afterAll(() => user.destroy());
 
       it('returns 200 with the user body', () =>
         agent
@@ -76,7 +76,7 @@ describe('/api/users', () => {
     describe('as a different non-admin user', () => {
       const agent = request.agent(app);
       let userA: UserInstance, userB: UserInstance;
-      before(() =>
+      beforeAll(() =>
         db.didSync
           .then(() => Promise.all([User.create(alice), User.create(bob)]))
           .then(([a, b]) => {
@@ -87,7 +87,7 @@ describe('/api/users', () => {
               .send({ username: bob.email, password: bob.password });
           })
       );
-      after(() => Promise.all([userA.destroy(), userB.destroy()]));
+      afterAll(() => Promise.all([userA.destroy(), userB.destroy()]));
 
       it('returns 403 Forbidden', () =>
         agent.get(`/api/users/${userA.id}`).expect(403));
@@ -96,7 +96,7 @@ describe('/api/users', () => {
     describe('as an admin', () => {
       const agent = request.agent(app);
       let user: UserInstance, admin: UserInstance;
-      before(() =>
+      beforeAll(() =>
         db.didSync
           .then(() => Promise.all([User.create(alice), User.create(adminUser)]))
           .then(([_user, _admin]) => {
@@ -108,7 +108,7 @@ describe('/api/users', () => {
             });
           })
       );
-      after(() => Promise.all([user.destroy(), admin.destroy()]));
+      afterAll(() => Promise.all([user.destroy(), admin.destroy()]));
 
       it('returns 200 with the requested user body', () =>
         agent
@@ -123,7 +123,7 @@ describe('/api/users', () => {
     describe('for a non-existent id', () => {
       const agent = request.agent(app);
       let user: UserInstance;
-      before(() =>
+      beforeAll(() =>
         db.didSync
           .then(() => User.create(alice))
           .then(_user => {
@@ -133,7 +133,7 @@ describe('/api/users', () => {
               .send({ username: alice.email, password: alice.password });
           })
       );
-      after(() => user.destroy());
+      afterAll(() => user.destroy());
 
       it('returns 404', () =>
         agent.get('/api/users/99999999').expect(404));

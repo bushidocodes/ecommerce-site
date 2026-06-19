@@ -3,10 +3,10 @@ import Review from './review.js';
 import { expect } from 'chai';
 
 describe('Review', () => {
-  before('wait for the db', () => db.didSync);
+  beforeAll(() => db.didSync);
 
   describe('Persistence to the db', () => {
-    xit('Does not allow a title to be null', () =>
+    it.skip('Does not allow a title to be null', () =>
       Review.create({
         // @ts-expect-error intentionally passing null to verify the DB rejects it
         title: null,

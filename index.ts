@@ -21,7 +21,7 @@ export default {
     return pkg.name;
   },
   get isTesting() {
-    return !!global.it;
+    return !!process.env.VITEST;
   },
   get isProduction() {
     return process.env.NODE_ENV === 'production';

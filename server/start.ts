@@ -1,4 +1,5 @@
 import express from 'express';
+import { readFileSync } from 'fs';
 import { resolve } from 'path';
 import { fileURLToPath } from 'url';
 import passport from 'passport';
@@ -7,6 +8,20 @@ import pkg from '../index.js';
 import api from './api.js';
 
 const __dirname = fileURLToPath(new URL('.', import.meta.url));
+const distDir = resolve(__dirname, '..', 'dist');
+
+// Read the built SPA shell once at startup instead of on every request. This
+// keeps the catch-all route free of per-request file system access (avoids the
+// DoS vector CodeQL flags as js/missing-rate-limiting) and serving the cached
+// HTML string sidesteps Express 5's res.sendFile path handling, so client-side
+// routes resolve on a hard load / refresh instead of 404ing.
+let indexHtml = '';
+try {
+  indexHtml = readFileSync(resolve(distDir, 'index.html'), 'utf-8');
+} catch {
+  // dist/ isn't built yet (e.g. running the test suite before `vite build`).
+  // API routes still work; the SPA fallback returns 503 until a build exists.
+}
 
 const app = express();
 
@@ -43,11 +58,16 @@ app
   })
   .use(passport.initialize())
   .use(passport.session())
-  .use(express.static(resolve(__dirname, '..', 'public')))
+  .use(express.static(distDir))
   .use('/api', api)
-  .get('/*path', (_, res) =>
-    res.sendFile(resolve(__dirname, '..', 'public', 'index.html'))
-  );
+  .get('/*path', (_req, res) => {
+    if (!indexHtml) {
+      return res
+        .status(503)
+        .send('Client bundle not built. Run `pnpm build`.');
+    }
+    res.type('html').send(indexHtml);
+  });
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const server = app.listen(Number(process.env.PORT ?? 1337), () => {

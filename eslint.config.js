@@ -6,7 +6,7 @@ import prettierConfig from 'eslint-config-prettier';
 import globals from 'globals';
 
 export default [
-  { ignores: ['node_modules/', 'public/'] },
+  { ignores: ['node_modules/', 'dist/'] },
 
   // Base config for all JS/JSX/TS/TSX
   {
@@ -36,11 +36,11 @@ export default [
     },
   },
 
-  // Test files — add mocha globals
+  // Test files — add vitest globals
   {
     files: ['**/*.test.js', '**/*.test.jsx', '**/*.test.ts', '**/*.test.tsx'],
     languageOptions: {
-      globals: globals.mocha,
+      globals: globals.vitest,
     },
   },
 

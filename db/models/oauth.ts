@@ -78,12 +78,9 @@ OAuth.V2 = async (accessToken, refreshToken, profile, done) => {
     const [oauth] = await OAuth.findOrCreate({
       where: { provider: profile.provider, uid: profile.id },
     });
-    debug(
-      'provider:%s will log in user:{name=%s uid=%s}',
-      profile.provider,
-      profile.displayName,
-      oauth.uid
-    );
+    // Log only the provider — never the user's name or the OAuth uid, which are
+    // personal data and would be written to logs in clear text.
+    debug('oauth login via provider:%s', profile.provider);
     oauth.profileJson = profile;
     // Run getUser and save in parallel; only the user result is needed downstream
     const [existingUser] = await Promise.all([oauth.getUser(), oauth.save()]);

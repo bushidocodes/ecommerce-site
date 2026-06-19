@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import React from 'react';
 import { expect, use } from 'chai';
 import sinonChai from 'sinon-chai';

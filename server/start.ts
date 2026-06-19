@@ -43,10 +43,10 @@ app
   })
   .use(passport.initialize())
   .use(passport.session())
-  .use(express.static(resolve(__dirname, '..', 'public')))
+  .use(express.static(resolve(__dirname, '..', 'dist')))
   .use('/api', api)
   .get('/*path', (_, res) =>
-    res.sendFile(resolve(__dirname, '..', 'public', 'index.html'))
+    res.sendFile(resolve(__dirname, '..', 'dist', 'index.html'))
   );
 
 if (process.argv[1] === fileURLToPath(import.meta.url)) {

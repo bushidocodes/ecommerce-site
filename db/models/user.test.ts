@@ -3,7 +3,7 @@ import User from './user.js';
 import { expect } from 'chai';
 
 describe('User', () => {
-  before('wait for the db', () => db.didSync);
+  beforeAll(() => db.didSync);
 
   describe('billingZip / shippingZip', () => {
     it('preserves a leading-zero zip code', () =>

@@ -30,7 +30,7 @@ describe('/api/orders/', () => {
       product: ProductInstance,
       associatedOrder: OrderInstance,
       unassociatedOrder: OrderInstance;
-    before('Create non-admin user and login', () =>
+    beforeAll(() =>
       db.didSync
         .then(() =>
           User.create({
@@ -58,7 +58,7 @@ describe('/api/orders/', () => {
           expect(res.body).to.have.lengthOf(1);
           expect(res.body[0].id).to.equal(associatedOrder.id);
         }));
-    after('logoff and destroy non-admin user', () => {
+    afterAll(() => {
       associatedOrder.destroy();
       unassociatedOrder.destroy();
       user.destroy();
@@ -69,7 +69,7 @@ describe('/api/orders/', () => {
   describe('GET / (as Admin)', () => {
     let user: UserInstance, order: OrderInstance;
     const agent = request.agent(app);
-    before('Create Admin user and Login', () =>
+    beforeAll(() =>
       db.didSync
         .then(() =>
           User.create({
@@ -93,7 +93,7 @@ describe('/api/orders/', () => {
         .then(res => {
           expect(res.body[0].id).to.equal(order.id);
         }));
-    after('logoff and destroy non-admin user', () => {
+    afterAll(() => {
       user.destroy();
       agent.post('/logout');
     });
@@ -101,7 +101,7 @@ describe('/api/orders/', () => {
 
   describe('POST / (as Guest)', () => {
     let product: ProductInstance, orderId: number;
-    before('Create product', () =>
+    beforeAll(() =>
       db.didSync
         .then(() =>
           Product.create({
@@ -148,7 +148,7 @@ describe('/api/orders/', () => {
           expect(lineItem).to.have.property('quantity', 5);
           expect(Number(lineItem.price)).to.equal(Number(product.price));
         }));
-    after('destroy product and any created orders', () =>
+    afterAll(() =>
       Promise.all([
         product.destroy(),
         orderId
@@ -160,7 +160,7 @@ describe('/api/orders/', () => {
   describe('POST / (as Non-Admin)', () => {
     const agent = request.agent(app);
     let user: UserInstance, product: ProductInstance, id: number;
-    before('Create Non-Admin user, product, and Login', () =>
+    beforeAll(() =>
       db.didSync
         .then(() =>
           Product.create({
@@ -203,7 +203,7 @@ describe('/api/orders/', () => {
           expect(res.body).to.have.property('id');
           expect(res.body.userId).to.equal(user.id);
         }));
-    after('logoff, destroy order, product, and non-admin user', () => {
+    afterAll(() => {
       agent.post('/logout');
       return Promise.all([
         user.destroy(),
@@ -217,7 +217,7 @@ describe('/api/orders/', () => {
   describe('POST / (as Admin)', () => {
     const agent = request.agent(app);
     let user: UserInstance, id: number;
-    before('Create Admin user and Login', () =>
+    beforeAll(() =>
       db.didSync
         .then(() =>
           User.create({
@@ -244,7 +244,7 @@ describe('/api/orders/', () => {
           expect(res.body).to.have.property('userId');
           expect(res.body.userId).to.be.null;
         }));
-    after('logoff, destroy posts, and destroy admin user', () => {
+    afterAll(() => {
       agent.post('/logout');
       user.destroy();
       Order.findByPk(id).then(order => order?.destroy());

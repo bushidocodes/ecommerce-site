@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import { DataTypes, Model } from 'sequelize';
 import type {
   HasManyCreateAssociationMixin,
@@ -115,7 +115,7 @@ User.prototype.toJSON = function (this: UserInstance) {
   return values;
 };
 
-// bcrypt v5+ returns a Promise when called without a callback
+// bcryptjs returns a Promise when called without a callback
 (User.prototype as UserInstance).authenticate = function (
   this: UserInstance,
   plaintext: string

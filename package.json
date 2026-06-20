@@ -45,7 +45,7 @@
     "@fortawesome/free-solid-svg-icons": "^7.2.0",
     "@fortawesome/react-fontawesome": "^3.3.1",
     "@reduxjs/toolkit": "^2.8.2",
-    "axios": "^1.16.1",
+    "axios": "^1.18.0",
     "bcryptjs": "^3.0.3",
     "cookie-session": "^2.1.1",
     "debug": "^4.0.0",

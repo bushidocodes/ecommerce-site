@@ -1,46 +1,46 @@
 import db from '../../db/index.js';
 import User from './user.js';
-import { expect } from 'chai';
 
 describe('User', () => {
   beforeAll(() => db.didSync);
 
   describe('billingZip / shippingZip', () => {
-    it('preserves a leading-zero zip code', () =>
-      User.create({
+    it('preserves a leading-zero zip code', async () => {
+      const user = await User.create({
         name: 'dude',
         password: 'ok',
         billingZip: '01234',
         shippingZip: '01234',
-      }).then(user => {
-        expect(user.billingZip).to.equal('01234');
-        expect(user.shippingZip).to.equal('01234');
-      }));
+      });
+      expect(user.billingZip).toBe('01234');
+      expect(user.shippingZip).toBe('01234');
+    });
 
-    it('accepts ZIP+4 format', () =>
-      User.create({
+    it('accepts ZIP+4 format', async () => {
+      const user = await User.create({
         name: 'dude',
         password: 'ok',
         billingZip: '01234-5678',
-      }).then(user => expect(user.billingZip).to.equal('01234-5678')));
+      });
+      expect(user.billingZip).toBe('01234-5678');
+    });
 
-    it('rejects a non-zip string', () =>
-      User.create({ name: 'dude', password: 'ok', billingZip: 'ABCDE' })
-        .then(() => {
-          throw new Error('should have rejected');
-        })
-        .catch(err => expect(err.name).to.equal('SequelizeValidationError')));
+    it('rejects a non-zip string', async () => {
+      await expect(
+        User.create({ name: 'dude', password: 'ok', billingZip: 'ABCDE' })
+      ).rejects.toMatchObject({ name: 'SequelizeValidationError' });
+    });
   });
 
   describe('authenticate(plaintext: String) ~> Boolean', () => {
-    it('resolves true if the password matches', () =>
-      User.create({ name: 'dude', password: 'ok' })
-        .then(user => user.authenticate('ok'))
-        .then(result => expect(result).to.be.true));
+    it('resolves true if the password matches', async () => {
+      const user = await User.create({ name: 'dude', password: 'ok' });
+      expect(await user.authenticate('ok')).toBe(true);
+    });
 
-    it("resolves false if the password doesn't match", () =>
-      User.create({ name: 'dude', password: 'ok' })
-        .then(user => user.authenticate('not ok'))
-        .then(result => expect(result).to.be.false));
+    it("resolves false if the password doesn't match", async () => {
+      const user = await User.create({ name: 'dude', password: 'ok' });
+      expect(await user.authenticate('not ok')).toBe(false);
+    });
   });
 });

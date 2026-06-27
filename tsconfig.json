@@ -19,6 +19,12 @@
     "noImplicitOverride": true,
     "noUncheckedIndexedAccess": true
   },
-  "include": ["app/**/*", "server/**/*", "db/**/*", "index.ts"],
+  "include": [
+    "app/**/*",
+    "server/**/*",
+    "db/**/*",
+    "index.ts",
+    "vitest.setup.ts"
+  ],
   "exclude": ["node_modules", "**/*.test.jsx"]
 }

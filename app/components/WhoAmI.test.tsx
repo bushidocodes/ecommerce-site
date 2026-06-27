@@ -1,12 +1,8 @@
 // @vitest-environment jsdom
 import React from 'react';
-import { expect, use } from 'chai';
-import sinonChai from 'sinon-chai';
-import { render, cleanup, fireEvent } from '@testing-library/react';
-import { spy } from 'sinon';
+import { render, screen, cleanup } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import type { User } from '../types';
-use(sinonChai);
-
 import { WhoAmI } from './WhoAmI';
 
 afterEach(cleanup);
@@ -18,23 +14,22 @@ describe('<WhoAmI/>', () => {
     email: 'bones@example.com',
     isAdmin: false,
   };
-  const logout = spy();
-  let container: HTMLElement;
+  const logout = vi.fn();
   beforeEach(() => {
-    logout.resetHistory();
-    ({ container } = render(<WhoAmI user={user} logout={logout} />));
+    logout.mockClear();
+    render(<WhoAmI user={user} logout={logout} />);
   });
 
   it('greets the user', () => {
-    expect(container.textContent).to.contain(user.name);
+    expect(screen.getByText(user.name)).toBeInTheDocument();
   });
 
   it('has a logout button', () => {
-    expect(container.querySelectorAll('button.logout').length).to.equal(1);
+    expect(screen.getByRole('button', { name: 'Logout' })).toBeInTheDocument();
   });
 
-  it('calls props.logout when logout is tapped', () => {
-    fireEvent.click(container.querySelector('button.logout')!);
-    expect(logout).to.have.been.called;
+  it('calls props.logout when logout is tapped', async () => {
+    await userEvent.click(screen.getByRole('button', { name: 'Logout' }));
+    expect(logout).toHaveBeenCalled();
   });
 });

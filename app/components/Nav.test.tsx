@@ -1,35 +1,37 @@
 // @vitest-environment jsdom
 import React from 'react';
-import { expect } from 'chai';
-import { render, cleanup } from '@testing-library/react';
+import { render, screen, cleanup } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Nav from './Nav';
 
 afterEach(cleanup);
 
+function renderNav(props: React.ComponentProps<typeof Nav>) {
+  return render(
+    <MemoryRouter>
+      <Nav {...props} />
+    </MemoryRouter>
+  );
+}
+
 describe('<Nav/>', () => {
   const noop = () => {};
 
   describe('when logged out', () => {
-    let container: HTMLElement;
     beforeEach(() => {
-      ({ container } = render(
-        <MemoryRouter>
-          <Nav auth={null} logout={noop} selectUser={noop} />
-        </MemoryRouter>
-      ));
+      renderNav({ auth: null, logout: noop, selectUser: noop });
     });
 
     it('shows Sign Up link', () => {
-      expect(container.innerHTML).to.contain('Sign Up');
+      expect(screen.getByRole('link', { name: 'Sign Up' })).toBeInTheDocument();
     });
 
     it('shows Login link', () => {
-      expect(container.innerHTML).to.contain('Login');
+      expect(screen.getByRole('link', { name: 'Login' })).toBeInTheDocument();
     });
 
     it('does not show Logout', () => {
-      expect(container.innerHTML).to.not.contain('Logout');
+      expect(screen.queryByText('Logout')).not.toBeInTheDocument();
     });
   });
 
@@ -40,25 +42,20 @@ describe('<Nav/>', () => {
       email: 'rachel@example.com',
       isAdmin: false,
     };
-    let container: HTMLElement;
     beforeEach(() => {
-      ({ container } = render(
-        <MemoryRouter>
-          <Nav auth={user} logout={noop} selectUser={noop} />
-        </MemoryRouter>
-      ));
+      renderNav({ auth: user, logout: noop, selectUser: noop });
     });
 
     it('greets the user by name', () => {
-      expect(container.innerHTML).to.contain('Rachel');
+      expect(screen.getByText('Rachel')).toBeInTheDocument();
     });
 
     it('shows Logout', () => {
-      expect(container.innerHTML).to.contain('Logout');
+      expect(screen.getByText('Logout')).toBeInTheDocument();
     });
 
     it('does not show Users link (not admin)', () => {
-      expect(container.innerHTML).to.not.contain('>Users<');
+      expect(screen.queryByRole('link', { name: 'Users' })).not.toBeInTheDocument();
     });
   });
 
@@ -69,17 +66,12 @@ describe('<Nav/>', () => {
       email: 'evan@example.com',
       isAdmin: true,
     };
-    let container: HTMLElement;
     beforeEach(() => {
-      ({ container } = render(
-        <MemoryRouter>
-          <Nav auth={admin} logout={noop} selectUser={noop} />
-        </MemoryRouter>
-      ));
+      renderNav({ auth: admin, logout: noop, selectUser: noop });
     });
 
     it('shows Users link for admin', () => {
-      expect(container.innerHTML).to.contain('Users');
+      expect(screen.getByRole('link', { name: 'Users' })).toBeInTheDocument();
     });
   });
 });

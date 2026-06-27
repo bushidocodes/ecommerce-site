@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { getJSON } from '../api';
 import { wipeLocalState } from './auth';
 import type { AppDispatch } from '../store';
 import type { User } from '../types';
@@ -30,9 +30,8 @@ const usersSlice = createSlice({
 export const { selectUser } = usersSlice.actions;
 
 export const receiveUsers = () => (dispatch: AppDispatch) =>
-  axios
-    .get('/api/users/')
-    .then(res => dispatch(usersSlice.actions.setUsers(res.data)))
+  getJSON<User[]>('/api/users/')
+    .then(users => dispatch(usersSlice.actions.setUsers(users)))
     .catch(err => console.error(err));
 
 export default usersSlice.reducer;

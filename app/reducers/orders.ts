@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import axios from 'axios';
+import { getJSON, postJSON } from '../api';
 import { emptyCart } from './cart';
 import type { AppDispatch } from '../store';
 import type { CartItem, Order } from '../types';
@@ -42,9 +42,8 @@ export const { selectOrder, setOrderSuccess, setOrderError } =
   ordersSlice.actions;
 
 export const receiveOrders = () => (dispatch: AppDispatch) =>
-  axios
-    .get('/api/orders/')
-    .then(res => dispatch(ordersSlice.actions.setOrders(res.data)))
+  getJSON<Order[]>('/api/orders/')
+    .then(orders => dispatch(ordersSlice.actions.setOrders(orders)))
     .catch(err => console.error(err));
 
 export function submitOrder(cart: CartItem[], navigate?: NavigateFunction) {
@@ -54,8 +53,7 @@ export function submitOrder(cart: CartItem[], navigate?: NavigateFunction) {
   });
   const order = { shippingCarrier: 'UPS', orderLineItems };
   return (dispatch: AppDispatch) =>
-    axios
-      .post('/api/orders/', order)
+    postJSON('/api/orders/', order)
       .then(() => {
         dispatch(setOrderSuccess('Cookies are on the way!'));
         dispatch(emptyCart());
@@ -63,9 +61,7 @@ export function submitOrder(cart: CartItem[], navigate?: NavigateFunction) {
       })
       .catch(err => {
         const message =
-          err?.response?.data?.message ||
-          err?.message ||
-          'Order submission failed. Please try again.';
+          err?.message || 'Order submission failed. Please try again.';
         console.error('Order submission error:', err);
         dispatch(setOrderError(message));
       });

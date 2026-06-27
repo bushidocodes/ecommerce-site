@@ -4,6 +4,9 @@ node_modules/*
 # Vite build output
 dist/
 
+# Vitest coverage output
+coverage/
+
 # Stale pre-Vite build artifacts (build now goes to dist/)
 public/bundle.js
 public/bundle.js.map

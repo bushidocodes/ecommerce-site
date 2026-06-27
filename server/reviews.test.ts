@@ -1,9 +1,6 @@
 import request from 'supertest';
-import { expect } from 'chai';
 import db from '../db/index.js';
-import Review from '../db/models/review.js';
 import User from '../db/models/user.js';
-import type { UserInstance } from '../db/models/user.js';
 import Product from '../db/models/product.js';
 import type { ProductInstance } from '../db/models/product.js';
 import app from './start.js';
@@ -16,32 +13,24 @@ const testUser = {
 
 describe('/api/reviews', () => {
   const agent = request.agent(app);
-  let user: UserInstance, product: ProductInstance;
+  let product: ProductInstance;
 
-  beforeAll(() =>
-    db.didSync
-      .then(() =>
-        Product.create({
-          name: 'Test Cookie',
-          description: 'A test cookie',
-          price: 1.0,
-          quantity: 50,
-          categories: [],
-        })
-      )
-      .then(_product => {
-        product = _product;
-        return User.create({
-          name: testUser.name,
-          email: testUser.username,
-          password: testUser.password,
-        });
-      })
-      .then(_user => {
-        user = _user;
-        return agent.post('/api/auth/local/login').send(testUser);
-      })
-  );
+  beforeAll(async () => {
+    await db.didSync;
+    product = await Product.create({
+      name: 'Test Cookie',
+      description: 'A test cookie',
+      price: 1.0,
+      quantity: 50,
+      categories: [],
+    });
+    await User.create({
+      name: testUser.name,
+      email: testUser.username,
+      password: testUser.password,
+    });
+    await agent.post('/api/auth/local/login').send(testUser);
+  });
 
   describe('GET /', () => {
     it('returns all reviews (public, no auth required)', () =>
@@ -51,8 +40,8 @@ describe('/api/reviews', () => {
   describe('POST / (authenticated)', () => {
     let createdId: number;
 
-    it('creates a review when logged in with a productId', () =>
-      agent
+    it('creates a review when logged in with a productId', async () => {
+      const res = await agent
         .post('/api/reviews')
         .send({
           title: 'Absolutely delicious',
@@ -60,11 +49,10 @@ describe('/api/reviews', () => {
           rating: 5,
           productId: product.id,
         })
-        .expect(201)
-        .then(res => {
-          createdId = res.body.id;
-          expect(res.body.title).to.equal('Absolutely delicious');
-        }));
+        .expect(201);
+      createdId = res.body.id;
+      expect(res.body.title).toBe('Absolutely delicious');
+    });
 
     it('rejects review creation without auth (401)', () =>
       request(app)
@@ -86,13 +74,13 @@ describe('/api/reviews', () => {
     });
 
     describe('PUT /:id', () => {
-      it('updates a review the user owns', ctx => {
+      it('updates a review the user owns', async ctx => {
         if (!createdId) return ctx.skip();
-        return agent
+        const res = await agent
           .put(`/api/reviews/${createdId}`)
           .send({ title: 'Updated title', rating: 4 })
-          .expect(200)
-          .then(res => expect(res.body.title).to.equal('Updated title'));
+          .expect(200);
+        expect(res.body.title).toBe('Updated title');
       });
     });
 

@@ -29,9 +29,25 @@ export default defineConfig({
       'db/**/*.test.ts',
       'server/**/*.test.ts',
     ],
-    // The db/server suites share one Postgres database and each runs
-    // db.sync({ force: true }); run files serially (as mocha did) so concurrent
-    // schema rebuilds don't race.
-    fileParallelism: false,
+    // Test files run in parallel across workers. Each worker gets its own
+    // Postgres database (suffixed with VITEST_POOL_ID — see db/sequelize.ts),
+    // so concurrent db.sync({ force: true }) rebuilds never race on a shared
+    // schema. Files within a single worker still run serially, as Vitest only
+    // executes one file per worker at a time.
+    coverage: {
+      provider: 'v8',
+      reporter: ['text', 'html', 'lcov'],
+      include: ['app/**/*.{ts,tsx}', 'server/**/*.ts', 'db/**/*.ts', 'index.ts'],
+      exclude: ['**/*.test.{ts,tsx}', 'app/**/*.d.ts'],
+      // Set conservatively below the current baseline (~45% statements / 46%
+      // lines) so the build fails only on a real regression. Ratchet these up
+      // as test coverage grows.
+      thresholds: {
+        statements: 40,
+        branches: 33,
+        functions: 25,
+        lines: 40,
+      },
+    },
   },
 });

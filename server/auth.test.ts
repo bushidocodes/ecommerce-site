@@ -1,5 +1,4 @@
 import request from 'supertest';
-import { expect } from 'chai';
 import db from '../db/index.js';
 import User from '../db/models/user.js';
 import app from './start.js';
@@ -11,15 +10,14 @@ const alice = {
 };
 
 describe('/api/auth', () => {
-  beforeAll(() =>
-    db.didSync.then(() =>
-      User.create({
-        name: alice.name,
-        email: alice.username,
-        password: alice.password,
-      })
-    )
-  );
+  beforeAll(async () => {
+    await db.didSync;
+    await User.create({
+      name: alice.name,
+      email: alice.username,
+      password: alice.password,
+    });
+  });
 
   describe('POST /local/login (username, password)', () => {
     it('succeeds with a valid username and password', () =>
@@ -42,23 +40,19 @@ describe('/api/auth', () => {
       const agent = request.agent(app);
       beforeAll(() => agent.post('/api/auth/local/login').send(alice));
 
-      it('responds with the currently logged in user', () =>
-        agent
+      it('responds with the currently logged in user', async () => {
+        const res = await agent
           .get('/api/auth/whoami')
           .set('Accept', 'application/json')
-          .expect(200)
-          .then(res =>
-            expect(res.body).to.contain({
-              email: alice.username,
-            })
-          ));
+          .expect(200);
+        expect(res.body).toMatchObject({ email: alice.username });
+      });
     });
 
-    it('when not logged in, responds with an empty object', () =>
-      request(app)
-        .get('/api/auth/whoami')
-        .expect(200)
-        .then(res => expect(res.body).to.eql({})));
+    it('when not logged in, responds with an empty object', async () => {
+      const res = await request(app).get('/api/auth/whoami').expect(200);
+      expect(res.body).toEqual({});
+    });
   });
 
   describe('POST /logout when logged in', () => {
@@ -66,16 +60,13 @@ describe('/api/auth', () => {
 
     beforeAll(() => agent.post('/api/auth/local/login').send(alice));
 
-    it('logs you out and redirects to whoami', () =>
-      agent
+    it('logs you out and redirects to whoami', async () => {
+      await agent
         .post('/api/auth/logout')
         .expect(302)
-        .expect('Location', '/api/auth/whoami')
-        .then(() =>
-          agent
-            .get('/api/auth/whoami')
-            .expect(200)
-            .then(rsp => expect(rsp.body).eql({}))
-        ));
+        .expect('Location', '/api/auth/whoami');
+      const res = await agent.get('/api/auth/whoami').expect(200);
+      expect(res.body).toEqual({});
+    });
   });
 });

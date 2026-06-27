@@ -1,12 +1,12 @@
 // @vitest-environment jsdom
 import React from 'react';
-import { expect } from 'chai';
-import { render, cleanup } from '@testing-library/react';
+import { render, screen, cleanup } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import Products from './Products';
 import rootReducer from '../reducers';
+import type { Product as ProductType } from '../types';
 
 afterEach(cleanup);
 
@@ -14,9 +14,18 @@ function makeTestStore() {
   return configureStore({ reducer: rootReducer });
 }
 
+function renderProducts(products: ProductType[]) {
+  return render(
+    <Provider store={makeTestStore()}>
+      <MemoryRouter>
+        <Products products={products} plusItemzToCart={() => {}} />
+      </MemoryRouter>
+    </Provider>
+  );
+}
+
 describe('<Products/>', () => {
-  const noop = () => {};
-  const sampleProducts = [
+  const sampleProducts: ProductType[] = [
     {
       id: 1,
       name: 'Chocolate Chip',
@@ -44,38 +53,28 @@ describe('<Products/>', () => {
   ];
 
   it('renders a card for each product', () => {
-    const { container } = render(
-      <Provider store={makeTestStore()}>
-        <MemoryRouter>
-          <Products products={sampleProducts} plusItemzToCart={noop} />
-        </MemoryRouter>
-      </Provider>
-    );
-    expect(container.innerHTML).to.contain('Chocolate Chip');
-    expect(container.innerHTML).to.contain('Oatmeal Raisin');
-    expect(container.innerHTML).to.contain('Sugar Cookie');
+    renderProducts(sampleProducts);
+    expect(
+      screen.getByRole('heading', { name: 'Chocolate Chip' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'Oatmeal Raisin' })
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('heading', { name: 'Sugar Cookie' })
+    ).toBeInTheDocument();
   });
 
-  it('renders nothing for an empty product list', () => {
-    const { container } = render(
-      <Provider store={makeTestStore()}>
-        <MemoryRouter>
-          <Products products={[]} plusItemzToCart={noop} />
-        </MemoryRouter>
-      </Provider>
-    );
-    expect(container.innerHTML).to.not.contain('Add to cart');
+  it('renders no add-to-cart buttons for an empty product list', () => {
+    renderProducts([]);
+    expect(
+      screen.queryByRole('button', { name: /add to cart/i })
+    ).not.toBeInTheDocument();
   });
 
   it('shows category tags for each product', () => {
-    const { container } = render(
-      <Provider store={makeTestStore()}>
-        <MemoryRouter>
-          <Products products={sampleProducts} plusItemzToCart={noop} />
-        </MemoryRouter>
-      </Provider>
-    );
-    expect(container.innerHTML).to.contain('chocolate');
-    expect(container.innerHTML).to.contain('oatmeal');
+    const { container } = renderProducts(sampleProducts);
+    expect(container).toHaveTextContent('chocolate');
+    expect(container).toHaveTextContent('oatmeal');
   });
 });

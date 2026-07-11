@@ -73,7 +73,7 @@ const OAuth = db.define<OAuthInstance>(
   }
 ) as OAuthStatic;
 
-OAuth.V2 = async (accessToken, refreshToken, profile, done) => {
+OAuth.V2 = async (_accessToken, _refreshToken, profile, done) => {
   try {
     const [oauth] = await OAuth.findOrCreate({
       where: { provider: profile.provider, uid: profile.id },

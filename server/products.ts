@@ -5,7 +5,7 @@ import { mustBeLoggedIn } from './auth.filters.js';
 export default express
   .Router()
 
-  .get('/', async (req, res, next) => {
+  .get('/', async (_req, res, next) => {
     try {
       const products = await Product.findAll();
       if (products.length > 0) {

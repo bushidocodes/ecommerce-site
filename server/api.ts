@@ -10,7 +10,7 @@ import reviews from './reviews.js';
 const api = express.Router();
 
 api
-  .get('/heartbeat', (req, res) => res.send({ ok: true }))
+  .get('/heartbeat', (_req, res) => res.send({ ok: true }))
   .use('/auth', auth)
   .use('/users', users)
   .use('/products', products)
@@ -23,6 +23,6 @@ const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
 };
 api.use(errorHandler);
 
-api.use((req, res) => res.status(404).end());
+api.use((_req, res) => res.status(404).end());
 
 export default api;

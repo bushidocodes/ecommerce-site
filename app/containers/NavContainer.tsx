@@ -1,10 +1,10 @@
 import { connect } from 'react-redux';
 import Nav from '../components/Nav';
-import { selectUser } from '../reducers/users';
 import { logout } from '../reducers/auth';
-import withNavigate, { WithNavigateProps } from '../utils/withNavigate';
-import type { RootState, AppDispatch } from '../store';
+import { selectUser } from '../reducers/users';
+import type { AppDispatch, RootState } from '../store';
 import type { User } from '../types';
+import withNavigate, { WithNavigateProps } from '../utils/withNavigate';
 
 function mapStateToProps(state: RootState) {
   return {

@@ -1,12 +1,12 @@
 import createDebug from 'debug';
-import passport from 'passport';
 import express from 'express';
 import rateLimit from 'express-rate-limit';
+import passport from 'passport';
 import passportGithub from 'passport-github';
 import passportLocal from 'passport-local';
-import app from '../index.js';
-import User from '../db/models/user.js';
 import OAuth from '../db/models/oauth.js';
+import User from '../db/models/user.js';
+import app from '../index.js';
 
 const { env } = app;
 const debug = createDebug(`${app.name}:auth`);
@@ -92,10 +92,13 @@ auth.post('/local/signup', authLimiter, async (req, res, next) => {
   }
 });
 
-auth.post<{ strategy: string }>('/:strategy/login', authLimiter, (req, res, next) =>
-  passport.authenticate(req.params.strategy, {
-    successRedirect: '/',
-  })(req, res, next)
+auth.post<{ strategy: string }>(
+  '/:strategy/login',
+  authLimiter,
+  (req, res, next) =>
+    passport.authenticate(req.params.strategy, {
+      successRedirect: '/',
+    })(req, res, next)
 );
 
 auth.post('/logout', (req, res, next) => {

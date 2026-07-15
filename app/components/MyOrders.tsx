@@ -1,7 +1,6 @@
-import React from 'react';
 import { Link } from 'react-router-dom';
-import MyOrdersItem from './MyOrdersItem';
 import type { Order } from '../types';
+import MyOrdersItem from './MyOrdersItem';
 
 interface MyOrdersProps {
   orders: Order[];

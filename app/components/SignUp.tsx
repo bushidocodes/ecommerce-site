@@ -1,4 +1,3 @@
-import React from 'react';
 import { connect } from 'react-redux';
 import { signup } from '../reducers/auth';
 import type { AppDispatch } from '../store';

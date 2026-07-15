@@ -1,7 +1,7 @@
 import { connect } from 'react-redux';
 import Products from '../components/Products';
 import { addToCart } from '../reducers/cart';
-import type { RootState, AppDispatch } from '../store';
+import type { AppDispatch, RootState } from '../store';
 import type { Product } from '../types';
 
 function mapStateToProps(state: RootState) {

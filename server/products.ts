@@ -28,7 +28,7 @@ export default express
     }
   })
 
-  .param('id', async function (req, res, next) {
+  .param('id', async (req, res, next) => {
     try {
       const product = await Product.findByPk(String(req.params.id));
       if (product) {

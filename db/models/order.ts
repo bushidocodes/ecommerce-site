@@ -1,10 +1,10 @@
-import { DataTypes, Model } from 'sequelize';
 import type {
   BelongsToManyAddAssociationMixin,
   BelongsToManyGetAssociationsMixin,
   BelongsToManyRemoveAssociationMixin,
   Optional,
 } from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 import db from '../sequelize.js';
 import type { ProductInstance } from './product.js';
 

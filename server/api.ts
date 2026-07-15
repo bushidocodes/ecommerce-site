@@ -1,11 +1,11 @@
-import express from 'express';
 import type { ErrorRequestHandler } from 'express';
+import express from 'express';
 import '../db/index.js';
 import auth from './auth.js';
-import users from './users.js';
-import products from './products.js';
 import orders from './orders.js';
+import products from './products.js';
 import reviews from './reviews.js';
+import users from './users.js';
 
 const api = express.Router();
 

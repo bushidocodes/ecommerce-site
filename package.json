@@ -21,8 +21,10 @@
     "start": "pnpm run start[prod]",
     "seed": "tsx db/seed.ts",
     "postinstall": "pnpm run build",
-    "format": "prettier --write app/ server/ db/ index.ts",
-    "format:check": "prettier --check app/ server/ db/ index.ts",
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "format:check": "biome format .",
     "typecheck": "tsc --noEmit"
   },
   "repository": {
@@ -77,9 +79,9 @@
     "@types/react-redux": "^7.1.34",
     "@types/supertest": "^7.2.0",
     "@vitest/coverage-v8": "^4.1.10",
+    "@biomejs/biome": "^2.5.3",
     "jsdom": "^29.1.1",
     "morgan": "^1.11.0",
-    "prettier": "^3.9.5",
     "supertest": "^7.2.2",
     "tsx": "^4.23.0",
     "typescript": "^6.0.3",

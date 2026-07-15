@@ -24,11 +24,7 @@ export default defineConfig({
     // Node context (e.g. server/start.ts resolves dirs from a file:// URL).
     environment: 'node',
     setupFiles: ['./vitest.setup.ts'],
-    include: [
-      'app/**/*.test.tsx',
-      'db/**/*.test.ts',
-      'server/**/*.test.ts',
-    ],
+    include: ['app/**/*.test.tsx', 'db/**/*.test.ts', 'server/**/*.test.ts'],
     // Test files run in parallel across workers. Each worker gets its own
     // Postgres database (suffixed with VITEST_POOL_ID — see db/sequelize.ts),
     // so concurrent db.sync({ force: true }) rebuilds never race on a shared
@@ -37,7 +33,12 @@ export default defineConfig({
     coverage: {
       provider: 'v8',
       reporter: ['text', 'html', 'lcov'],
-      include: ['app/**/*.{ts,tsx}', 'server/**/*.ts', 'db/**/*.ts', 'index.ts'],
+      include: [
+        'app/**/*.{ts,tsx}',
+        'server/**/*.ts',
+        'db/**/*.ts',
+        'index.ts',
+      ],
       exclude: ['**/*.test.{ts,tsx}', 'app/**/*.d.ts'],
       // Set conservatively below the current baseline (~45% statements / 46%
       // lines) so the build fails only on a real regression. Ratchet these up

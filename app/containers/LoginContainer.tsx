@@ -1,8 +1,8 @@
 import { connect } from 'react-redux';
 import Login from '../components/Login';
 import { login } from '../reducers/auth';
-import withNavigate, { WithNavigateProps } from '../utils/withNavigate';
 import type { AppDispatch } from '../store';
+import withNavigate, { WithNavigateProps } from '../utils/withNavigate';
 
 function mapDispatchToProps(
   dispatch: AppDispatch,

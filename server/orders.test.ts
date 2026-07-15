@@ -1,11 +1,11 @@
 import request from 'supertest';
 import db from '../db/index.js';
-import User from '../db/models/user.js';
-import type { UserInstance } from '../db/models/user.js';
-import Order from '../db/models/order.js';
 import type { OrderInstance } from '../db/models/order.js';
-import Product from '../db/models/product.js';
+import Order from '../db/models/order.js';
 import type { ProductInstance } from '../db/models/product.js';
+import Product from '../db/models/product.js';
+import type { UserInstance } from '../db/models/user.js';
+import User from '../db/models/user.js';
 import app from './start.js';
 
 const bobTheAdmin = {

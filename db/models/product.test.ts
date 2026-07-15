@@ -1,6 +1,6 @@
 import db from '../../db/index.js';
-import Product from './product.js';
 import type { ProductInstance } from './product.js';
+import Product from './product.js';
 
 describe('Product', () => {
   let testCookie: ProductInstance;

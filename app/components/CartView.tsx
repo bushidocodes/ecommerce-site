@@ -1,8 +1,7 @@
-import React from 'react';
-import Hero from './Hero';
+import type { CartItem, User } from '../types';
 import CartEmpty from './CartEmpty';
 import CartLineItem from './CartLineItem';
-import type { CartItem, User } from '../types';
+import Hero from './Hero';
 
 interface CartViewProps {
   cart: CartItem[];

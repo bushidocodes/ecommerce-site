@@ -1,6 +1,6 @@
 import { createSlice, current, PayloadAction } from '@reduxjs/toolkit';
-import { wipeLocalState } from './auth';
 import type { CartItem, Product } from '../types';
+import { wipeLocalState } from './auth';
 
 const cartSlice = createSlice({
   name: 'cart',

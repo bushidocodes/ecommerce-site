@@ -1,7 +1,7 @@
-import { readFileSync } from 'fs';
-import { resolve } from 'path';
-import { homedir } from 'os';
 import createDebug from 'debug';
+import { readFileSync } from 'fs';
+import { homedir } from 'os';
+import { resolve } from 'path';
 import pkg from './package.json' with { type: 'json' };
 
 const debug = createDebug(`${pkg.name}:boot`);

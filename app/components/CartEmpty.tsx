@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function CartEmpty() {
   return (
     <div id="cart-empty-container" className="container">

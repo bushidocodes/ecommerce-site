@@ -1,9 +1,9 @@
 // @vitest-environment jsdom
-import React from 'react';
-import { render, cleanup } from '@testing-library/react';
+
+import { cleanup, render } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
-import Cart from './Cart';
 import type { CartItem } from '../types';
+import Cart from './Cart';
 
 afterEach(cleanup);
 

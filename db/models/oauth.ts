@@ -1,15 +1,15 @@
 import createDebug from 'debug';
-import { DataTypes, Model } from 'sequelize';
+import type { Profile, Strategy } from 'passport';
 import type {
   BelongsToGetAssociationMixin,
   BelongsToSetAssociationMixin,
   ModelStatic,
   Optional,
 } from 'sequelize';
-import type { Profile, Strategy } from 'passport';
+import { DataTypes, Model } from 'sequelize';
 import db from '../sequelize.js';
-import User from './user.js';
 import type { UserInstance } from './user.js';
+import User from './user.js';
 
 const debug = createDebug('oauth');
 
@@ -24,7 +24,10 @@ interface SetupStrategyArgs {
   provider: string;
   // Passport strategy constructors vary per provider, so the option shape is
   // intentionally open here; only the verify callback is pinned down.
-  strategy: new (options: never, verify: OAuthVerify) => Strategy;
+  strategy: new (
+    options: never,
+    verify: OAuthVerify
+  ) => Strategy;
   config: Record<string, unknown>;
   oauth?: OAuthVerify;
   passport: { use(strategy: Strategy): unknown };

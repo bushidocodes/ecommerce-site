@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
-import React from 'react';
-import { render, screen, cleanup } from '@testing-library/react';
+
+import { cleanup, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import type { User } from '../types';
 import { WhoAmI } from './WhoAmI';

@@ -1,10 +1,10 @@
 import bcrypt from 'bcryptjs';
-import { DataTypes, Model } from 'sequelize';
 import type {
   HasManyCreateAssociationMixin,
   HasManyGetAssociationsMixin,
   Optional,
 } from 'sequelize';
+import { DataTypes, Model } from 'sequelize';
 import db from '../sequelize.js';
 import type { OrderInstance } from './order.js';
 

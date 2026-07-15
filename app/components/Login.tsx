@@ -1,5 +1,3 @@
-import React from 'react';
-
 interface LoginProps {
   login: (username: string, password: string) => void;
 }

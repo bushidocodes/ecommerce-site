@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import type { NavigateFunction } from 'react-router-dom';
 import { getJSON, postJSON } from '../api';
-import { emptyCart } from './cart';
 import type { AppDispatch } from '../store';
 import type { CartItem, Order } from '../types';
-import type { NavigateFunction } from 'react-router-dom';
+import { emptyCart } from './cart';
 
 interface OrdersState {
   orders: Order[];

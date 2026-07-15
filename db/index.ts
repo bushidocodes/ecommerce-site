@@ -1,7 +1,7 @@
-import { styleText } from 'util';
 import { Sequelize } from 'sequelize';
-import db, { dbName, dbUrl, maintenanceUrl } from './sequelize.js';
+import { styleText } from 'util';
 import app from '../index.js';
+import db, { dbName, dbUrl, maintenanceUrl } from './sequelize.js';
 
 import './models/index.js';
 

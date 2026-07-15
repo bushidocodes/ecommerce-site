@@ -1,8 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getJSON } from '../api';
-import { wipeLocalState } from './auth';
 import type { AppDispatch } from '../store';
 import type { User } from '../types';
+import { wipeLocalState } from './auth';
 
 interface UsersState {
   users: User[];

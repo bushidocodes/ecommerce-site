@@ -1,11 +1,11 @@
 import createDebug from 'debug';
 import express from 'express';
 import type { IncludeOptions } from 'sequelize';
-import Order from '../db/models/order.js';
 import type { OrderInstance } from '../db/models/order.js';
+import Order from '../db/models/order.js';
 import Product from '../db/models/product.js';
 import User from '../db/models/user.js';
-import { mustBeLoggedIn, forbidden } from './auth.filters.js';
+import { forbidden, mustBeLoggedIn } from './auth.filters.js';
 
 const debug = createDebug('cookie-monsters:orders');
 

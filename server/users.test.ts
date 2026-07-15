@@ -1,7 +1,7 @@
 import request from 'supertest';
 import db from '../db/index.js';
-import User from '../db/models/user.js';
 import type { UserInstance } from '../db/models/user.js';
+import User from '../db/models/user.js';
 import app from './start.js';
 
 const alice = { name: 'Alice', email: 'alice@example.com', password: '12345' };

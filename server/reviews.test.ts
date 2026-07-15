@@ -1,8 +1,8 @@
 import request from 'supertest';
 import db from '../db/index.js';
-import User from '../db/models/user.js';
-import Product from '../db/models/product.js';
 import type { ProductInstance } from '../db/models/product.js';
+import Product from '../db/models/product.js';
+import User from '../db/models/user.js';
 import app from './start.js';
 
 const testUser = {

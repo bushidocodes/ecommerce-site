@@ -1,8 +1,8 @@
-import User from './user.js';
-import Product from './product.js';
 import Order from './order.js';
 import OrderLineItem from './orderLineItem.js';
+import Product from './product.js';
 import Review from './review.js';
+import User from './user.js';
 
 Order.belongsToMany(Product, { through: OrderLineItem });
 Product.belongsToMany(Order, { through: OrderLineItem });

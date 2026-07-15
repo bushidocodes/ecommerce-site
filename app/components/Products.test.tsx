@@ -1,12 +1,12 @@
 // @vitest-environment jsdom
-import React from 'react';
-import { render, screen, cleanup } from '@testing-library/react';
-import { MemoryRouter } from 'react-router-dom';
-import { Provider } from 'react-redux';
+
 import { configureStore } from '@reduxjs/toolkit';
-import Products from './Products';
+import { cleanup, render, screen } from '@testing-library/react';
+import { Provider } from 'react-redux';
+import { MemoryRouter } from 'react-router-dom';
 import rootReducer from '../reducers';
 import type { Product as ProductType } from '../types';
+import Products from './Products';
 
 afterEach(cleanup);
 

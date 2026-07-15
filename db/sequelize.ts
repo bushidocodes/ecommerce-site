@@ -1,6 +1,6 @@
-import { styleText } from 'util';
 import createDebug from 'debug';
 import { Sequelize } from 'sequelize';
+import { styleText } from 'util';
 import app from '../index.js';
 
 const debug = createDebug('sql');
@@ -10,7 +10,8 @@ const debug = createDebug('sql');
 // VITEST_POOL_ID is a stable per-worker index that Vitest sets in the worker's
 // env; it's absent outside the test runner.
 const testSuffix = app.isTesting
-  ? '_test' + (process.env.VITEST_POOL_ID ? `_${process.env.VITEST_POOL_ID}` : '')
+  ? '_test' +
+    (process.env.VITEST_POOL_ID ? `_${process.env.VITEST_POOL_ID}` : '')
   : '';
 
 export const dbName = (process.env.DATABASE_NAME || app.name) + testSuffix;

@@ -2,7 +2,7 @@ import express from 'express';
 import type { ModelStatic } from 'sequelize';
 import db from '../db/index.js';
 import type { UserInstance } from '../db/models/user.js';
-import { mustBeLoggedIn, forbidden } from './auth.filters.js';
+import { forbidden, mustBeLoggedIn } from './auth.filters.js';
 
 const User = db.model('users') as ModelStatic<UserInstance>;
 

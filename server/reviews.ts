@@ -1,6 +1,6 @@
+import express from 'express';
 import Review from '../db/models/review.js';
 import { mustBeLoggedIn } from './auth.filters.js';
-import express from 'express';
 
 export default express
   .Router()

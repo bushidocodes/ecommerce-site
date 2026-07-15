@@ -1,7 +1,6 @@
-import React from 'react';
-import Product from './Product';
-import Hero from './Hero';
 import type { Product as ProductType } from '../types';
+import Hero from './Hero';
+import Product from './Product';
 
 interface ProductsProps {
   products: ProductType[];

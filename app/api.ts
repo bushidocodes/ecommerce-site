@@ -20,7 +20,8 @@ export async function getJSON<T = unknown>(url: string): Promise<T> {
 export async function postJSON(url: string, body?: unknown): Promise<void> {
   const res = await fetch(url, {
     method: 'POST',
-    headers: body === undefined ? undefined : { 'Content-Type': 'application/json' },
+    headers:
+      body === undefined ? undefined : { 'Content-Type': 'application/json' },
     body: body === undefined ? undefined : JSON.stringify(body),
   });
   if (!res.ok) throw await toError(res);

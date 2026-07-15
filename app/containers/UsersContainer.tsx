@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import Users from '../components/Users';
-import { selectUser, receiveUsers } from '../reducers/users';
-import withNavigate, { WithNavigateProps } from '../utils/withNavigate';
-import type { RootState, AppDispatch } from '../store';
+import { receiveUsers, selectUser } from '../reducers/users';
+import type { AppDispatch, RootState } from '../store';
 import type { User } from '../types';
+import withNavigate, { WithNavigateProps } from '../utils/withNavigate';
 
 function mapStateToProps(state: RootState) {
   return {

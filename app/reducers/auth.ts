@@ -1,4 +1,4 @@
-import { createSlice, createAction, PayloadAction } from '@reduxjs/toolkit';
+import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { getJSON, postJSON } from '../api';
 import type { AppDispatch } from '../store';
 import type { User } from '../types';

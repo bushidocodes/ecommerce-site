@@ -1,7 +1,6 @@
-import React from 'react';
 import { connect } from 'react-redux';
 import { logout } from '../reducers/auth';
-import type { RootState, AppDispatch } from '../store';
+import type { AppDispatch, RootState } from '../store';
 import type { User } from '../types';
 
 interface WhoAmIProps {

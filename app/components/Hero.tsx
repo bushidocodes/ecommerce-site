@@ -1,4 +1,3 @@
-import React from 'react';
 import Cart from '../containers/CartContainer';
 
 export default function Hero() {

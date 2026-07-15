@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
+
+import { cleanup, render, screen } from '@testing-library/react';
 import React from 'react';
-import { render, screen, cleanup } from '@testing-library/react';
 import { MemoryRouter } from 'react-router-dom';
 import Nav from './Nav';
 
@@ -55,7 +56,9 @@ describe('<Nav/>', () => {
     });
 
     it('does not show Users link (not admin)', () => {
-      expect(screen.queryByRole('link', { name: 'Users' })).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole('link', { name: 'Users' })
+      ).not.toBeInTheDocument();
     });
   });
 

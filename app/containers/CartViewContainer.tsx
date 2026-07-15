@@ -1,10 +1,10 @@
 import { connect } from 'react-redux';
 import CartView from '../components/CartView';
-import { submitOrder } from '../reducers/orders';
 import { removeFromCart } from '../reducers/cart';
-import withNavigate, { WithNavigateProps } from '../utils/withNavigate';
-import type { RootState, AppDispatch } from '../store';
+import { submitOrder } from '../reducers/orders';
+import type { AppDispatch, RootState } from '../store';
 import type { CartItem } from '../types';
+import withNavigate, { WithNavigateProps } from '../utils/withNavigate';
 
 function mapStateToProps(state: RootState) {
   return {

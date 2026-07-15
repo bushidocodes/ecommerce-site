@@ -1,9 +1,9 @@
+import cookieSession from 'cookie-session';
 import express from 'express';
 import { readFileSync } from 'fs';
+import passport from 'passport';
 import { resolve } from 'path';
 import { fileURLToPath } from 'url';
-import passport from 'passport';
-import cookieSession from 'cookie-session';
 import pkg from '../index.js';
 import api from './api.js';
 
@@ -62,9 +62,7 @@ app
   .use('/api', api)
   .get('/*path', (_req, res) => {
     if (!indexHtml) {
-      return res
-        .status(503)
-        .send('Client bundle not built. Run `pnpm build`.');
+      return res.status(503).send('Client bundle not built. Run `pnpm build`.');
     }
     res.type('html').send(indexHtml);
   });

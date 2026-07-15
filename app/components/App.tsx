@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Outlet } from 'react-router-dom';
 import { getJSON } from '../api';
-import { receiveProducts } from '../reducers/products';
-import Footer from './Footer';
 import NavContainer from '../containers/NavContainer';
+import { receiveProducts } from '../reducers/products';
 import type { AppDispatch } from '../store';
 import type { Product } from '../types';
+import Footer from './Footer';
 
 export default function App() {
   const dispatch = useDispatch<AppDispatch>();

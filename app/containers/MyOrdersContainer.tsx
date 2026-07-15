@@ -1,8 +1,8 @@
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 import { connect, useDispatch } from 'react-redux';
 import MyOrders from '../components/MyOrders';
-import { selectOrder, receiveOrders } from '../reducers/orders';
-import type { RootState, AppDispatch } from '../store';
+import { receiveOrders, selectOrder } from '../reducers/orders';
+import type { AppDispatch, RootState } from '../store';
 import type { Order } from '../types';
 
 function mapStateToProps(state: RootState) {

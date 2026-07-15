@@ -1,0 +1,99 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.5.3/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "ignoreUnknown": true,
+    "includes": [
+      "app/**",
+      "server/**",
+      "db/**",
+      "index.ts",
+      "start-preview.ts",
+      "vite.config.ts",
+      "vitest.setup.ts",
+      "biome.json",
+      "package.json",
+      "tsconfig.json",
+      "!!**/*.{svg,png,jpg,jpeg,gif,ico,webp}"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 80,
+    "lineEnding": "lf"
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended",
+      "a11y": {
+        "recommended": false
+      },
+      "correctness": {
+        "noUnusedVariables": "warn",
+        "noUnusedImports": "warn",
+        "noUnusedFunctionParameters": "off",
+        "useExhaustiveDependencies": "off",
+        "useHookAtTopLevel": "error",
+        "useJsxKeyInIterable": "error",
+        "useParseIntRadix": "off"
+      },
+      "style": {
+        "useConst": "warn",
+        "useTemplate": "off",
+        "useImportType": "off",
+        "useNodejsImportProtocol": "off",
+        "noNonNullAssertion": "off"
+      },
+      "suspicious": {
+        "noExplicitAny": "off",
+        "noConsole": "off",
+        "noRedeclare": "off",
+        "noAssignInExpressions": "off",
+        "noDoubleEquals": "off",
+        "noImplicitAnyLet": "off",
+        "useIterableCallbackReturn": "off"
+      },
+      "complexity": {
+        "noBannedTypes": "off",
+        "noForEach": "off",
+        "noCommaOperator": "off",
+        "useOptionalChain": "off"
+      }
+    }
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "jsxQuoteStyle": "double",
+      "semicolons": "always",
+      "trailingCommas": "es5",
+      "arrowParentheses": "asNeeded"
+    },
+    "globals": [
+      "describe",
+      "it",
+      "expect",
+      "vi",
+      "beforeEach",
+      "afterEach",
+      "beforeAll",
+      "afterAll",
+      "test"
+    ]
+  },
+  "assist": {
+    "enabled": true,
+    "actions": {
+      "source": {
+        "organizeImports": "on"
+      }
+    }
+  }
+}

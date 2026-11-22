@@ -53,6 +53,14 @@ describe('/api/orders/', () => {
       expect(res.body).toHaveLength(1);
       expect(res.body[0].id).toBe(associatedOrder.id);
     });
+
+    it('includes created_at from the Sequelize createdAt timestamp', async () => {
+      const res = await agent.get('/api/orders/').expect(200);
+      expect(res.body[0].created_at).toBeTruthy();
+      const returned = new Date(res.body[0].created_at).getTime();
+      expect(Number.isNaN(returned)).toBe(false);
+      expect(returned).toBe(new Date(associatedOrder.createdAt!).getTime());
+    });
   });
 
   describe('GET / (as Admin)', () => {

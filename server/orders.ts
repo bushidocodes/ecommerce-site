@@ -31,7 +31,7 @@ async function resolveOrder(order: OrderInstance) {
     shippingRate,
     shippingCarrier,
     trackingNumber,
-    created_at,
+    created_at: order.createdAt ?? created_at,
     products,
     total: await total,
   };

@@ -13,8 +13,8 @@ import UserContainer from './containers/UserContainer';
 import UsersContainer from './containers/UsersContainer';
 import store from './store';
 
-const rootEl = document.getElementById('main');
-if (!rootEl) throw new Error('Root element #main not found');
+const rootEl = document.getElementById('root');
+if (!rootEl) throw new Error('Root element #root not found');
 
 createRoot(rootEl).render(
   <Provider store={store}>

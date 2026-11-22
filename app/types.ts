@@ -34,6 +34,7 @@ export interface OrderLineItem {
 
 export interface Order {
   id: number;
+  status?: 'created' | 'processing' | 'cancelled' | 'completed';
   shippingCarrier?: string;
   shippingRate?: number;
   total?: number;

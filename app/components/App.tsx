@@ -16,10 +16,10 @@ export default function App() {
       .catch(err => console.error(err));
   }, []);
   return (
-    <div id="main" className="container-fluid">
+    <main id="main" className="container-fluid">
       <NavContainer />
       <Outlet />
       <Footer />
-    </div>
+    </main>
   );
 }

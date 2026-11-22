@@ -31,6 +31,7 @@ type OrderCreationAttributes = Optional<
 export interface OrderInstance
   extends Model<OrderAttributes, OrderCreationAttributes>,
     OrderAttributes {
+  readonly createdAt?: Date;
   readonly created_at?: Date;
 
   // Eager-loaded association + computed async getter (see getterMethods below).
